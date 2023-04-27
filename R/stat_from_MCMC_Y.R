@@ -5,7 +5,7 @@ stat_from_MCMC_Y = function(chains){
   # posterior mean, median and mode for Y abundance
   post_mean = colMeans(chains)
   post_median = apply(chains, 2, quantile, probs = c(0.5))
-  post_mode = apply(chains, 2, DescTools::Mode)
+  post_mode = apply(chains, 2, Mode)
   
   # 0.95 CI for protein abundance:
   CI = apply(chains, 2, quantile, probs = c(0.025, 0.975))

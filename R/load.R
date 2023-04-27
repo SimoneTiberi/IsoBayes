@@ -5,6 +5,7 @@
 
 # general todo:
 # remove "library" and put all functions from other packages in roxygen_tags.R
+#' @export
 load_data = function(path_to_peptides_psm,
                       path_to_peptides_intensities = NULL,
                       tpm_path = NULL,

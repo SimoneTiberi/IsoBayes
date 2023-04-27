@@ -1,6 +1,6 @@
 # take loaded data (list of Peptide and Protein DFs, created at "load" step).
 # run MCMC, return results as data.frame
-
+#' @export
 inference = function(loaded_data, prior = 0, parallel = TRUE, K = 10000, burn_in = 1000, thin = 5){
   MCMC_CONFIG = list(parallel = parallel, K = K, burn_in = burn_in, thin = thin, PEP = loaded_data$PEP)
   
