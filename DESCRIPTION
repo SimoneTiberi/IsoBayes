@@ -32,7 +32,7 @@ Authors@R: c(person(given = "Simone",
 biocViews: StatisticalMethod, Bayesian, Proteomics, MassSpectrometry, Transcriptomics, Sequencing
 License: GPL-3
 Depends: R (>= 4.3.0)
-Imports: methods, Rcpp
+Imports: methods, Rcpp, Biostrings, data.table, glue, xml2, DescTools, stats
 LinkingTo: Rcpp, RcppArmadillo
 Suggests: knitr, rmarkdown, testthat, BiocStyle
 SystemRequirements: C++11
