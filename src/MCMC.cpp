@@ -26,8 +26,7 @@ List MCMC(Rcpp::ListOf<Rcpp::NumericVector> const& EC_numeric_multi_map,
           unsigned int const& M,
           unsigned int const& K,
           unsigned int const& burn_in,
-          unsigned int const& thin,
-          double const& lib_size
+          unsigned int const& thin
 ) {
   Rcpp::NumericVector pi(N); // dirichlet sample.
   Rcpp::NumericVector y(N);

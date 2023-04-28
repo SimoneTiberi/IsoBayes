@@ -1,6 +1,6 @@
 #' @useDynLib SIMBA, .registration = TRUE
 #' @importFrom methods formalArgs
-#' @importFrom stats median, quantile, aggregate.data.frame
+#' @importFrom stats aggregate.data.frame
 #' @importFrom Biostrings fasta.seqlengths
 #' @importFrom data.table fread
 #' @importFrom glue glue

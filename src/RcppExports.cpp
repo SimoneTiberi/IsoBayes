@@ -12,8 +12,8 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // MCMC
-List MCMC(Rcpp::ListOf<Rcpp::NumericVector> const& EC_numeric_multi_map, Rcpp::NumericVector const& Y_unique, Rcpp::NumericVector const& N_peptides_per_protein, Rcpp::NumericVector const& delta_prior, Rcpp::NumericVector const& PSM_multi_map, unsigned int const& N, unsigned int const& M, unsigned int const& K, unsigned int const& burn_in, unsigned int const& thin, double const& lib_size);
-RcppExport SEXP _SIMBA_MCMC(SEXP EC_numeric_multi_mapSEXP, SEXP Y_uniqueSEXP, SEXP N_peptides_per_proteinSEXP, SEXP delta_priorSEXP, SEXP PSM_multi_mapSEXP, SEXP NSEXP, SEXP MSEXP, SEXP KSEXP, SEXP burn_inSEXP, SEXP thinSEXP, SEXP lib_sizeSEXP) {
+List MCMC(Rcpp::ListOf<Rcpp::NumericVector> const& EC_numeric_multi_map, Rcpp::NumericVector const& Y_unique, Rcpp::NumericVector const& N_peptides_per_protein, Rcpp::NumericVector const& delta_prior, Rcpp::NumericVector const& PSM_multi_map, unsigned int const& N, unsigned int const& M, unsigned int const& K, unsigned int const& burn_in, unsigned int const& thin);
+RcppExport SEXP _SIMBA_MCMC(SEXP EC_numeric_multi_mapSEXP, SEXP Y_uniqueSEXP, SEXP N_peptides_per_proteinSEXP, SEXP delta_priorSEXP, SEXP PSM_multi_mapSEXP, SEXP NSEXP, SEXP MSEXP, SEXP KSEXP, SEXP burn_inSEXP, SEXP thinSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -27,8 +27,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< unsigned int const& >::type K(KSEXP);
     Rcpp::traits::input_parameter< unsigned int const& >::type burn_in(burn_inSEXP);
     Rcpp::traits::input_parameter< unsigned int const& >::type thin(thinSEXP);
-    Rcpp::traits::input_parameter< double const& >::type lib_size(lib_sizeSEXP);
-    rcpp_result_gen = Rcpp::wrap(MCMC(EC_numeric_multi_map, Y_unique, N_peptides_per_protein, delta_prior, PSM_multi_map, N, M, K, burn_in, thin, lib_size));
+    rcpp_result_gen = Rcpp::wrap(MCMC(EC_numeric_multi_map, Y_unique, N_peptides_per_protein, delta_prior, PSM_multi_map, N, M, K, burn_in, thin));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -58,7 +57,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_SIMBA_MCMC", (DL_FUNC) &_SIMBA_MCMC, 11},
+    {"_SIMBA_MCMC", (DL_FUNC) &_SIMBA_MCMC, 10},
     {"_SIMBA_MCMC_PEP", (DL_FUNC) &_SIMBA_MCMC_PEP, 14},
     {NULL, NULL, 0}
 };
