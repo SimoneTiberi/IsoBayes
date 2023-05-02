@@ -16,10 +16,10 @@ load_data = function(path_to_peptides_psm,
                       FDR_thd = 0.01 # ignored if input_type = openMS
 ) {
   variables = c("Protein Accession", "QValue", "Decoy/Contaminant/Target", "Base Sequence")
-  if(PEP){
-    variables = c(variables, "PEP")
-  }
   if (input_type == "metamorpheus") {
+    if(PEP){
+      variables = c(variables, "PEP")
+    }
     if (abundance_type == "intensities") {
       data_list = list(x = fread(path_to_peptides_intensities, data.table = FALSE), y = NULL)
       data_list = build_intensity(data_list$x, path_to_peptides_psm, variables)

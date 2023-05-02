@@ -1,5 +1,4 @@
-list_components_for_MCMC_pep = function(groups, pep_df, pept_unique_df, prot_df,
-                                        protein_length, pp, ll, N){
+list_components_for_MCMC_pep = function(groups, pep_df, pept_unique_df, prot_df, protein_length, pp, N, params){
   vec = rep(NA, N)
   components = lapply(groups, function(x){
     vec[x$proteins] = seq_len(length(x$proteins))
@@ -26,12 +25,11 @@ list_components_for_MCMC_pep = function(groups, pep_df, pept_unique_df, prot_df,
          protein_length = protein_length[x$proteins],
          pp = pp[x$proteins],
          N = length(x$proteins),
-         K = CONFIG$MCMC$K,
-         burn_in = CONFIG$MCMC$burn_in,
-         thin = CONFIG$MCMC$thin,
-         ll = ll)
+         K = params$K,
+         burn_in = params$burn_in,
+         thin = params$thin)
   })
-  list_pept_prot = get_list_pept_prot(pept_unique_df, groups, protein_length, pp, ll)
+  list_pept_prot = get_list_pept_prot(pept_unique_df, groups, protein_length, pp, params)
   
-  append(components, list_pept_prot)
+  list(components = append(components, list_pept_prot[[1]]), one_pept_one_prot = list_pept_prot[[2]])
 }

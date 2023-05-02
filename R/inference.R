@@ -1,8 +1,13 @@
 # take loaded data (list of Peptide and Protein DFs, created at "load" step).
 # run MCMC, return results as data.frame
 #' @export
-inference = function(loaded_data, prior = 0, length_norm = FALSE, parallel = TRUE, n_cores = 2, K = 10000, burn_in = 1000, thin = 5) {
-  loaded_data$prior = prior
+inference = function(loaded_data, prior = 0.1, length_norm = FALSE, parallel = TRUE, n_cores = 2, K = 10000, burn_in = 1000, thin = 5) {
+  if(is.null(loaded_data$PROTEIN_DF$TPM)){
+    print("TPM not loaded. Set prior equal to 0.")
+    loaded_data$prior = 0
+  }else{
+    loaded_data$prior = prior
+  }
   loaded_data$length_norm = length_norm
 
   names(loaded_data) = formalArgs(set_MCMC_args)
