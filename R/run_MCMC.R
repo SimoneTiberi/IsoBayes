@@ -13,7 +13,7 @@ run_MCMC = function(pept_df, prot_df, protein_length, N, M, prior = 0, lib_size,
     pp = prior * lib_size * pp
   }
   if (params$parallel) {
-    parallel_MCMC(pept_df, prot_df, protein_length, pp, ll, N, params)
+    parallel_MCMC(pept_df, prot_df, protein_length, pp, N, params)
   } else {
     MCMC(
       pept_df$EC_numeric, prot_df$Y_unique, protein_length, pp,

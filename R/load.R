@@ -15,20 +15,23 @@ load_data = function(path_to_peptides_psm,
                       PEP = FALSE,
                       FDR_thd = 0.01 # ignored if input_type = openMS
 ) {
+  variables = c("Protein Accession", "QValue", "Decoy/Contaminant/Target", "Base Sequence")
+  if(PEP){
+    variables = c(variables, "PEP")
+  }
   if (input_type == "metamorpheus") {
     if (abundance_type == "intensities") {
-      data_list = list(x = as.data.frame(fread(path_to_peptides_intensities)), y = NULL)
-      data_list = build_intensity(data_list$x, path_to_peptides_psm)
+      data_list = list(x = fread(path_to_peptides_intensities, data.table = FALSE), y = NULL)
+      data_list = build_intensity(data_list$x, path_to_peptides_psm, variables)
     } else {
-      data_list = list(x = as.data.frame(fread(path_to_peptides_psm)), y = NULL)
-      data_list$y = as.numeric(data_list$x$`PSM Count (unambiguous, <0.01 q-value)`)
+      data_list = list(x = fread(path_to_peptides_psm, select = variables, data.table = FALSE), y = NULL)
+      data_list$y = as.numeric(fread(path_to_peptides_psm, select = "PSM Count (unambiguous, <0.01 q-value)", data.table = FALSE)[, 1])
     }
     PEPTIDE_DF = do.call("build_peptide_df", data_list)
     rm(data_list)
     protein_df_args = list(protein_name = get_prot_from_EC(PEPTIDE_DF$EC))
   } else {
     PEPTIDE_DF = get_peptides_from_idXML(path_to_peptides_psm, PEP)
-
     PROTEIN_DF_openMS = get_proteins_from_idXML(path_to_peptides_psm)
     protein_name_openMS = get_prot_from_EC(PEPTIDE_DF$EC)
     protein_df_args = list(
@@ -38,20 +41,20 @@ load_data = function(path_to_peptides_psm,
   }
   if (!is.null(tpm_path)) {
     protein_df_args$TPM = load_tpm(protein_df_args$protein_name, tpm_path)
-  } else {
-    protein_df_args$TPM = NULL
-  }
+  } 
   if (!is.null(path_fasta)) {
     protein_df_args$protein_length = get_protein_length(protein_df_args$protein_name, path_fasta)
   } else {
     protein_df_args$protein_length = rep(1, length(protein_df_args$protein_name))
   }
+  
   PROTEIN_DF = do.call("data.frame", protein_df_args)
   rm(protein_df_args)
 
   if (input_type == "metamorpheus") {
     PEPTIDE_DF = PEPTIDE_DF[PEPTIDE_DF$QValue <= FDR_thd, ]
   }
+  
   PEPTIDE_DF = collapse_pept_w_equal_EC(PEPTIDE_DF, PEP)
   PEPTIDE_DF = PEPTIDE_DF[PEPTIDE_DF$Y > 0, ]
 

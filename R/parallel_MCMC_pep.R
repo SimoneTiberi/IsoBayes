@@ -23,7 +23,7 @@ parallel_MCMC_pep = function(pep_df, pept_unique_df, prot_df, protein_length, pp
   stopCluster(cluster)
   
   half = nrow(res) / 2
-  res = list(PI = res[1:half, ], Y = res[(half+1):nrow(res), ], groups = groups, pept_prot = PEPT_PROT)
+  res = list(PI = res[1:half, ], Y = res[(half+1):nrow(res), ], groups = groups, one_pept_one_prot = PEPT_PROT)
   
   res
 }

@@ -1,5 +1,5 @@
-get_components = function(EC_numeric){
-  graph = lapply(1:length(EC_numeric), function(i){
+get_components = function(EC_numeric) {
+  graph = lapply(1:length(EC_numeric), function(i) {
     x = EC_numeric[[i]]
     out = rbind()
     for (ii in 1:length(x)) {
@@ -8,9 +8,9 @@ get_components = function(EC_numeric){
     out
   })
   graph = do.call("rbind", graph)
-  
+
   components = list()
-  while (nrow(graph) > 0){ 
+  while (nrow(graph) > 0) {
     nodes = matrix(graph[1, ], ncol = 2)
     graph = matrix(graph[-1, ], ncol = 2)
     new_nodes = which(graph[, 1] %in% unique(nodes[, 1]))
@@ -23,7 +23,7 @@ get_components = function(EC_numeric){
       new_nodes = c(new_nodes, which(graph[, 2] %in% unique(nodes[, 2])))
       check = length(new_nodes) > 0
     }
-    components = append(components, list(list(peptides = unique(nodes[,1]), proteins = unique(nodes[, 2]))))
+    components = append(components, list(list(peptides = unique(nodes[, 1]), proteins = unique(nodes[, 2]))))
   }
   components
 }

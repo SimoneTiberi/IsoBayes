@@ -1,4 +1,4 @@
-list_components_for_MCMC = function(components, EC_numeric, Y_unique, protein_length, pp, Y, ll, N){
+list_components_for_MCMC = function(components, EC_numeric, Y_unique, protein_length, pp, Y, N, params){
   vec = rep(NA, N)
   components = lapply(components, function(x){
     vec[x$proteins] = seq_len(length(x$proteins))
@@ -9,10 +9,10 @@ list_components_for_MCMC = function(components, EC_numeric, Y_unique, protein_le
          Y = Y[x$peptides],
          N = length(x$proteins),
          M = length(x$peptides),
-         K = CONFIG$MCMC$K,
-         burn_in = CONFIG$MCMC$burn_in,
-         thin = CONFIG$MCMC$thin,
-         ll = ll)
+         K = params$K,
+         burn_in = params$burn_in,
+         thin = params$thin
+         )
   })
   components
 }
