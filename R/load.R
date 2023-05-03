@@ -15,6 +15,9 @@ load_data = function(path_to_peptides_psm,
                       PEP = FALSE,
                       FDR_thd = 0.01 # ignored if input_type = openMS
 ) {
+  if (input_type == "openMS"){
+    print("input_type = 'openMS'. 'FDR_thd' is ignored and abundance_type = 'psm'.")
+  }
   variables = c("Protein Accession", "QValue", "Decoy/Contaminant/Target", "Base Sequence")
   if (input_type == "metamorpheus") {
     if(PEP){
@@ -23,14 +26,16 @@ load_data = function(path_to_peptides_psm,
     if (abundance_type == "intensities") {
       data_list = list(x = fread(path_to_peptides_intensities, data.table = FALSE), y = NULL)
       data_list = build_intensity(data_list$x, path_to_peptides_psm, variables)
-    } else {
+    } else if (abundance_type == "psm") {
       data_list = list(x = fread(path_to_peptides_psm, select = variables, data.table = FALSE), y = NULL)
       data_list$y = as.numeric(fread(path_to_peptides_psm, select = "PSM Count (unambiguous, <0.01 q-value)", data.table = FALSE)[, 1])
+    } else {
+      stop("Invalid abundance_type Choose one of 'psm' or 'intensities'.")
     }
     PEPTIDE_DF = do.call("build_peptide_df", data_list)
     rm(data_list)
     protein_df_args = list(protein_name = get_prot_from_EC(PEPTIDE_DF$EC))
-  } else {
+  } else if (input_type == "openMS"){
     PEPTIDE_DF = get_peptides_from_idXML(path_to_peptides_psm, PEP)
     PROTEIN_DF_openMS = get_proteins_from_idXML(path_to_peptides_psm)
     protein_name_openMS = get_prot_from_EC(PEPTIDE_DF$EC)
@@ -38,6 +43,8 @@ load_data = function(path_to_peptides_psm,
       protein_name = PROTEIN_DF_openMS$isoform[match(protein_name_openMS, PROTEIN_DF_openMS$id)],
       id_openMS = PROTEIN_DF_openMS$id[match(protein_name_openMS, PROTEIN_DF_openMS$id)]
     )
+  } else {
+    stop("Invalid input_type. Choose one of 'metamorpheus' or 'openMS'.")
   }
   if (!is.null(tpm_path)) {
     protein_df_args$TPM = load_tpm(protein_df_args$protein_name, tpm_path)
