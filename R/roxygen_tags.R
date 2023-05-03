@@ -15,4 +15,7 @@
 #' @importFrom parallel stopCluster
 #' @importFrom foreach foreach
 #' @importFrom iterators iter
+#' @importFrom stats median
+#' @importFrom stats na.omit
+#' @importFrom stats quantile
 NULL
