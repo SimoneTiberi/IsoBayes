@@ -4,7 +4,7 @@ run_MCMC = function(pept_df, prot_df, protein_length, N, M, prior = 0, lib_size,
     # vaguely informative prior for "pi" (protein relative abundances)
     # their posterior = dirichlet(Y + 1)
     # where Y = number of protein INTENSITYs
-    pp = rep(1/N, N) * lib_size
+    pp = rep(1, N)
   }else{
     # we assign a small probability to all isoforms, to avoid a 0-prior:
     epsilon = 10^(-5)
