@@ -37,5 +37,5 @@ inference = function(loaded_data, prior = 0.1, length_norm = FALSE, parallel = T
     isoform_results = stat_from_TPM(isoform_results, args_MCMC$prot_df$TPM, results_MCMC[[1]])
   }
   
-  isoform_results
+  list(isoform_results = isoform_results, results_MCMC = results_MCMC)
 }
