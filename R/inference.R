@@ -31,7 +31,7 @@ inference = function(loaded_data, prior = 0.1, length_norm = FALSE, parallel = T
     results_MCMC[[2]] = results_MCMC[[2]][, old_order]
   }
 
-  isoform_results = get_res_MCMC(results_MCMC, args_MCMC$prot_df$protein_name, args_MCMC$params)
+  isoform_results = get_res_MCMC(results_MCMC, args_MCMC$prot_df$protein_name)
   isoform_results$Y_unique = args_MCMC$prot_df$Y_unique
   if(!is.null(args_MCMC$prot_df$TPM)){
     isoform_results = stat_from_TPM(isoform_results, args_MCMC$prot_df$TPM, results_MCMC[[1]])

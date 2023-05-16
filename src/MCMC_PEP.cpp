@@ -41,7 +41,7 @@ List MCMC_PEP(Rcpp::ListOf<Rcpp::NumericVector> const& EC_numeric_multi_map,
   
   unsigned int k, j, i, EC_len, cond_PEP, y_tmp_one, index; //, EC_len;
   
-  double prob_tot, dir_sample_sum, alpha;
+  double prob_tot, alpha;
   
   // initialize pi vector with the prior
   //for (i=0 ; i < N; i++) {
@@ -103,16 +103,9 @@ List MCMC_PEP(Rcpp::ListOf<Rcpp::NumericVector> const& EC_numeric_multi_map,
     }
     
     // Dirichlter sampling, pi|Y, delta
-    dir_sample_sum = 0.0;
-    
     for (i=0 ; i < N; i++) {
       alpha = y(i) + delta_prior(i);
       pi[i] = as<double>(Rcpp::rgamma(1, alpha, 1));
-      dir_sample_sum += pi[i];
-    }
-    
-    for (i=0 ; i < N; i++) {
-      pi[i] /= dir_sample_sum;
     }
     
     // store 1 value every "thin" iterations:
@@ -127,6 +120,5 @@ List MCMC_PEP(Rcpp::ListOf<Rcpp::NumericVector> const& EC_numeric_multi_map,
   
   return Rcpp::List::create(Rcpp::Named("PI") = PI_mat,
                             Rcpp::Named("Y") = Y_mat);
-  //Rcpp::Named("N_peptides") = N_mat);
 }
 

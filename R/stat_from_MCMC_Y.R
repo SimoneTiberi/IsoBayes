@@ -1,4 +1,4 @@
-stat_from_MCMC_Y = function(chains){
+stat_from_MCMC_Y = function(chains, protein_name){
   # probability of non-zero (i.e., present):
   p_non_zero = apply(chains > 0, 2, mean)
   
@@ -11,7 +11,7 @@ stat_from_MCMC_Y = function(chains){
   CI = apply(chains, 2, quantile, probs = c(0.025, 0.975))
   CI = matrix(CI, ncol = 2, byrow = TRUE)
   
-  out = data.frame(row.names = NULL,
+  out = data.frame(Isoform = protein_name,
                    Probability_present = p_non_zero,
                    Posterior_mode = sapply(post_mode, function(y){y[[1]]}),
                    Posterior_median = post_median,
