@@ -37,5 +37,7 @@ inference = function(loaded_data, prior = 0.1, length_norm = FALSE, parallel = T
     isoform_results = stat_from_TPM(isoform_results, args_MCMC$prot_df$TPM, results_MCMC[[1]])
   }
   
-  list(isoform_results = isoform_results, results_MCMC = results_MCMC)
+  res_norm = normalize_by_gene(isoform_results, results_MCMC)
+  
+  list(isoform_results = isoform_results, normalized_isoform_results = res_norm)
 }

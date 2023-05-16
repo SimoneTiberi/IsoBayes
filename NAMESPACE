@@ -2,7 +2,6 @@
 
 export(inference)
 export(load_data)
-export(normalize_by_gene)
 export(plot_relative_abundances)
 importFrom(Biostrings,fasta.seqlengths)
 importFrom(DescTools,Mode)

@@ -1,26 +1,25 @@
 #' @export
-plot_relative_abundances = function(x, gene_id, plot_CI = TRUE){
-  sel = x$gene == gene_id
+plot_relative_abundances = function(x, gene_id, plot_CI = TRUE, normalize_gene = TRUE){
+  sel = x$isoform_results$gene == gene_id
   if(sum(sel) == 1){
     stop(paste0("Only 1 available isoform for gene ", gene_id, ". Plot not returned since the relative abundances is equal to 1."))
+  }else if(normalize_gene){
+    rel_abundances = x$normalized_isoform_results[sel, "post_mean_probs_iso"]
+    CI = x$normalized_isoform_results[sel, c("CI_pi_0.025", "CI_pi_0.975")]
+    prop_transc = x$normalized_isoform_results$probs_TPM[sel] / sum(x$normalized_isoform_results$probs_TPM[sel])
   }else{
-    rel_abundances = x[sel, "post_mean_probs_iso"]
-    CI = x[sel, c("CI_pi_0.025", "CI_pi_0.975")]
-    if(sum(rel_abundances) == 1){
-      prop_transc = x$probs_TPM[sel] / sum(x$probs_TPM[sel])
-    }else{
-      prop_transc = x$probs_TPM[sel]
-    }
-    
+    rel_abundances = x$isoform_results[sel, "post_mean_probs_iso"]
+    CI = x$isoform_results[sel, c("CI_pi_0.025", "CI_pi_0.975")]
+    prop_transc = x$isoform_results$probs_TPM[sel]
   }
   # impose an order to the isoforms (according to the over-all relative abudance):
   ord = order(rel_abundances, decreasing = TRUE)
   
-  prop_samp = data.frame(feature_id = factor(x$Isoform[sel], levels = x$Isoform[sel][ord]), 
+  prop_samp = data.frame(feature_id = factor(x$isoform_results$Isoform[sel], levels = x$isoform_results$Isoform[sel][ord]), 
                          prop = c(rel_abundances, prop_transc), #add transcriptomics probs
                          LB = c(pmax(0, CI[, 1]), rep(NA, nrow(CI))), # LB must be >= 0
                          UB = c(pmin(1,  CI[, 2]),  rep(NA, nrow(CI))), # UB must be <= 0
-                         Legend = c(rep("Protein", length(x$Isoform[sel])), rep("Transcript", length(x$Isoform[sel])))
+                         Legend = c(rep("Protein", length(x$isoform_results$Isoform[sel])), rep("Transcript", length(x$isoform_results$Isoform[sel])))
                          )
   # Plot the estimated relative abundance:
   ggp = ggplot() +
