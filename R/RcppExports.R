@@ -9,3 +9,7 @@ MCMC_PEP <- function(EC_numeric_multi_map, PSM_multi_map, PEP, M, EC_numeric_uni
     .Call(`_SIMBA_MCMC_PEP`, EC_numeric_multi_map, PSM_multi_map, PEP, M, EC_numeric_unique, PSM_unique, PEP_unique, M_unique, N_peptides_per_protein, delta_prior, N, K, burn_in, thin)
 }
 
+MCMC_Unique <- function(Y_unique, delta_prior, N, K, burn_in, thin) {
+    .Call(`_SIMBA_MCMC_Unique`, Y_unique, delta_prior, N, K, burn_in, thin)
+}
+

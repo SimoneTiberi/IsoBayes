@@ -12,19 +12,27 @@ parallel_MCMC = function(pep_df, prot_df, protein_length, pp, N, params){
   cluster = makeCluster(params$n_cores, type = "PSOCK")
   registerDoParallel(cl = cluster)
   
-  res = foreach(component = iter(components), .combine = cbind) %dorng% {
+  res = foreach(component = iter(components)) %dorng% {
     names(component) = formalArgs(MCMC)
     res = do.call(MCMC, component)
-    rbind(res[[1]], res[[2]])
+    isoform_results = stat_from_MCMC_Y(res$Y)
+    
+    list(isoform_results, res$PI)
   }
   stopCluster(cluster)
   
-  half = nrow(res) / 2
-  res = list(PI = res[1:half, ], Y = res[(half+1):nrow(res), ], groups = groups)
-  
-  final_K = nrow(res$Y)
-  res$Y = cbind(res$Y, matrix(rep(one_pept_one_prot_Y, final_K), final_K, byrow = T))
-  res$PI = cbind(res$PI, matrix(rep(rep(1, length(one_pept_one_prot_Y)), final_K), final_K, byrow = T))
+  PI_one_pept_one_prot = MCMC_Unique(one_pept_one_prot_Y, prot_df$TPM[one_pept_one_prot],
+                                     length(one_pept_one_prot_Y), params$K,
+                                     params$burn_in, params$thin
+                                     )
+  isoform_results_unique = stat_from_MCMC_Y(matrix(rep(one_pept_one_prot_Y, params$K), params$K, byrow = T)
+                                            )
+  res = list(PI = do.call("cbind", lapply(res, function(x){x[[2]]})),
+             isoform_results = do.call("rbind", lapply(res, function(x){x[[1]]})),
+             groups = groups
+             )
+  res$isoform_results = rbind(res$isoform_results, isoform_results_unique)
+  res$PI = cbind(res$PI, PI_one_pept_one_prot$PI)
   res$one_pept_one_prot = one_pept_one_prot
   
   res

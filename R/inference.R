@@ -27,17 +27,18 @@ inference = function(loaded_data, prior = 0.1, length_norm = FALSE, parallel = T
     }))
     old_order = c(old_order, results_MCMC$one_pept_one_prot)
     old_order = sort(old_order, index.return = T)$ix
-    results_MCMC[[1]] = results_MCMC[[1]][, old_order]
-    results_MCMC[[2]] = results_MCMC[[2]][, old_order]
+    results_MCMC$PI = results_MCMC$PI[, old_order]
+    results_MCMC$isoform_results = results_MCMC$isoform_results[old_order, ]
   }
-
-  isoform_results = get_res_MCMC(results_MCMC, args_MCMC$prot_df$protein_name)
-  isoform_results$Y_unique = args_MCMC$prot_df$Y_unique
+  
+  results_MCMC = get_res_MCMC(results_MCMC, args_MCMC$prot_df$protein_name)
+  results_MCMC$isoform_results$Y_unique = args_MCMC$prot_df$Y_unique
+  
   if(!is.null(args_MCMC$prot_df$TPM)){
-    isoform_results = stat_from_TPM(isoform_results, args_MCMC$prot_df$TPM, results_MCMC[[1]])
+    results_MCMC$isoform_results = stat_from_TPM(results_MCMC$isoform_results, args_MCMC$prot_df$TPM, results_MCMC$PI)
   }
   
-  res_norm = normalize_by_gene(isoform_results, results_MCMC)
+  res_norm = normalize_by_gene(results_MCMC)
   
-  list(isoform_results = isoform_results, normalized_isoform_results = res_norm)
+  list(isoform_results = results_MCMC$isoform_results, normalized_isoform_results = res_norm)
 }

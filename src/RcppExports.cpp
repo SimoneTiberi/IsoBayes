@@ -55,10 +55,27 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// MCMC_Unique
+List MCMC_Unique(Rcpp::NumericVector const& Y_unique, Rcpp::NumericVector const& delta_prior, unsigned int const& N, unsigned int const& K, unsigned int const& burn_in, unsigned int const& thin);
+RcppExport SEXP _SIMBA_MCMC_Unique(SEXP Y_uniqueSEXP, SEXP delta_priorSEXP, SEXP NSEXP, SEXP KSEXP, SEXP burn_inSEXP, SEXP thinSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector const& >::type Y_unique(Y_uniqueSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector const& >::type delta_prior(delta_priorSEXP);
+    Rcpp::traits::input_parameter< unsigned int const& >::type N(NSEXP);
+    Rcpp::traits::input_parameter< unsigned int const& >::type K(KSEXP);
+    Rcpp::traits::input_parameter< unsigned int const& >::type burn_in(burn_inSEXP);
+    Rcpp::traits::input_parameter< unsigned int const& >::type thin(thinSEXP);
+    rcpp_result_gen = Rcpp::wrap(MCMC_Unique(Y_unique, delta_prior, N, K, burn_in, thin));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_SIMBA_MCMC", (DL_FUNC) &_SIMBA_MCMC, 10},
     {"_SIMBA_MCMC_PEP", (DL_FUNC) &_SIMBA_MCMC_PEP, 14},
+    {"_SIMBA_MCMC_Unique", (DL_FUNC) &_SIMBA_MCMC_Unique, 6},
     {NULL, NULL, 0}
 };
 

@@ -1,7 +1,8 @@
-get_res_MCMC = function(chains, protein_name){
-  isoform_results = stat_from_MCMC_Y(chains[[2]], protein_name)
-  isoform_results = cbind(isoform_results, stat_from_MCMC_PI(chains[[1]]))
-  isoform_results$gene = gsub("-.*", "", protein_name)
+get_res_MCMC = function(results_MCMC, protein_name){
+  results_MCMC$isoform_results$Isoform = protein_name
+  results_MCMC$isoform_results$gene = gsub("-.*", "", protein_name)
+  results_MCMC$isoform_results = cbind(results_MCMC$isoform_results, stat_from_MCMC_PI(results_MCMC$PI))
+  results_MCMC$isoform_results$gene = gsub("-.*", "", results_MCMC$isoform_results$Isoform)
 
-  isoform_results
+  results_MCMC
 }
