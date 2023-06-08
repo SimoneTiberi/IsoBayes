@@ -1,3 +1,23 @@
+#' Load data
+#'
+#' \code{load_data} read and process input data (peptides counts from metamorpheus or OpenMS, peptides intensities, tpm)
+#' 
+#' @param path_to_peptides_psm a string indicating the path to psmtsv file from metamorpheus or the xml file from OpenMS.
+#' @param path_to_peptides_intensities a string indicating the path to psmtsv file from metamorpheus with intensity values.
+#' @param tpm_path a string indicating the path to tpm file.
+#' @param path_fasta a string indicating the path to fasta file.
+#' @param input_type a character string indicating the tool that outputs the peptides file: 'metamorpheus' or 'openMS'.
+#' @param abundance_type a character string indicating the type of input: 'psm' or 'intensities'.
+#' @param PEP boolean value indicating if Peptite Error Probability shoud be used.
+#' @param FDR_thd numeric value indicating the False Discovery Rate filter.
+#' 
+#' @return A list with a peptide dataframe, a peptide dataframe of unique peptides (only for PEP=TRUE) and a protein dataframe.
+#' @examples
+#' 
+#' @author name
+#' 
+#' @seealso links
+#' 
 #' @export
 load_data = function(path_to_peptides_psm,
                       path_to_peptides_intensities = NULL,
