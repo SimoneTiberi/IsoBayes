@@ -1,7 +1,24 @@
-# take loaded data (list of Peptide and Protein DFs, created at "load" step).
-# run MCMC, return results as data.frame
+#' Run latent variable Bayesian model
+#'
+#' \code{inference} run latent variable Bayesian model
+#'
+#' @param loaded_data list of dataframes returned by \code{\link{load}}.
+#' @param prior a numeric value indicating how much weight to assign on trascriptomic prior information.
+#' @param parallel a boolean value to enable parallel computation.
+#' @param n_cores number of cores to be used during parallel computation.
+#' @param K number of MCMC iterations. # modificabile dall'utente?
+#' @param burn_in number of initial iterations to discard. # modificabile dall'utente?
+#' @param thin thinning value to apply to the final MCMC chain. # modificabile dall'utente?
+#'
+#' @return A list of two dataframe. 'isoform_results' with sigle isoform results and "normalized_isoform_results" with single
+#' isoform results normalized by gene..
+#' @examples
+#' @author name
+#'
+#' @seealso links
+#'
 #' @export
-inference = function(loaded_data, prior = 0.1, length_norm = FALSE, parallel = TRUE, n_cores = 2, K = 10000, burn_in = 1000, thin = 5) {
+inference = function(loaded_data, prior = 0.1, parallel = TRUE, n_cores = 2, K = 10000, burn_in = 1000, thin = 5) {
   if(is.null(loaded_data$PROTEIN_DF$TPM)){
     print("TPM not loaded. Set prior equal to 0.")
     loaded_data$prior = 0

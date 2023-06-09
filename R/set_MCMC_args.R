@@ -1,4 +1,4 @@
-set_MCMC_args = function(pept_df, pept_unique_df, prot_df, PEP, prior, length_norm) {
+set_MCMC_args = function(pept_df, pept_unique_df, prot_df, PEP, prior) {
   arguments = list()
   arguments$pept_df = pept_df
   if (PEP) {
@@ -26,12 +26,7 @@ set_MCMC_args = function(pept_df, pept_unique_df, prot_df, PEP, prior, length_no
   arguments$N = nrow(arguments$prot_df) # number of proteins
   arguments$M = nrow(arguments$pept_df) # number of filtered detected peptides
   arguments$prior = prior
-  
-  if(length_norm){
-    arguments$protein_length = arguments$prot_df$protein_length
-  }else{
-    arguments$protein_length = rep(1, arguments$N)
-  }
-  
+  arguments$protein_length = arguments$prot_df$protein_length
+
   arguments
 }
