@@ -10,8 +10,7 @@
 #' @param burn_in number of initial iterations to discard. # modificabile dall'utente?
 #' @param thin thinning value to apply to the final MCMC chain. # modificabile dall'utente?
 #'
-#' @return A list of two dataframe. 'isoform_results' with sigle isoform results and "normalized_isoform_results" with single
-#' isoform results normalized by gene..
+#' @return A list of two dataframe: 'isoform_results' and "normalized_isoform_results" (results normalized by gene).
 #' @examples
 #' @author name
 #'
@@ -19,6 +18,9 @@
 #'
 #' @export
 inference = function(loaded_data, prior = 0.1, parallel = TRUE, n_cores = 2, K = 10000, burn_in = 1000, thin = 5) {
+  
+  input_check_inference(loaded_data, prior, parallel, n_cores, K, burn_in, thin)
+  
   if(is.null(loaded_data$PROTEIN_DF$TPM)){
     print("TPM not loaded. Set prior equal to 0.")
     loaded_data$prior = 0

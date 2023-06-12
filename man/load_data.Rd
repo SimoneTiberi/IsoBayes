@@ -6,9 +6,8 @@
 \usage{
 load_data(
   path_to_peptides_psm,
-  path_to_peptides_intensities = NULL,
-  tpm_path = NULL,
-  path_fasta = NULL,
+  path_to_peptides_intensities = "",
+  tpm_path = "",
   input_type = "metamorpheus",
   abundance_type = "psm",
   PEP = FALSE,
@@ -16,13 +15,11 @@ load_data(
 )
 }
 \arguments{
-\item{path_to_peptides_psm}{a string indicating the path to psmtsv file from metamorpheus or the xml file from OpenMS.}
+\item{path_to_peptides_psm}{a character string indicating the path to psmtsv file from metamorpheus tool or the idXML file from OpenMS toolkit.}
 
-\item{path_to_peptides_intensities}{a string indicating the path to psmtsv file from metamorpheus with intensity values.}
+\item{path_to_peptides_intensities}{a character string indicating the path to psmtsv file from metamorpheus with intensity values.}
 
-\item{tpm_path}{a string indicating the path to tpm file.}
-
-\item{path_fasta}{a string indicating the path to fasta file.}
+\item{tpm_path}{a character string indicating the path to tpm file.}
 
 \item{input_type}{a character string indicating the tool that outputs the peptides file: 'metamorpheus' or 'openMS'.}
 

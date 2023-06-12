@@ -1,5 +1,23 @@
+#' Plot isoform results
+#'
+#' \code{plot_relative_abundances} plot isoform results for a specific gene.
+#'
+#' @param x list of dataframes returned by \code{\link{inference}}.
+#' @param gene_id a character string indicating the gene to be plot.
+#' @param plot_CI a boolean value to plot Credibility Interval.
+#' @param normalize_gene a boolean value to plot results normalized by gene.
+#'
+#' @return A plot with relative frequencies of isoforms detected for a specific gene.
+#' @examples
+#' @author name
+#'
+#' @seealso links
+#'
 #' @export
 plot_relative_abundances = function(x, gene_id, plot_CI = TRUE, normalize_gene = TRUE){
+  
+  input_check_plot(x, gene_id, plot_CI, normalize_gene)
+  
   sel = x$isoform_results$gene == gene_id
   if(sum(sel) == 1){
     stop(paste0("Only 1 available isoform for gene ", gene_id, ". Plot not returned since the relative abundances is equal to 1."))
