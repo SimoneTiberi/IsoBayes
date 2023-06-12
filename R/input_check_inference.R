@@ -1,5 +1,5 @@
 input_check_inference = function(loaded_data, prior, parallel, n_cores, K, burn_in, thin){
-  if(names(loaded_data) != c("PEPTIDE_DF", "PEPTIDE_DF_unique", "PROTEIN_DF", "PEP")){
+  if(all(names(loaded_data) != c("PEPTIDE_DF", "PEPTIDE_DF_unique", "PROTEIN_DF", "PEP"))){
     stop("Names of 'loaded_data' should be: 'PEPTIDE_DF', 'PEPTIDE_DF_unique', 'PROTEIN_DF', 'PEP'")
   }
   if (prior < 0 & prior > 1) {
@@ -8,16 +8,16 @@ input_check_inference = function(loaded_data, prior, parallel, n_cores, K, burn_
   if (!is.logical(parallel)) {
     stop("Input error: parallel must be a boolean value.")
   }
-  if(!is.integer(n_cores) || n_cores < 0){
+  if(n_cores != round(n_cores) || n_cores < 0){
     stop("Input error: n_cores must be an integer > 0.")
   }
-  if(!is.integer(burn_in) || burn_in < 1000){
+  if(burn_in != round(burn_in) || burn_in < 1000){
     stop("Input error: burn_in should be an integer >= 1000.")
   }
-  if(!is.integer(K) || K < 2000){
+  if(K != round(K) || K < 2000){
     stop("Input error: K should be an integer >= 2000.")
   }
-  if(!is.integer(thin) || thin < 1){
+  if(thin != round(thin) || thin < 1){
     stop("Input error: thin should be an integer >= 1.")
   }
   if(round((K-burn_in)/thin) < 1000){

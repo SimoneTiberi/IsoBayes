@@ -25,7 +25,7 @@ load_data = function(path_to_peptides_psm,
                      PEP = FALSE,
                      FDR_thd = 0.01 # ignored if input_type = openMS
 ) {
-  input_check()
+  input_check(path_to_peptides_psm, path_to_peptides_intensities, tpm_path, input_type, abundance_type, PEP, FDR_thd)
   
   if (input_type == "openMS") {
     abundance_type = "psm"

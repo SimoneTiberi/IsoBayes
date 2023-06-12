@@ -1,5 +1,5 @@
 input_check_plot = function(x, gene_id, plot_CI, normalize_gene){
-  if(names(x) != c("isoform_results", "normalized_isoform_results")){
+  if(all(names(x) != c("isoform_results", "normalized_isoform_results"))){
     stop("Names of 'x' should be: 'isoform_results', 'normalized_isoform_results'")
   }
   if(!is.character(gene_id)){

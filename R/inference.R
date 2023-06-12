@@ -27,7 +27,6 @@ inference = function(loaded_data, prior = 0.1, parallel = TRUE, n_cores = 2, K =
   }else{
     loaded_data$prior = prior
   }
-  loaded_data$length_norm = length_norm
 
   names(loaded_data) = formalArgs(set_MCMC_args)
   args_MCMC = do.call("set_MCMC_args", loaded_data)
