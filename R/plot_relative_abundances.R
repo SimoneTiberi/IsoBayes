@@ -15,20 +15,22 @@
 #'
 #' @export
 plot_relative_abundances = function(x, gene_id, plot_CI = TRUE, normalize_gene = TRUE){
-  
+
   input_check_plot(x, gene_id, plot_CI, normalize_gene)
   
-  sel = x$isoform_results$gene == gene_id
+  sel = x$isoform_results$Gene == gene_id
   if(sum(sel) == 1){
     stop(paste0("Only 1 available isoform for gene ", gene_id, ". Plot not returned since the relative abundances is equal to 1."))
   }else if(normalize_gene){
-    rel_abundances = x$normalized_isoform_results[sel, "post_mean_probs_iso"]
-    CI = x$normalized_isoform_results[sel, c("CI_pi_0.025", "CI_pi_0.975")]
-    prop_transc = x$normalized_isoform_results$probs_TPM[sel] / sum(x$normalized_isoform_results$probs_TPM[sel])
+    df_sub = x$normalized_isoform_results[sel, ]
+    rel_abundances = df_sub$Pi_norm
+    CI = df_sub[, c("Pi_norm_CI_LB", "Pi_norm_CI_UB")]
+    prop_transc = df_sub$Pi_norm_TPM
   }else{
-    rel_abundances = x$isoform_results[sel, "post_mean_probs_iso"]
-    CI = x$isoform_results[sel, c("CI_pi_0.025", "CI_pi_0.975")]
-    prop_transc = x$isoform_results$probs_TPM[sel]
+    df_sub = x$isoform_results[sel, ]
+    rel_abundances = df_sub$Pi
+    CI = df_sub[, c("Pi_CI_LB", "Pi_CI_UB")]
+    prop_transc = df_sub$TPM / sum(x$isoform_results$TPM)
   }
   # impose an order to the isoforms (according to the over-all relative abudance):
   ord = order(rel_abundances, decreasing = TRUE)

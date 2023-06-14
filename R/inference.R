@@ -2,7 +2,7 @@
 #'
 #' \code{inference} run latent variable Bayesian model
 #'
-#' @param loaded_data list of dataframes returned by \code{\link{load}}.
+#' @param loaded_data list of \code data.frame} returned by \code{\link{load}}.
 #' @param prior a numeric value indicating how much weight to assign on trascriptomic prior information.
 #' @param parallel a boolean value to enable parallel computation.
 #' @param n_cores number of cores to be used during parallel computation.
@@ -18,7 +18,7 @@
 #'
 #' @export
 inference = function(loaded_data, prior = 0.1, parallel = TRUE, n_cores = 2, K = 10000, burn_in = 1000, thin = 5) {
-  
+
   input_check_inference(loaded_data, prior, parallel, n_cores, K, burn_in, thin)
   
   if(is.null(loaded_data$PROTEIN_DF$TPM)){
@@ -50,13 +50,15 @@ inference = function(loaded_data, prior = 0.1, parallel = TRUE, n_cores = 2, K =
   }
   
   results_MCMC = get_res_MCMC(results_MCMC, args_MCMC$prot_df$protein_name)
-  results_MCMC$isoform_results$Y_unique = args_MCMC$prot_df$Y_unique
   
   if(!is.null(args_MCMC$prot_df$TPM)){
     results_MCMC$isoform_results = stat_from_TPM(results_MCMC$isoform_results, args_MCMC$prot_df$TPM, results_MCMC$PI)
   }
   
   res_norm = normalize_by_gene(results_MCMC)
-  
-  list(isoform_results = results_MCMC$isoform_results, normalized_isoform_results = res_norm)
+  reorder_col = c("Gene", "Isoform", "Prob_present", "Abundance", "CI_LB", "CI_UB",
+                  "Pi", "Pi_CI_LB", "Pi_CI_UB", "TPM", "Log2_FC", "Prob_prot_inc"
+                  )
+  list(isoform_results = results_MCMC$isoform_results[, reorder_col],
+       normalized_isoform_results = res_norm)
 }

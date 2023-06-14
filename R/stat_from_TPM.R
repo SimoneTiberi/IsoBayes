@@ -1,10 +1,10 @@
 stat_from_TPM = function(isoform_results, TPM, chain){
   isoform_results$TPM = TPM
-  isoform_results$probs_TPM = TPM/sum(TPM)
-  isoform_results$log2_FC = log2(isoform_results$post_mean_probs_iso/isoform_results$probs_TPM)
+  P_TPM = TPM/sum(TPM)
+  isoform_results$Log2_FC = log2(isoform_results$Pi/P_TPM)
   
-  isoform_results$prob_iso_greater_tpm = sapply(seq_len(nrow(isoform_results)), function(i){
-    mean(chain[, i] > isoform_results$probs_TPM[i])})
+  isoform_results$Prob_prot_inc = sapply(seq_len(nrow(isoform_results)), function(i){
+    mean(chain[, i] > P_TPM[i])})
   
   isoform_results
 }

@@ -14,14 +14,11 @@ run_MCMC = function(pept_df, prot_df, protein_length, N, M, prior = 0, lib_size,
   }
   if (params$parallel) {
     res = parallel_MCMC(pept_df, prot_df, protein_length, pp, N, params)
-    # normalize PI
-    res$PI = t(apply(res$PI, 1, function(x){x/sum(x)}))
   } else {
     res = MCMC(pept_df$EC_numeric, prot_df$Y_unique, protein_length, pp,
-               pept_df$Y, N, M, params$K, params$burn_in, params$thin
-    )
-    # normalize PI
-    res$PI = t(apply(res$PI, 1, function(x){x/sum(x)}))
+               pept_df$Y, N, M, params$K, params$burn_in, params$thin)
   }
+  # normalize PI
+  res$PI = t(apply(res$PI, 1, function(x){x/sum(x)}))
   res
 }

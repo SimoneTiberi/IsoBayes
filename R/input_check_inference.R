@@ -2,7 +2,7 @@ input_check_inference = function(loaded_data, prior, parallel, n_cores, K, burn_
   if(all(names(loaded_data) != c("PEPTIDE_DF", "PEPTIDE_DF_unique", "PROTEIN_DF", "PEP"))){
     stop("Names of 'loaded_data' should be: 'PEPTIDE_DF', 'PEPTIDE_DF_unique', 'PROTEIN_DF', 'PEP'")
   }
-  if (prior < 0 & prior > 1) {
+  if (prior < 0 || prior > 1) {
     stop("Input error: prior must be a numeric value between 0 and 1.")
   }
   if (!is.logical(parallel)) {

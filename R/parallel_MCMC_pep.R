@@ -22,6 +22,8 @@ parallel_MCMC_pep = function(pep_df, pept_unique_df, prot_df, protein_length, pp
              isoform_results = do.call("rbind", lapply(res, function(x){x[[1]]})),
              groups = groups, one_pept_one_prot = one_pept_one_prot
   )
+  # normalize PI
+  res$PI = t(apply(res$PI, 1, function(x){x/sum(x)}))
   
   res
 }
