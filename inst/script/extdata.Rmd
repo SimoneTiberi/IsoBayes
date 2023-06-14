@@ -1,0 +1,20 @@
+---
+title: "External data"
+output: html_document
+---
+
+# AllPeptides.psmtsv file
+`AllPeptides.psmtsv` contains a \code{data.frame} with ... .
+
+Below is the script used to create the `AllPeptides.psmtsv` file.
+[Codice MM]
+
+```r
+### read AllPeptides.psmtsv file returned by MM
+# data_path = "/path/to/AllPeptides.psmtsv"
+df = data.table::fread(data_path)
+# Keep usefull columns for our model:
+df = df[, c("Base Sequence", "Decoy/Contaminant/Target", "PSM Count (unambiguous, <0.01 q-value)", "Protein Accession", "QValue", "PEP")]
+data.table::fwrite(df, "AllPeptides.psmtsv")
+```
+

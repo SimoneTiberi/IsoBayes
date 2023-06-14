@@ -25,6 +25,7 @@ load_data = function(path_to_peptides_psm,
                      PEP = FALSE,
                      FDR_thd = 0.01 # ignored if input_type = openMS
 ) {
+
   input_check(path_to_peptides_psm, path_to_peptides_intensities, tpm_path, input_type, abundance_type, PEP, FDR_thd)
   
   if (input_type == "openMS") {
@@ -56,7 +57,7 @@ load_data = function(path_to_peptides_psm,
       id_openMS = PROTEIN_DF_openMS$id[match(protein_name_openMS, PROTEIN_DF_openMS$id)]
     )
   }
-  if (!is.null(tpm_path)) {
+  if (tpm_path != "") {
     protein_df_args$TPM = load_tpm(protein_df_args$protein_name, tpm_path)
   }
 

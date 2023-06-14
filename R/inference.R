@@ -18,7 +18,7 @@
 #'
 #' @export
 inference = function(loaded_data, prior = 0.1, parallel = TRUE, n_cores = 2, K = 10000, burn_in = 1000, thin = 5) {
-
+  
   input_check_inference(loaded_data, prior, parallel, n_cores, K, burn_in, thin)
   
   if(is.null(loaded_data$PROTEIN_DF$TPM)){
