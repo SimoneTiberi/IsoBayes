@@ -32,8 +32,9 @@ load_data = function(path_to_peptides_psm,
     abundance_type = "psm"
     print("input_type = 'openMS'. 'FDR_thd' is ignored and abundance_type = 'psm'.")
   }
-  variables = c("Protein Accession", "QValue", "Decoy/Contaminant/Target", "Base Sequence")
+  
   if (input_type == "metamorpheus") {
+    variables = c("Protein Accession", "QValue", "Decoy/Contaminant/Target", "Base Sequence")
     if (PEP) {
       variables = c(variables, "PEP")
     }
@@ -56,6 +57,10 @@ load_data = function(path_to_peptides_psm,
       protein_name = PROTEIN_DF_openMS$isoform[match(protein_name_openMS, PROTEIN_DF_openMS$id)],
       id_openMS = PROTEIN_DF_openMS$id[match(protein_name_openMS, PROTEIN_DF_openMS$id)]
     )
+  }else if(input_type == "other"){
+    PEPTIDE_DF = data.table::fread(path_to_peptides_psm)
+    PEPTIDE_DF = as.data.frame(PEPTIDE_DF)
+    protein_df_args = list(protein_name = get_prot_from_EC(PEPTIDE_DF$EC))
   }
   if (tpm_path != "") {
     protein_df_args$TPM = load_tpm(protein_df_args$protein_name, tpm_path)
@@ -75,13 +80,14 @@ load_data = function(path_to_peptides_psm,
 
   print("Total number of proteins we MAY actually detect:")
   protein_name_to_keep = get_prot_from_EC(PEPTIDE_DF$EC)
-  if (input_type == "metamorpheus") {
+  if (input_type %in% c("metamorpheus", "other")) {
     PROTEIN_DF = PROTEIN_DF[PROTEIN_DF$protein_name %in% protein_name_to_keep, ]
     UNIQUE_PEPT_ABUNDANCE = unique_protein_abundance(PEPTIDE_DF$Y, PEPTIDE_DF$EC, PROTEIN_DF$protein_name)
-  } else {
+  } else if (input_type == "OpenMS") {
     PROTEIN_DF = PROTEIN_DF[PROTEIN_DF$id_openMS %in% protein_name_to_keep, ]
     UNIQUE_PEPT_ABUNDANCE = unique_protein_abundance(PEPTIDE_DF$Y, PEPTIDE_DF$EC, PROTEIN_DF$id_openMS)
   }
+  
   PROTEIN_DF$Y_unique = UNIQUE_PEPT_ABUNDANCE$Y_unique
 
   if (PEP) {

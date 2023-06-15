@@ -9,8 +9,8 @@ input_check = function(path_to_peptides_psm, path_to_peptides_intensities, tpm_p
     first_error_arg = args_name[which(character_inputs != "character")[1]]
     stop(glue("Input error: {first_error_arg} must be a character string."))
   }
-  if (!(input_type %in% c("openMS", "metamorpheus"))) {
-    stop("Invalid input_type. Choose one of 'openMS' or 'metamorpheus'.")
+  if (!(input_type %in% c("openMS", "metamorpheus", "other"))) {
+    stop("Invalid input_type. Choose one of 'openMS', 'metamorpheus' or 'other'.")
   }
   if (!(abundance_type %in% c("psm", "intensities"))) {
     stop("Invalid input_type. Choose one of 'psm' or 'intensities'.")
