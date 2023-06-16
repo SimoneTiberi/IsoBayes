@@ -3,18 +3,29 @@ title: "External data"
 output: html_document
 ---
 
-# AllPeptides.psmtsv file
+# AllPeptides.psmtsv and AllQuantifiedPeptides.tsv files
 `AllPeptides.psmtsv` contains a \code{data.frame} with ... .
 
-Below is the script used to create the `AllPeptides.psmtsv` file.
+`AllQuantifiedPeptides.tsv` contains a \code{data.frame} with ... 
+
+Below is the script used to create the `AllPeptides.psmtsv` and `AllQuantifiedPeptides.tsv` files.
 [Codice MM]
 
-```r
-### read AllPeptides.psmtsv file returned by MM
+```{r}
+### NOT RUN
 # data_path = "/path/to/AllPeptides.psmtsv"
-df = data.table::fread(data_path)
+#df = as.data.frame(data.table::fread(data_path))
 # Keep usefull columns for our model:
-df = df[, c("Base Sequence", "Decoy/Contaminant/Target", "PSM Count (unambiguous, <0.01 q-value)", "Protein Accession", "QValue", "PEP")]
-data.table::fwrite(df, "AllPeptides.psmtsv")
+#df = df[, c("Base Sequence", "Decoy/Contaminant/Target", "PSM Count (unambiguous, <0.01 q-value)", "Protein Accession", "QValue", "PEP")]
+#data.table::fwrite(df, "AllPeptides.psmtsv")
+```
+
+```{r}
+# data_path = "/path/to/AllQuantifiedPeptides.tsv"
+#df = as.data.frame(data.table::fread(data_path))
+# Keep usefull columns for our model:
+#sel_intensities = grep("Intensity_", colnames(df))
+#df = df[, c("Base Sequence", colnames(df)[sel_intensities])]
+#data.table::fwrite(df, "AllQuantifiedPeptides.tsv")
 ```
 

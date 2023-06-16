@@ -33,8 +33,7 @@ Our approach infers the presence/absence of protein isoforms, and also estimates
 additionally, it provides a measure of the uncertainty of these estimates, via:
 i) the posterior probability the a protein isoform is present in the sample;
 ii) a posterior credible interval of its abundance.
-SIMBA inputs liquid cromatography mass spectrometry (MS) data,
-and can work with both PSM counts, and intensities.
+SIMBA inputs liquid cromatography mass spectrometry (MS) data, and can work with both PSM counts, and intensities.
 When available, trascript isoform abundances (i.e., TPMs) are also incorporated:
 TPMs are used to formulate an informative prior for the respective protein isoform relative abundance.
 We further identify isoforms where the relative abundance of proteins and transcripts significantly differ.
@@ -120,7 +119,7 @@ Note that with OpenMS data the algorithm processes psm counts (not intensities) 
 by FDR is done during the data generation by the aforementioned pipeline to create an idXML file.
 
 ## From user data
-We can also input data coming from any bioinformatics tool. To this aim, the data must be structured in a tsv file where each raw correspond to a identified peptide. Each peptide is described by 4 fields named:
+We can also input data coming from any bioinformatics tool. To this aim, the data must be structured in a tsv file where each raw corresponds to a identified peptide with 4 fields:
 
 * 'Y': a numeric variable indicating the peptide abundance;
 * 'EC': Equivalent Classes, a character string indicating the isoform(s) name the peptide maps to. If the peptide maps to multiple protein isoforms, the names must be separated with "|" ("name_isoform_1|name_isoform_2");
@@ -137,6 +136,15 @@ To load the tsv file with user data, we just need to specify the file path and s
 ```
 
 ## mRNA data integration
+When available, trascript isoform abundances (i.e., TPMs) can be incorporated to enhance protein isoform inference. To load TPMs data we have to specify the file path. The format file must be a tsv with two fields for each isoform:
+* 'isoname': a character string indicating the isoform name;
+* 'tpm': a numeric variable indicating the transcripts per million.
+
+```{r set path mRNA}
+tpm_path = paste0(data_dir, "/jurkat_isoform_kallisto.tsv")
+data_loaded = load_data(path_to_peptides_psm = path_to_peptides_psm,
+                        tpm_path = "/home/jbollon/GITHUB/SIMBA/inst/extdata/jurkat_isoform_kallisto.tsv")
+```
 
 ## FDR threshold
 
@@ -145,7 +153,7 @@ To load the tsv file with user data, we just need to specify the file path and s
 # Run SIMBA algorithm
 
 ## Setting the prior
-
+The transcriptomics data contribute to formulate an informative prior for the protein isoform relative abundances. The final results will be a trade-off between proteomics and transcriptomics information. We can regulate this trade-off by setting a prior coefficient on the tpm data. By default, the model set the prior equal to 0.1. This means that the concentration parameters of the Dirichelet distribution, from which we sample PIs relative abundances, consist of absolute protein abundance and tpm multiplied by 10% of the total protein abundance. A prior equal to zero is equivalent to run the model without transcriptomics data integration, while larger values force the inference process to be driven only by the mRNA information without considering the proteomics input.
 ## Parallel computation
 
 # Plotting the results
