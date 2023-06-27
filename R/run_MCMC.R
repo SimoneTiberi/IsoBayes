@@ -1,9 +1,6 @@
 run_MCMC = function(pept_df, prot_df, protein_length, N, M, prior = 0, lib_size, params) {
-  set.seed(169612)
   if(prior == 0){
     # vaguely informative prior for "pi" (protein relative abundances)
-    # their posterior = dirichlet(Y + 1)
-    # where Y = number of protein INTENSITYs
     pp = rep(1, N)
   }else{
     # we assign a small probability to all isoforms, to avoid a 0-prior:
@@ -17,8 +14,12 @@ run_MCMC = function(pept_df, prot_df, protein_length, N, M, prior = 0, lib_size,
   } else {
     res = MCMC(pept_df$EC_numeric, prot_df$Y_unique, protein_length, pp,
                pept_df$Y, N, M, params$K, params$burn_in, params$thin)
+    res$isoform_results = stat_from_MCMC_Y(res$Y)
+    res$Y = NULL
   }
   # normalize PI
   res$PI = t(apply(res$PI, 1, function(x){x/sum(x)}))
   res
 }
+
+
