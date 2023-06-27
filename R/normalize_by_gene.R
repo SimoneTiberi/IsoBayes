@@ -1,4 +1,5 @@
 normalize_by_gene = function(results_MCMC){
+  
   id_genes = as.numeric(factor(results_MCMC$isoform_results$Gene))
   list_unique_gene = unique(id_genes)
   

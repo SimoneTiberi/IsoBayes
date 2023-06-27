@@ -17,9 +17,9 @@
 #' @seealso links
 #'
 #' @export
-inference = function(loaded_data, prior = 0.1, parallel = TRUE, n_cores = 2, K = 10000, burn_in = 1000, thin = 5) {
+inference = function(loaded_data, prior = 0.1, map_iso_gene = "",  parallel = FALSE, n_cores = 2, K = 10000, burn_in = 1000, thin = 5) {
 
-  input_check_inference(loaded_data, prior, parallel, n_cores, K, burn_in, thin)
+  input_check_inference(loaded_data, prior, map_iso_gene, parallel, n_cores, K, burn_in, thin)
   
   if(is.null(loaded_data$PROTEIN_DF$TPM)){
     print("TPM not loaded. Set prior equal to 0.")
@@ -55,10 +55,20 @@ inference = function(loaded_data, prior = 0.1, parallel = TRUE, n_cores = 2, K =
     results_MCMC$isoform_results = stat_from_TPM(results_MCMC$isoform_results, args_MCMC$prot_df$TPM, results_MCMC$PI)
   }
   
-  res_norm = normalize_by_gene(results_MCMC)
-  reorder_col = c("Gene", "Isoform", "Prob_present", "Abundance", "CI_LB", "CI_UB",
+  reorder_col = c("Isoform", "Prob_present", "Abundance", "CI_LB", "CI_UB",
                   "Pi", "Pi_CI_LB", "Pi_CI_UB", "TPM", "Log2_FC", "Prob_prot_inc"
                   )
+  
+  if(file.exists(map_iso_gene)){
+    map_iso_gene_file = fread(map_iso_gene, header = FALSE)
+    results_MCMC$isoform_results = merge(results_MCMC$isoform_results, map_iso_gene_file, by.x = "Isoform", by.y = "V1")
+    colnames(results_MCMC$isoform_results)[ncol(results_MCMC$isoform_results)] = "Gene"
+    res_norm = normalize_by_gene(results_MCMC)
+    reorder_col = c("Gene", reorder_col)
+  }else{
+    res_norm = NULL
+  }
+  
   list(isoform_results = results_MCMC$isoform_results[, reorder_col],
        normalized_isoform_results = res_norm)
 }

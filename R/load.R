@@ -19,14 +19,14 @@
 #' @export
 load_data = function(path_to_peptides_psm,
                      path_to_peptides_intensities = "",
-                     tpm_path = "",
+                     path_to_tpm = "",
                      input_type = "metamorpheus",
                      abundance_type = "psm",
                      PEP = FALSE,
                      FDR_thd = 0.01 # ignored if input_type = openMS
 ) {
 
-  input_check(path_to_peptides_psm, path_to_peptides_intensities, tpm_path, input_type, abundance_type, PEP, FDR_thd)
+  input_check(path_to_peptides_psm, path_to_peptides_intensities, path_to_tpm, input_type, abundance_type, PEP, FDR_thd)
   
   if (input_type == "openMS") {
     abundance_type = "psm"
@@ -62,8 +62,8 @@ load_data = function(path_to_peptides_psm,
     PEPTIDE_DF = as.data.frame(PEPTIDE_DF)
     protein_df_args = list(protein_name = get_prot_from_EC(PEPTIDE_DF$EC))
   }
-  if (tpm_path != "") {
-    protein_df_args$TPM = load_tpm(protein_df_args$protein_name, tpm_path)
+  if (path_to_tpm != "") {
+    protein_df_args$TPM = load_tpm(protein_df_args$protein_name, path_to_tpm)
   }
 
   protein_df_args$protein_length = rep(1, length(protein_df_args$protein_name))

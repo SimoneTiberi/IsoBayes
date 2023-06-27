@@ -103,7 +103,7 @@ If we want to run the algorithm with peptides intensities, in addition to "AllPe
 Then, we have to set `abundance_type` equal to "intensities" (otherwise by default the \code{load_data} function will preprocess psm counts).
 ```{r set path MM intensities}
 path_to_peptides_psm = paste0(data_dir, "/AllPeptides.psmtsv")
-path_to_peptides_intensities = paste0(data_dir, "AllQuantifiedPeptides.tsv")
+path_to_peptides_intensities = paste0(data_dir, "/AllQuantifiedPeptides.tsv")
 data_loaded = load_data(path_to_peptides_psm = path_to_peptides_psm,
                         path_to_peptides_intensities = path_to_peptides_intensities)
 ```
@@ -143,7 +143,7 @@ When available, trascript isoform abundances (TPMs) can be incorporated to enhan
 ```{r set path mRNA}
 tpm_path = paste0(data_dir, "/jurkat_isoform_kallisto.tsv")
 data_loaded = load_data(path_to_peptides_psm = path_to_peptides_psm,
-                        tpm_path = "/home/jbollon/GITHUB/SIMBA/inst/extdata/jurkat_isoform_kallisto.tsv")
+                        path_to_tpm = "/home/jbollon/GITHUB/SIMBA/inst/extdata/jurkat_isoform_kallisto.tsv")
 ```
 
 ## FDR threshold
@@ -159,9 +159,15 @@ If the Peptide Error Probability is provided, we can enable the `PEP` option to 
 
 # Run SIMBA algorithm
 Once we have imputed the data, we can run the algorithm using the `inference` function:
-```{r default inference}
-t_start = Sys.time()
+```{r inference}
 results = inference(data_loaded)
+```
+
+## Gene Normalization
+```{r default inference}
+path_to_map_iso_gene = paste0(data_dir, "/map_iso_gene.csv")
+t_start = Sys.time()
+results = inference(data_loaded, map_iso_gene = path_to_map_iso_gene)
 t_end = Sys.time()
 default_time = t_end - t_start
 ```
@@ -171,25 +177,20 @@ The transcriptomics data contribute to formulate an informative prior for the pr
 
 Here, we run the model with prior equal to zero (ignoring mRNA data):
 ```{r no prior inference}
-results_no_prior = inference(data_loaded, prior = 0)
+results_no_prior = inference(data_loaded, prior = 0, map_iso_gene = path_to_map_iso_gene)
 ```
 
 ## Parallel computation!
-By default the `inference` function execute the algorithm in parallel exploiting two cores. We can disable the parallel computation by settint to FALSE the `parallel` argument:
+By default the `inference` function execute the algorithm with one single core. We can enable the parallel computation by setting to TRUE the `parallel` argument and increase the number of cores in order to speed up the execution time:
 ```{r no parallel inference}
 t_start = Sys.time()
-results_no_parallel = inference(data_loaded, parallel = FALSE)
+results_no_parallel = inference(data_loaded, parallel = TRUE, map_iso_gene = path_to_map_iso_gene, n_cores = 8)
 t_end = Sys.time()
-no_parallel_time = t_end - t_start
+parallel_time = t_end - t_start
 print("Single core VS parallel computation (two cores):")
-no_parallel_time - default_time
+parallel_time - default_time
 ```
-
-For large dataset (high number of proteins and peptides) we can speed up the computation by increasing the number of cores:
-```{r more cores inference}
-# NOT RUN
-# results_more_cores = inference(data_loaded, n_cores = 8)
-```
+Sottolineare che il guadagno di tempo è trascurabile in quanto il dataset è piccolo?
 
 # Plotting the results
 Finally, SIMBA provides the `plot_relative_abundances` function to visualize differential relative abundances between transcriptomics and
