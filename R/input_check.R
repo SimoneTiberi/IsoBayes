@@ -16,7 +16,7 @@ input_check = function(path_to_peptides_psm, path_to_peptides_intensities,
   check_path = (file_exist + file_not_specified) == 1
   if(!all(check_path) ){
     args_name = c("path_to_peptides_psm", "path_to_peptides_intensities", "path_to_tpm")
-    first_error_arg = args_name[which(check_path)[1]]
+    first_error_arg = args_name[which(!check_path)[1]]
     stop(glue("{first_error_arg} does not exist."))
   }
   

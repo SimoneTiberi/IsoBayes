@@ -1,38 +1,58 @@
-#' Load data
+#' Read and process all the input files required to run the latent variable Bayesin model
 #'
-#' \code{load_data} read and process input data (peptides counts from metamorpheus or OpenMS, peptides intensities, tpm)
+#' \code{load_data} reads and processes input data (abundance of protein isoforms and mRNA isoform abundances).
 #'
-#' @param path_to_peptides_psm a character string indicating the path to psmtsv file from metamorpheus tool or the idXML file from OpenMS toolkit.
-#' @param path_to_peptides_intensities a character string indicating the path to psmtsv file from metamorpheus with intensity values.
-#' @param tpm_path a character string indicating the path to tpm file.
-#' @param input_type a character string indicating the tool that outputs the peptides file: 'metamorpheus' or 'openMS'.
-#' @param abundance_type a character string indicating the type of input: 'psm' or 'intensities'.
-#' @param PEP boolean value indicating if Peptite Error Probability shoud be used.
-#' @param FDR_thd numeric value indicating the False Discovery Rate filter.
+#' @param path_to_peptides_psm a character string indicating the path to the psmtsv file from Metamorpheus tool,
+#' the idXML file from OpenMS toolkit or the tsv file with data coming from any bioinformatics tool. For more details on how to create these files
+#' see the vignettes.
+#' @param path_to_peptides_intensities a character string indicating the path to the psmtsv file from Metamorpheus with intensity values.
+#' Required if 'abundance_type' equal to "intensities".
+#' @param path_to_tpm a character string indicating the path to a tsv file with mRNA isoform abundances.
+#' The tsv file must have two fields for each isoform: 'isoname', a string for the isoform name, and 'tpm' a numeric variable for the corresponing
+#' Transcripts Per Million (tpm) count.
+#' @param input_type a character string indicating the tool that outputs the peptides file: "metamorpheus", "openMS" or "other",
+#' with default "metamorpheus".
+#' @param abundance_type a character string indicating the type of input: "psm" or "intensities", with default "psm".
+#' @param PEP logical; if TRUE, the latent variable Bayesin model will take into account the Peptite Error Probability. Default is FALSE.
+#' @param FDR_thd a numeric value indicating the False Discovery Rate threshold to be used to discard unreliable peptides.
 #'
-#' @return A list with a peptide dataframe, a peptide dataframe of unique peptides (only for PEP=TRUE) and a protein dataframe.
+#' @return A \code{list} with a peptide \code{data.frame}, a peptide \code{data.frame} with unique peptides (only for PEP=TRUE)
+#' and a protein \code{data.frame}.
+#'
 #' @examples
-#' @author name
+#' # Load internal data to the package:
+#' data_dir = system.file("extdata", package = "SIMBA")
 #'
-#' @seealso links
+#' # Define the path to the AllPeptides.psmtsv file returned by MetaMorpheus tool
+#' path_to_peptides_psm = paste0(data_dir, "/AllPeptides.psmtsv")
+#'
+#' # Load the data
+#' data_loaded = load_data(path_to_peptides_psm = path_to_peptides_psm)
+#'
+#' # For more examples see the vignettes:
+#' browseVignettes("SIMBA")
+#'
+#' @author Simone Tiberi \email{simone.tiberi@unibo.it} and Jordy Bollon \email{jordy.bollon@iit.it}
+#'
+#' @seealso \link[https://github.com/smith-chem-wisc/MetaMorpheus]{Metamorpheus},
+#' \link[https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_documentation.html]{OpenMS toolkit}.
 #'
 #' @export
 load_data = function(path_to_peptides_psm,
-                     path_to_peptides_intensities = "",
-                     path_to_tpm = "",
-                     input_type = "metamorpheus",
-                     abundance_type = "psm",
-                     PEP = FALSE,
-                     FDR_thd = 0.01 # ignored if input_type = openMS
+                      path_to_peptides_intensities = "",
+                      path_to_tpm = "",
+                      input_type = "metamorpheus",
+                      abundance_type = "psm",
+                      PEP = FALSE,
+                      FDR_thd = 0.01 # ignored if input_type = openMS
 ) {
-
   input_check(path_to_peptides_psm, path_to_peptides_intensities, path_to_tpm, input_type, abundance_type, PEP, FDR_thd)
-  
+
   if (input_type == "openMS") {
     abundance_type = "psm"
     print("input_type = 'openMS'. 'FDR_thd' is ignored and abundance_type = 'psm'.")
   }
-  
+
   if (input_type == "metamorpheus") {
     variables = c("Protein Accession", "QValue", "Decoy/Contaminant/Target", "Base Sequence")
     if (PEP) {
@@ -45,7 +65,7 @@ load_data = function(path_to_peptides_psm,
       data_list = list(x = fread(path_to_peptides_psm, select = variables, data.table = FALSE), y = NULL)
       data_list$y = as.numeric(fread(path_to_peptides_psm, select = "PSM Count (unambiguous, <0.01 q-value)", data.table = FALSE)[, 1])
     }
-    
+
     PEPTIDE_DF = do.call("build_peptide_df", data_list)
     rm(data_list)
     protein_df_args = list(protein_name = get_prot_from_EC(PEPTIDE_DF$EC))
@@ -53,11 +73,10 @@ load_data = function(path_to_peptides_psm,
     PEPTIDE_DF = get_peptides_from_idXML(path_to_peptides_psm, PEP)
     PROTEIN_DF_openMS = get_proteins_from_idXML(path_to_peptides_psm)
     protein_name_openMS = get_prot_from_EC(PEPTIDE_DF$EC)
-    protein_df_args = list(
-      protein_name = PROTEIN_DF_openMS$isoform[match(protein_name_openMS, PROTEIN_DF_openMS$id)],
-      id_openMS = PROTEIN_DF_openMS$id[match(protein_name_openMS, PROTEIN_DF_openMS$id)]
-    )
-  }else if(input_type == "other"){
+    protein_df_args = list(protein_name = PROTEIN_DF_openMS$isoform[match(protein_name_openMS, PROTEIN_DF_openMS$id)],
+                           id_openMS = PROTEIN_DF_openMS$id[match(protein_name_openMS, PROTEIN_DF_openMS$id)]
+                           )
+  } else if (input_type == "other") {
     PEPTIDE_DF = data.table::fread(path_to_peptides_psm)
     PEPTIDE_DF = as.data.frame(PEPTIDE_DF)
     protein_df_args = list(protein_name = get_prot_from_EC(PEPTIDE_DF$EC))
@@ -87,7 +106,7 @@ load_data = function(path_to_peptides_psm,
     PROTEIN_DF = PROTEIN_DF[PROTEIN_DF$id_openMS %in% protein_name_to_keep, ]
     UNIQUE_PEPT_ABUNDANCE = unique_protein_abundance(PEPTIDE_DF$Y, PEPTIDE_DF$EC, PROTEIN_DF$id_openMS)
   }
-  
+
   PROTEIN_DF$Y_unique = UNIQUE_PEPT_ABUNDANCE$Y_unique
 
   if (PEP) {

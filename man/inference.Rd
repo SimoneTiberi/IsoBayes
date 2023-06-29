@@ -7,7 +7,8 @@
 inference(
   loaded_data,
   prior = 0.1,
-  parallel = TRUE,
+  map_iso_gene = "",
+  parallel = FALSE,
   n_cores = 2,
   K = 10000,
   burn_in = 1000,
@@ -15,29 +16,56 @@ inference(
 )
 }
 \arguments{
-\item{loaded_data}{list of dataframes returned by \code{\link{load}}.}
+\item{loaded_data}{\code{list} of \code{data.frame} returned by \code{\link{load}}.}
 
-\item{prior}{a numeric value indicating how much weight to assign on trascriptomic prior information.}
+\item{prior}{a numeric value indicating how much weight to assign to the trascriptomics information. Default is 0.1. Larger values will force
+the inference process to be guided by mRNA relative abundance.}
 
-\item{parallel}{a boolean value to enable parallel computation.}
+\item{map_iso_gene}{a character string indicating the path to a csv file with two fields: isoform and gene name. Required to return protein
+isoforms results normalized by gene.}
 
-\item{n_cores}{number of cores to be used during parallel computation.}
+\item{parallel}{logical; if TRUE, enable parallel computation. Default is FALSE.}
 
-\item{K}{number of MCMC iterations. # modificabile dall'utente?}
+\item{n_cores}{the number of cores to use during parallel computation. Default is 2.}
 
-\item{burn_in}{number of initial iterations to discard. # modificabile dall'utente?}
+\item{K}{the number of MCMC iterations. Default is 10000.}
 
-\item{thin}{thinning value to apply to the final MCMC chain. # modificabile dall'utente?}
+\item{burn_in}{the number of initial iterations to discard. Default is 1000.}
+
+\item{thin}{thinning value to apply to the final MCMC chain. Default is 5.}
 }
 \value{
-A list of two dataframe: 'isoform_results' and "normalized_isoform_results" (results normalized by gene).
+A \code{list} of two \code{data.frame}: 'isoform_results' and 'normalized_isoform_results' (results normalized by gene).
 }
 \description{
-\code{inference} run latent variable Bayesian model
+\code{inference} run latent variable Bayesian model taking as input the data created by \code{\link{load}}.
+}
+\examples{
+# Load internal data to the package:
+data_dir = system.file("extdata", package = "SIMBA")
+
+# Define the path to the AllPeptides.psmtsv file returned by MetaMorpheus tool
+path_to_peptides_psm = paste0(data_dir, "/AllPeptides.psmtsv")
+
+# Define the path to the jurkat_isoform_kallisto.tsv with mRNA relative abundance
+tpm_path = paste0(data_dir, "/jurkat_isoform_kallisto.tsv")
+
+# Load the data
+data_loaded = load_data(
+  path_to_peptides_psm = path_to_peptides_psm,
+  path_to_tpm = tpm_path
+)
+
+# Define the path to the map_iso_gene.csv file
+path_to_map_iso_gene = paste0(data_dir, "/map_iso_gene.csv")
+
+# Run the algorithm
+results = inference(data_loaded, prior = 0.1, map_iso_gene = path_to_map_iso_gene)
+
 }
 \seealso{
-links
+\code{\link{load}}
 }
 \author{
-name
+Simone Tiberi \email{simone.tiberi@unibo.it} and Jordy Bollon \email{jordy.bollon@iit.it}
 }

@@ -1,30 +1,62 @@
 #' Run latent variable Bayesian model
 #'
-#' \code{inference} run latent variable Bayesian model
+#' \code{inference} run latent variable Bayesian model taking as input the data created by \code{\link{load}}.
 #'
-#' @param loaded_data list of \code data.frame} returned by \code{\link{load}}.
-#' @param prior a numeric value indicating how much weight to assign on trascriptomic prior information.
-#' @param parallel a boolean value to enable parallel computation.
-#' @param n_cores number of cores to be used during parallel computation.
-#' @param K number of MCMC iterations. # modificabile dall'utente?
-#' @param burn_in number of initial iterations to discard. # modificabile dall'utente?
-#' @param thin thinning value to apply to the final MCMC chain. # modificabile dall'utente?
+#' @param loaded_data \code{list} of \code{data.frame} returned by \code{\link{load}}.
+#' @param prior a numeric value indicating how much weight to assign to the trascriptomics information. Default is 0.1. Larger values will force
+#' the inference process to be guided by mRNA relative abundance.
+#' @param map_iso_gene a character string indicating the path to a csv file with two fields: isoform and gene name. Required to return protein
+#' isoforms results normalized by gene.
+#' @param parallel logical; if TRUE, enable parallel computation. Default is FALSE.
+#' @param n_cores the number of cores to use during parallel computation. Default is 2.
+#' @param K the number of MCMC iterations. Default is 10000.
+#' @param burn_in the number of initial iterations to discard. Default is 1000.
+#' @param thin thinning value to apply to the final MCMC chain. Default is 5.
 #'
-#' @return A list of two dataframe: 'isoform_results' and "normalized_isoform_results" (results normalized by gene).
+#' @return A \code{list} of two \code{data.frame}: 'isoform_results' and 'normalized_isoform_results' (results normalized by gene).
+#'
 #' @examples
-#' @author name
+#' # Load internal data to the package:
+#' data_dir = system.file("extdata", package = "SIMBA")
 #'
-#' @seealso links
+#' # Define the path to the AllPeptides.psmtsv file returned by MetaMorpheus tool
+#' path_to_peptides_psm = paste0(data_dir, "/AllPeptides.psmtsv")
+#'
+#' # Define the path to the jurkat_isoform_kallisto.tsv with mRNA relative abundance
+#' tpm_path = paste0(data_dir, "/jurkat_isoform_kallisto.tsv")
+#'
+#' # Load the data
+#' data_loaded = load_data(
+#'   path_to_peptides_psm = path_to_peptides_psm,
+#'   path_to_tpm = tpm_path
+#' )
+#'
+#' # Define the path to the map_iso_gene.csv file
+#' path_to_map_iso_gene = paste0(data_dir, "/map_iso_gene.csv")
+#'
+#' # Run the algorithm
+#' results = inference(data_loaded, prior = 0.1, map_iso_gene = path_to_map_iso_gene)
+#'
+#' @author Simone Tiberi \email{simone.tiberi@unibo.it} and Jordy Bollon \email{jordy.bollon@iit.it}
+#'
+#' @seealso \code{\link{load}}
 #'
 #' @export
-inference = function(loaded_data, prior = 0.1, map_iso_gene = "",  parallel = FALSE, n_cores = 2, K = 10000, burn_in = 1000, thin = 5) {
-
-  input_check_inference(loaded_data, prior, map_iso_gene, parallel, n_cores, K, burn_in, thin)
+inference = function(loaded_data,
+                     prior = 0.1,
+                     map_iso_gene = "",
+                     parallel = FALSE,
+                     n_cores = 2,
+                     K = 10000,
+                     burn_in = 1000,
+                     thin = 5) {
   
-  if(is.null(loaded_data$PROTEIN_DF$TPM)){
-    print("TPM not loaded. Set prior equal to 0.")
+  input_check_inference(loaded_data, prior, map_iso_gene, parallel, n_cores, K, burn_in, thin)
+
+  if (is.null(loaded_data$PROTEIN_DF$TPM)) {
+    message("TPM not loaded. Set prior equal to 0.")
     loaded_data$prior = 0
-  }else{
+  } else {
     loaded_data$prior = prior
   }
 
@@ -48,27 +80,31 @@ inference = function(loaded_data, prior = 0.1, map_iso_gene = "",  parallel = FA
     results_MCMC$PI = results_MCMC$PI[, old_order]
     results_MCMC$isoform_results = results_MCMC$isoform_results[old_order, ]
   }
-  
+
   results_MCMC = get_res_MCMC(results_MCMC, args_MCMC$prot_df$protein_name)
-  
-  if(!is.null(args_MCMC$prot_df$TPM)){
+
+  if (!is.null(args_MCMC$prot_df$TPM)) {
     results_MCMC$isoform_results = stat_from_TPM(results_MCMC$isoform_results, args_MCMC$prot_df$TPM, results_MCMC$PI)
+    reorder_col = c("Isoform", "Prob_present", "Abundance", "CI_LB", "CI_UB",
+                    "Pi", "Pi_CI_LB", "Pi_CI_UB", "TPM", "Log2_FC", "Prob_prot_inc"
+                    )
+  } else {
+    reorder_col = c("Isoform", "Prob_present", "Abundance", "CI_LB", "CI_UB",
+                    "Pi", "Pi_CI_LB", "Pi_CI_UB"
+                    )
   }
-  
-  reorder_col = c("Isoform", "Prob_present", "Abundance", "CI_LB", "CI_UB",
-                  "Pi", "Pi_CI_LB", "Pi_CI_UB", "TPM", "Log2_FC", "Prob_prot_inc"
-                  )
-  
-  if(file.exists(map_iso_gene)){
+
+  if (file.exists(map_iso_gene)) {
     map_iso_gene_file = fread(map_iso_gene, header = FALSE)
     results_MCMC$isoform_results = merge(results_MCMC$isoform_results, map_iso_gene_file, by.x = "Isoform", by.y = "V1")
     colnames(results_MCMC$isoform_results)[ncol(results_MCMC$isoform_results)] = "Gene"
-    res_norm = normalize_by_gene(results_MCMC)
+    res_norm = normalize_by_gene(results_MCMC, tpm = !is.null(args_MCMC$prot_df$TPM))
     reorder_col = c("Gene", reorder_col)
-  }else{
+  } else {
     res_norm = NULL
   }
-  
+
   list(isoform_results = results_MCMC$isoform_results[, reorder_col],
-       normalized_isoform_results = res_norm)
+       normalized_isoform_results = res_norm
+       )
 }

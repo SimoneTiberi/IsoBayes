@@ -21,7 +21,7 @@ parallel_MCMC = function(pep_df, prot_df, protein_length, pp, N, params){
   }
   stopCluster(cluster)
   
-  PI_one_pept_one_prot = MCMC_Unique(one_pept_one_prot_Y, prot_df$TPM[one_pept_one_prot],
+  PI_one_pept_one_prot = MCMC_Unique(one_pept_one_prot_Y, pp[one_pept_one_prot],
                                      length(one_pept_one_prot_Y), params$K,
                                      params$burn_in, params$thin
                                      )

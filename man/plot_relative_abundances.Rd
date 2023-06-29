@@ -4,26 +4,57 @@
 \alias{plot_relative_abundances}
 \title{Plot isoform results}
 \usage{
-plot_relative_abundances(x, gene_id, plot_CI = TRUE, normalize_gene = TRUE)
+plot_relative_abundances(
+  res_inference,
+  gene_id,
+  plot_CI = TRUE,
+  normalize_gene = TRUE
+)
 }
 \arguments{
-\item{x}{list of dataframes returned by \code{\link{inference}}.}
+\item{res_inference}{\code{list} of \code{data.frame} returned by \code{\link{inference}}.}
 
 \item{gene_id}{a character string indicating the gene to be plot.}
 
-\item{plot_CI}{a boolean value to plot Credibility Interval.}
+\item{plot_CI}{logical; if TRUE (default), plot Credibility Intervals for each isoform.}
 
-\item{normalize_gene}{a boolean value to plot results normalized by gene.}
+\item{normalize_gene}{logical; if TRUE (default), plot normalized results.}
 }
 \value{
-A plot with relative frequencies of isoforms detected for a specific gene.
+A plot showing isoforms relative abundances for a specific gene.
 }
 \description{
-\code{plot_relative_abundances} plot isoform results for a specific gene.
+\code{plot_relative_abundances} plots isoforms results for a specific gene.
+}
+\examples{
+# Load internal data to the package:
+data_dir = system.file("extdata", package = "SIMBA")
+
+# Define the path to the AllPeptides.psmtsv file returned by MetaMorpheus tool
+path_to_peptides_psm = paste0(data_dir, "/AllPeptides.psmtsv")
+
+# Define the path to the jurkat_isoform_kallisto.tsv with mRNA relative abundance
+tpm_path = paste0(data_dir, "/jurkat_isoform_kallisto.tsv")
+
+# Load the data
+data_loaded = load_data(
+  path_to_peptides_psm = path_to_peptides_psm,
+  path_to_tpm = tpm_path
+)
+
+# Define the path to the map_iso_gene.csv file
+path_to_map_iso_gene = paste0(data_dir, "/map_iso_gene.csv")
+
+# Run the algorithm
+results = inference(data_loaded, prior = 0.1, map_iso_gene = path_to_map_iso_gene)
+
+# Plotting results
+plot_relative_abundances(results, gene_id = "HLA")
+
 }
 \seealso{
-links
+\code{\link{load}}, \code{\link{inference}}
 }
 \author{
-name
+Simone Tiberi \email{simone.tiberi@unibo.it} and Jordy Bollon \email{jordy.bollon@iit.it}
 }
