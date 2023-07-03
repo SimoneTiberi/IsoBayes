@@ -4,28 +4,67 @@ output: html_document
 ---
 
 # AllPeptides.psmtsv and AllQuantifiedPeptides.tsv files
-`AllPeptides.psmtsv` contains a \code{data.frame} with ... .
+`AllPeptides.psmtsv` file collects for each identified peptide the following information:
 
-`AllQuantifiedPeptides.tsv` contains a \code{data.frame} with ... 
+* 'Base Sequence': a character string indicating the peptide name/id/amino acids sequence;
+* 'Decoy/Contaminant/Target': a character string indicating if the peptide is a decoy, contaminant or, or target;
+* 'PSM Count (unambiguous, <0.01 q-value)': a numeric variable indicating how many times the peptide has been identified (peptide abundance);
+* 'Protein Accession': a character string indicating the isoform(s) name the peptide maps to;
+* 'QValue': a numeric variable indicating the false discovery rate associated to the peptide;
+* 'PEP': a numeric variable indicating the Peptide Error Probability.
 
-Below is the script used to create the `AllPeptides.psmtsv` and `AllQuantifiedPeptides.tsv` files.
+`AllQuantifiedPeptides.tsv` lists for each identified peptide the base sequence and several peptide intensities.
+
+Below is the script used to create `AllPeptides.psmtsv` and `AllQuantifiedPeptides.tsv`, both available inside SIMBA package.
 [Codice MM]
 
-```{r}
-### NOT RUN
-# data_path = "/path/to/AllPeptides.psmtsv"
-#df = as.data.frame(data.table::fread(data_path))
-# Keep usefull columns for our model:
-#df = df[, c("Base Sequence", "Decoy/Contaminant/Target", "PSM Count (unambiguous, <0.01 q-value)", "Protein Accession", "QValue", "PEP")]
-#data.table::fwrite(df, "AllPeptides.psmtsv")
+```{r, eval=FALSE}
+data_path = "/path/to/AllPeptides.psmtsv"
+df = as.data.frame(data.table::fread(data_path))
+# Keep useful columns for our model:
+df = df[, c("Base Sequence", "Decoy/Contaminant/Target", "PSM Count (unambiguous, <0.01 q-value)", "Protein Accession", "QValue", "PEP")]
+# Discard peptides with qvalue > 0.1
+df = df[df$QValue < 0.1, ]
+
+data.table::fwrite(df, "AllPeptides.psmtsv")
 ```
 
-```{r}
-# data_path = "/path/to/AllQuantifiedPeptides.tsv"
-#df = as.data.frame(data.table::fread(data_path))
-# Keep usefull columns for our model:
-#sel_intensities = grep("Intensity_", colnames(df))
-#df = df[, c("Base Sequence", colnames(df)[sel_intensities])]
-#data.table::fwrite(df, "AllQuantifiedPeptides.tsv")
+```{r, eval=FALSE}
+data_path = "/path/to/AllQuantifiedPeptides.tsv"
+df = as.data.frame(data.table::fread(data_path))
+# Keep useful columns for our model:
+sel_intensities = grep("Intensity_", colnames(df))
+df = df[, c("Base Sequence", colnames(df)[sel_intensities])]
+
+data.table::fwrite(df, "AllQuantifiedPeptides.tsv")
 ```
 
+# Code to get jurkat_isoform_kallisto.tsv
+[code kallisto?]
+
+```{r, eval=FALSE}
+data_path = "/path/to/AllPeptides.psmtsv"
+tpm_path = "/path/to/tpm.tsv"
+df = as.data.frame(data.table::fread(data_path))
+tpm = as.data.frame(data.table::fread(tmp_path))
+# extract isoform names
+iso_names_prot = unique(unlist(lapply(df$`Protein Accession`, function(x){strsplit(x, "\\|")})))
+# keep only those transcript isoforms that are present in the peptide dataset
+tpm = merge(tpm, as.data.frame(iso_names_prot), by.x = "isoname", by.y = "iso_names_prot")
+
+data.table::fwrite(df, "jurkat_isoform_kallisto.tsv")
+```
+
+# Code to create map_iso_gene.csv
+
+```{r, eval=FALSE}
+library(SIMBA)
+data_dir = system.file("extdata", package = "SIMBA")
+path_to_peptides_psm = paste0(data_dir, "/AllPeptides.psmtsv")
+f = as.data.frame(data.table::fread(path_to_peptides_psm))
+iso_names_prot = unique(unlist(lapply(df$`Protein Accession`, function(x){strsplit(x, "\\|")})))
+gene_name = unlist(lapply(as.list(iso_names_prot), function(x){strsplit(x, "-")[[1]][1]}))
+map_iso_gene = data.frame(iso_names_prot, gene_name)
+
+data.table::fwrite(map_iso_gene, file = "map_iso_gene.csv", col.names = FALSE, sep = ",")
+```
