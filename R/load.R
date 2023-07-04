@@ -1,7 +1,7 @@
-#' Read and process all the input files required to run the latent variable Bayesin model
+#' Load and process input data
 #'
-#' \code{load_data} reads and processes input data (abundance of protein isoforms and mRNA isoform abundances).
-#'
+#' \code{load_data} reads and processes all the input files required to run the model.
+#
 #' @param path_to_peptides_psm a character string indicating the path to the psmtsv file from Metamorpheus tool,
 #' the idXML file from OpenMS toolkit or the tsv file with data coming from any bioinformatics tool. For more details on how to create these files
 #' see the vignettes.
@@ -43,14 +43,18 @@ load_data = function(path_to_peptides_psm,
                       path_to_tpm = "",
                       input_type = "metamorpheus",
                       abundance_type = "psm",
-                      PEP = FALSE,
-                      FDR_thd = 0.01 # ignored if input_type = openMS
+                      PEP = TRUE,
+                      FDR_thd = NULL
 ) {
+  browser()
+  if(is.null(FDR_thd)){
+    FDR_thd = 1
+  }
   input_check(path_to_peptides_psm, path_to_peptides_intensities, path_to_tpm, input_type, abundance_type, PEP, FDR_thd)
 
   if (input_type == "openMS") {
     abundance_type = "psm"
-    print("input_type = 'openMS'. 'FDR_thd' is ignored and abundance_type = 'psm'.")
+    message("input_type = 'openMS'. 'FDR_thd' is ignored and abundance_type = 'psm'.")
   }
 
   if (input_type == "metamorpheus") {
@@ -68,17 +72,22 @@ load_data = function(path_to_peptides_psm,
 
     PEPTIDE_DF = do.call("build_peptide_df", data_list)
     rm(data_list)
+    message("Found:")
     protein_df_args = list(protein_name = get_prot_from_EC(PEPTIDE_DF$EC))
   } else if (input_type == "openMS") {
     PEPTIDE_DF = get_peptides_from_idXML(path_to_peptides_psm, PEP)
     PROTEIN_DF_openMS = get_proteins_from_idXML(path_to_peptides_psm)
+    message("Found:")
     protein_name_openMS = get_prot_from_EC(PEPTIDE_DF$EC)
     protein_df_args = list(protein_name = PROTEIN_DF_openMS$isoform[match(protein_name_openMS, PROTEIN_DF_openMS$id)],
                            id_openMS = PROTEIN_DF_openMS$id[match(protein_name_openMS, PROTEIN_DF_openMS$id)]
                            )
   } else if (input_type == "other") {
-    PEPTIDE_DF = data.table::fread(path_to_peptides_psm)
-    PEPTIDE_DF = as.data.frame(PEPTIDE_DF)
+    PEPTIDE_DF = as.data.frame(data.table::fread(path_to_peptides_psm))
+    if(PEP & !("PEP" %in% colnames(PEPTIDE_DF))){
+      stop(glue("'PEP'=TRUE, but PEP not present in the data. If PEP not available, please set 'PEP'=FALSE."))
+    }
+    message("Found:")
     protein_df_args = list(protein_name = get_prot_from_EC(PEPTIDE_DF$EC))
   }
   if (path_to_tpm != "") {
@@ -97,7 +106,7 @@ load_data = function(path_to_peptides_psm,
   PEPTIDE_DF = collapse_pept_w_equal_EC(PEPTIDE_DF, PEP)
   PEPTIDE_DF = PEPTIDE_DF[PEPTIDE_DF$Y > 0, ]
 
-  print("Total number of proteins we MAY actually detect:")
+  message("We may actually detect:")
   protein_name_to_keep = get_prot_from_EC(PEPTIDE_DF$EC)
   if (input_type %in% c("metamorpheus", "other")) {
     PROTEIN_DF = PROTEIN_DF[PROTEIN_DF$protein_name %in% protein_name_to_keep, ]
@@ -121,6 +130,6 @@ load_data = function(path_to_peptides_psm,
   PEPTIDE_DF$EC_numeric = UNIQUE_PEPT_ABUNDANCE$EC_numeric[!UNIQUE_PEPT_ABUNDANCE$sel_unique]
   PEPTIDE_DF$EC = NULL
 
-  print(glue("Number of multi-mapping peptides: {nrow(PEPTIDE_DF)}"))
+  message(glue("Number of multi-mapping peptides: {nrow(PEPTIDE_DF)}"))
   list(PEPTIDE_DF = PEPTIDE_DF, PEPTIDE_DF_unique = PEPTIDE_DF_unique, PROTEIN_DF = PROTEIN_DF, PEP = PEP)
 }

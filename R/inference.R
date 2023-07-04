@@ -3,17 +3,15 @@
 #' \code{inference} run latent variable Bayesian model taking as input the data created by \code{\link{load}}.
 #'
 #' @param loaded_data \code{list} of \code{data.frame} returned by \code{\link{load}}.
-#' @param prior a numeric value indicating how much weight to assign to the trascriptomics information. Default is 0.1. Larger values will force
-#' the inference process to be guided by mRNA relative abundance.
 #' @param map_iso_gene a character string indicating the path to a csv file with two fields: isoform and gene name. Required to return protein
-#' isoforms results normalized by gene.
-#' @param parallel logical; if TRUE, enable parallel computation. Default is FALSE.
-#' @param n_cores the number of cores to use during parallel computation. Default is 2.
-#' @param K the number of MCMC iterations. Default is 10000.
+#' isoforms relative abundances normalized within a gene.
+#' @param n_cores the number of cores to use during algorithm execution. Default is 1.
+#' @param K the number of MCMC iterations. Default is 2000.
 #' @param burn_in the number of initial iterations to discard. Default is 1000.
-#' @param thin thinning value to apply to the final MCMC chain. Default is 5.
+#' @param thin thinning value to apply to the final MCMC chain. Default is 1.
 #'
-#' @return A \code{list} of two \code{data.frame}: 'isoform_results' and 'normalized_isoform_results' (results normalized by gene).
+#' @return A \code{list} of two \code{data.frame}: 'isoform_results' and 'normalized_isoform_results' (results normalized by gene,
+#' if `map_iso_gene` is provided).
 #'
 #' @examples
 #' # Load internal data to the package:
@@ -43,26 +41,24 @@
 #'
 #' @export
 inference = function(loaded_data,
-                     prior = 0.1,
                      map_iso_gene = "",
-                     parallel = FALSE,
-                     n_cores = 2,
-                     K = 10000,
+                     n_cores = 1,
+                     K = 2000,
                      burn_in = 1000,
-                     thin = 5) {
-  
-  input_check_inference(loaded_data, prior, map_iso_gene, parallel, n_cores, K, burn_in, thin)
+                     thin = 1) {
+  browser()
+  input_check_inference(loaded_data, map_iso_gene, n_cores, K, burn_in, thin)
 
   if (is.null(loaded_data$PROTEIN_DF$TPM)) {
-    message("TPM not loaded. Set prior equal to 0.")
+    message("Transcriptomics data not loaded. Inference will be based only on proteomics data.")
     loaded_data$prior = 0
   } else {
-    loaded_data$prior = prior
+    loaded_data$prior = 0.1
   }
 
   names(loaded_data) = formalArgs(set_MCMC_args)
   args_MCMC = do.call("set_MCMC_args", loaded_data)
-  args_MCMC$params = list(parallel = parallel, n_cores = n_cores, K = K, burn_in = burn_in, thin = thin, PEP = loaded_data$PEP)
+  args_MCMC$params = list(n_cores = n_cores, K = K, burn_in = burn_in, thin = thin, PEP = loaded_data$PEP)
   rm(loaded_data)
 
   if (args_MCMC$params$PEP) {
@@ -71,7 +67,7 @@ inference = function(loaded_data,
     results_MCMC = do.call("run_MCMC", args_MCMC)
   }
 
-  if (args_MCMC$params$parallel) {
+  if (args_MCMC$params$n_cores > 1) {
     old_order = unlist(lapply(results_MCMC$groups, function(x) {
       x$proteins
     }))
@@ -86,12 +82,10 @@ inference = function(loaded_data,
   if (!is.null(args_MCMC$prot_df$TPM)) {
     results_MCMC$isoform_results = stat_from_TPM(results_MCMC$isoform_results, args_MCMC$prot_df$TPM, results_MCMC$PI)
     reorder_col = c("Isoform", "Prob_present", "Abundance", "CI_LB", "CI_UB",
-                    "Pi", "Pi_CI_LB", "Pi_CI_UB", "TPM", "Log2_FC", "Prob_prot_inc"
-                    )
+                    "Pi", "Pi_CI_LB", "Pi_CI_UB", "TPM", "Log2_FC", "Prob_prot_inc")
   } else {
     reorder_col = c("Isoform", "Prob_present", "Abundance", "CI_LB", "CI_UB",
-                    "Pi", "Pi_CI_LB", "Pi_CI_UB"
-                    )
+                    "Pi", "Pi_CI_LB", "Pi_CI_UB")
   }
 
   if (file.exists(map_iso_gene)) {

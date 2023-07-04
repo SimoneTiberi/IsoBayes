@@ -26,7 +26,7 @@ df = df[, c("Base Sequence", "Decoy/Contaminant/Target", "PSM Count (unambiguous
 # Discard peptides with qvalue > 0.1
 df = df[df$QValue < 0.1, ]
 
-data.table::fwrite(df, "AllPeptides.psmtsv")
+data.table::fwrite(df, "AllPeptides.psmtsv", sep = "\t")
 ```
 
 ```{r, eval=FALSE}
@@ -36,7 +36,7 @@ df = as.data.frame(data.table::fread(data_path))
 sel_intensities = grep("Intensity_", colnames(df))
 df = df[, c("Base Sequence", colnames(df)[sel_intensities])]
 
-data.table::fwrite(df, "AllQuantifiedPeptides.tsv")
+data.table::fwrite(df, "AllQuantifiedPeptides.tsv", sep = "\t")
 ```
 
 # Code to get jurkat_isoform_kallisto.tsv
@@ -46,13 +46,13 @@ data.table::fwrite(df, "AllQuantifiedPeptides.tsv")
 data_path = "/path/to/AllPeptides.psmtsv"
 tpm_path = "/path/to/tpm.tsv"
 df = as.data.frame(data.table::fread(data_path))
-tpm = as.data.frame(data.table::fread(tmp_path))
+tpm = as.data.frame(data.table::fread(tpm_path))
 # extract isoform names
 iso_names_prot = unique(unlist(lapply(df$`Protein Accession`, function(x){strsplit(x, "\\|")})))
 # keep only those transcript isoforms that are present in the peptide dataset
 tpm = merge(tpm, as.data.frame(iso_names_prot), by.x = "isoname", by.y = "iso_names_prot")
 
-data.table::fwrite(df, "jurkat_isoform_kallisto.tsv")
+data.table::fwrite(tpm, "jurkat_isoform_kallisto.tsv", sep = "\t")
 ```
 
 # Code to create map_iso_gene.csv

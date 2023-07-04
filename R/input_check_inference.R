@@ -1,4 +1,4 @@
-input_check_inference = function(loaded_data, prior, map_iso_gene, parallel, n_cores, K, burn_in, thin){
+input_check_inference = function(loaded_data, map_iso_gene, n_cores, K, burn_in, thin){
   if(all(names(loaded_data) != c("PEPTIDE_DF", "PEPTIDE_DF_unique", "PROTEIN_DF", "PEP"))){
     stop("Names of 'loaded_data' should be: 'PEPTIDE_DF', 'PEPTIDE_DF_unique', 'PROTEIN_DF', 'PEP'")
   }
@@ -9,13 +9,6 @@ input_check_inference = function(loaded_data, prior, map_iso_gene, parallel, n_c
     message("'map_iso_gene' not specified. We return results without gene normalization.")
   }else if(!file.exists(map_iso_gene)){
     message("'map_iso_gene' does not exist. We return results without gene normalization.")
-  }
-  
-  if (prior < 0 || prior > 1) {
-    stop("'prior' must be a numeric value between 0 and 1.")
-  }
-  if (!is.logical(parallel)) {
-    stop("'parallel' must be a boolean value.")
   }
   if(n_cores != round(n_cores) || n_cores < 0){
     stop("'n_cores' must be an integer > 0.")

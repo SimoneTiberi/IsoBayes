@@ -1,6 +1,6 @@
 #' Plot isoform results
 #'
-#' \code{plot_relative_abundances} plots isoforms results for a specific gene.
+#' \code{plot_relative_abundances} plots protein isoforms results for a specific gene together with transcripts abundances if available.
 #'
 #' @param res_inference \code{list} of \code{data.frame} returned by \code{\link{inference}}.
 #' @param gene_id a character string indicating the gene to be plot.

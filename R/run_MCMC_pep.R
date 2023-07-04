@@ -9,7 +9,7 @@ run_MCMC_pep = function(pept_df, pept_unique_df, prot_df, protein_length, N, M, 
     pp = pp/sum(pp)
     pp = prior * lib_size * pp
   }
-  if(params$parallel){
+  if(params$n_cores > 1){
     res = parallel_MCMC_pep(pept_df, pept_unique_df, prot_df, protein_length, pp, N, params)
   }else{
     res = MCMC_PEP(pept_df$EC_numeric, pept_df$Y, pept_df$PEP, M, pept_unique_df$EC_numeric, pept_unique_df$Y,

@@ -27,9 +27,9 @@ input_check = function(path_to_peptides_psm, path_to_peptides_intensities,
     stop("Invalid input_type. Choose one of 'psm' or 'intensities'.")
   }
   if (!is.logical(PEP)) {
-    stop("Input error: PEP must be a boolean value.")
+    stop("PEP must be a boolean value.")
   }
-  if (FDR_thd < 0 & FDR_thd > 1) {
-    stop("Input error: FDR_thd must be a numeric value between 0 and 1.")
-  }
+  if (FDR_thd < 0 | FDR_thd > 1) {
+    stop("FDR_thd must be a numeric value between 0 and 1.")
+    }
 }
