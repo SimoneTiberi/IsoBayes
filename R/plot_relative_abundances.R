@@ -5,7 +5,7 @@
 #' @param res_inference \code{list} of \code{data.frame} returned by \code{\link{inference}}.
 #' @param gene_id a character string indicating the gene to be plot.
 #' @param plot_CI logical; if TRUE (default), plot Credibility Intervals for each isoform.
-#' @param normalize_gene logical; if TRUE (default), plot normalized results.
+#' @param normalize_gene logical; if TRUE (default), plot isoforms relative abundances normalized within the specified gene.
 #'
 #' @return A plot showing isoforms relative abundances for a specific gene.
 #'
@@ -29,14 +29,18 @@
 #' path_to_map_iso_gene = paste0(data_dir, "/map_iso_gene.csv")
 #'
 #' # Run the algorithm
+#' set.seed(169612)
 #' results = inference(data_loaded, prior = 0.1, map_iso_gene = path_to_map_iso_gene)
 #'
 #' # Plotting results
 #' plot_relative_abundances(results, gene_id = "HLA")
+#' 
+#' # For more examples see the vignettes:
+#' #browseVignettes("SIMBA")
 #'
 #' @author Simone Tiberi \email{simone.tiberi@unibo.it} and Jordy Bollon \email{jordy.bollon@iit.it}
 #'
-#' @seealso \code{\link{load}}, \code{\link{inference}}
+#' @seealso \code{\link{load_data}}, \code{\link{inference}}
 #'
 #' @export
 plot_relative_abundances = function(res_inference,

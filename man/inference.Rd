@@ -6,39 +6,33 @@
 \usage{
 inference(
   loaded_data,
-  prior = 0.1,
   map_iso_gene = "",
-  parallel = FALSE,
-  n_cores = 2,
-  K = 10000,
+  n_cores = 1,
+  K = 2000,
   burn_in = 1000,
-  thin = 5
+  thin = 1
 )
 }
 \arguments{
-\item{loaded_data}{\code{list} of \code{data.frame} returned by \code{\link{load}}.}
-
-\item{prior}{a numeric value indicating how much weight to assign to the trascriptomics information. Default is 0.1. Larger values will force
-the inference process to be guided by mRNA relative abundance.}
+\item{loaded_data}{\code{list} of \code{data.frame} returned by \code{\link{load_data}}.}
 
 \item{map_iso_gene}{a character string indicating the path to a csv file with two fields: isoform and gene name. Required to return protein
-isoforms results normalized by gene.}
+isoforms relative abundances normalized within each gene and to plot results via \code{\link{plot_relative_abundances}}.}
 
-\item{parallel}{logical; if TRUE, enable parallel computation. Default is FALSE.}
+\item{n_cores}{the number of cores to use during algorithm execution. Default is 1.}
 
-\item{n_cores}{the number of cores to use during parallel computation. Default is 2.}
-
-\item{K}{the number of MCMC iterations. Default is 10000.}
+\item{K}{the number of MCMC iterations. Default is 2000.}
 
 \item{burn_in}{the number of initial iterations to discard. Default is 1000.}
 
-\item{thin}{thinning value to apply to the final MCMC chain. Default is 5.}
+\item{thin}{thinning value to apply to the final MCMC chain. Default is 1.}
 }
 \value{
-A \code{list} of two \code{data.frame}: 'isoform_results' and 'normalized_isoform_results' (results normalized by gene).
+A \code{list} of two \code{data.frame}: 'isoform_results' and 'normalized_isoform_results' (relative abundances normalized
+within each gene, if `map_iso_gene` is provided).
 }
 \description{
-\code{inference} run latent variable Bayesian model taking as input the data created by \code{\link{load}}.
+\code{inference} run latent variable Bayesian model taking as input the data created by \code{\link{load_data}}.
 }
 \examples{
 # Load internal data to the package:
@@ -60,11 +54,14 @@ data_loaded = load_data(
 path_to_map_iso_gene = paste0(data_dir, "/map_iso_gene.csv")
 
 # Run the algorithm
+set.seed(169612)
 results = inference(data_loaded, prior = 0.1, map_iso_gene = path_to_map_iso_gene)
+# For more examples see the vignettes:
+#browseVignettes("SIMBA")
 
 }
 \seealso{
-\code{\link{load}}
+\code{\link{load_data}} and \code{\link{plot_relative_abundances}}
 }
 \author{
 Simone Tiberi \email{simone.tiberi@unibo.it} and Jordy Bollon \email{jordy.bollon@iit.it}

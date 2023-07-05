@@ -66,7 +66,7 @@ Here we are showing an example with chymotrypsin enzyme. If the data has been ge
 inside the following documentations
 ``` shell
 PeptideIndexer --help
-PeptideIndexer --help
+PercolatorAdapter --help
 ```
 and reset the global variables `ENZYME_indexer` and `ENZYME_percolator` with the correct enzyme.
 The pipeline also assume that in the `/path/to/mzIDfiles` folder there is a fasta file listing target and decoy protein isoforms.

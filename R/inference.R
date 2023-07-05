@@ -1,17 +1,17 @@
 #' Run latent variable Bayesian model
 #'
-#' \code{inference} run latent variable Bayesian model taking as input the data created by \code{\link{load}}.
+#' \code{inference} run latent variable Bayesian model taking as input the data created by \code{\link{load_data}}.
 #'
-#' @param loaded_data \code{list} of \code{data.frame} returned by \code{\link{load}}.
+#' @param loaded_data \code{list} of \code{data.frame} returned by \code{\link{load_data}}.
 #' @param map_iso_gene a character string indicating the path to a csv file with two fields: isoform and gene name. Required to return protein
-#' isoforms relative abundances normalized within a gene.
+#' isoforms relative abundances normalized within each gene and to plot results via \code{\link{plot_relative_abundances}}.
 #' @param n_cores the number of cores to use during algorithm execution. Default is 1.
 #' @param K the number of MCMC iterations. Default is 2000.
 #' @param burn_in the number of initial iterations to discard. Default is 1000.
 #' @param thin thinning value to apply to the final MCMC chain. Default is 1.
 #'
-#' @return A \code{list} of two \code{data.frame}: 'isoform_results' and 'normalized_isoform_results' (results normalized by gene,
-#' if `map_iso_gene` is provided).
+#' @return A \code{list} of two \code{data.frame}: 'isoform_results' and 'normalized_isoform_results' (relative abundances normalized
+#' within each gene, if `map_iso_gene` is provided).
 #'
 #' @examples
 #' # Load internal data to the package:
@@ -33,11 +33,14 @@
 #' path_to_map_iso_gene = paste0(data_dir, "/map_iso_gene.csv")
 #'
 #' # Run the algorithm
+#' set.seed(169612)
 #' results = inference(data_loaded, prior = 0.1, map_iso_gene = path_to_map_iso_gene)
+#' # For more examples see the vignettes:
+#' #browseVignettes("SIMBA")
 #'
 #' @author Simone Tiberi \email{simone.tiberi@unibo.it} and Jordy Bollon \email{jordy.bollon@iit.it}
 #'
-#' @seealso \code{\link{load}}
+#' @seealso \code{\link{load_data}} and \code{\link{plot_relative_abundances}}
 #'
 #' @export
 inference = function(loaded_data,

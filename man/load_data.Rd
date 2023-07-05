@@ -2,7 +2,7 @@
 % Please edit documentation in R/load.R
 \name{load_data}
 \alias{load_data}
-\title{Read and process all the input files required to run the latent variable Bayesin model}
+\title{Load and process input data}
 \usage{
 load_data(
   path_to_peptides_psm,
@@ -10,16 +10,16 @@ load_data(
   path_to_tpm = "",
   input_type = "metamorpheus",
   abundance_type = "psm",
-  PEP = FALSE,
-  FDR_thd = 0.01
+  PEP = TRUE,
+  FDR_thd = NULL
 )
 }
 \arguments{
-\item{path_to_peptides_psm}{a character string indicating the path to the psmtsv file from Metamorpheus tool,
-the idXML file from OpenMS toolkit or the tsv file with data coming from any bioinformatics tool. For more details on how to create these files
+\item{path_to_peptides_psm}{a character string indicating the path to the psmtsv file from *MetaMorpheus* tool,
+the idXML file from *OpenMS* toolkit or the tsv file with data coming from any bioinformatics tool. For more details on how to create these files
 see the vignettes.}
 
-\item{path_to_peptides_intensities}{a character string indicating the path to the psmtsv file from Metamorpheus with intensity values.
+\item{path_to_peptides_intensities}{a character string indicating the path to the psmtsv file from *MetaMorpheus* with intensity values.
 Required if 'abundance_type' equal to "intensities".}
 
 \item{path_to_tpm}{a character string indicating the path to a tsv file with mRNA isoform abundances.
@@ -31,7 +31,7 @@ with default "metamorpheus".}
 
 \item{abundance_type}{a character string indicating the type of input: "psm" or "intensities", with default "psm".}
 
-\item{PEP}{logical; if TRUE, the latent variable Bayesin model will take into account the Peptite Error Probability. Default is FALSE.}
+\item{PEP}{logical; if FALSE, the algorithm will not take into account the Peptite Error Probability. Default is TRUE.}
 
 \item{FDR_thd}{a numeric value indicating the False Discovery Rate threshold to be used to discard unreliable peptides.}
 }
@@ -40,25 +40,24 @@ A \code{list} with a peptide \code{data.frame}, a peptide \code{data.frame} with
 and a protein \code{data.frame}.
 }
 \description{
-\code{load_data} reads and processes input data (abundance of protein isoforms and mRNA isoform abundances).
+\code{load_data} reads and processes all the input files required to run the model.
 }
 \examples{
 # Load internal data to the package:
 data_dir = system.file("extdata", package = "SIMBA")
 
-# Define the path to the AllPeptides.psmtsv file returned by MetaMorpheus tool
+# Define the path to the AllPeptides.psmtsv file returned by *MetaMorpheus* tool
 path_to_peptides_psm = paste0(data_dir, "/AllPeptides.psmtsv")
 
 # Load the data
 data_loaded = load_data(path_to_peptides_psm = path_to_peptides_psm)
 
 # For more examples see the vignettes:
-browseVignettes("SIMBA")
+#browseVignettes("SIMBA")
 
 }
 \seealso{
-\link[https://github.com/smith-chem-wisc/MetaMorpheus]{Metamorpheus},
-\link[https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_documentation.html]{OpenMS toolkit}.
+\code{\link{inference}} and \code{\link{plot_relative_abundances}}.
 }
 \author{
 Simone Tiberi \email{simone.tiberi@unibo.it} and Jordy Bollon \email{jordy.bollon@iit.it}

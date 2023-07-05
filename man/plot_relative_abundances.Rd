@@ -18,13 +18,13 @@ plot_relative_abundances(
 
 \item{plot_CI}{logical; if TRUE (default), plot Credibility Intervals for each isoform.}
 
-\item{normalize_gene}{logical; if TRUE (default), plot normalized results.}
+\item{normalize_gene}{logical; if TRUE (default), plot isoforms relative abundances normalized within the specified gene.}
 }
 \value{
 A plot showing isoforms relative abundances for a specific gene.
 }
 \description{
-\code{plot_relative_abundances} plots isoforms results for a specific gene.
+\code{plot_relative_abundances} plots protein isoforms results for a specific gene together with transcripts abundances if available.
 }
 \examples{
 # Load internal data to the package:
@@ -46,14 +46,18 @@ data_loaded = load_data(
 path_to_map_iso_gene = paste0(data_dir, "/map_iso_gene.csv")
 
 # Run the algorithm
+set.seed(169612)
 results = inference(data_loaded, prior = 0.1, map_iso_gene = path_to_map_iso_gene)
 
 # Plotting results
 plot_relative_abundances(results, gene_id = "HLA")
 
+# For more examples see the vignettes:
+#browseVignettes("SIMBA")
+
 }
 \seealso{
-\code{\link{load}}, \code{\link{inference}}
+\code{\link{load_data}}, \code{\link{inference}}
 }
 \author{
 Simone Tiberi \email{simone.tiberi@unibo.it} and Jordy Bollon \email{jordy.bollon@iit.it}
