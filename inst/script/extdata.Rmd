@@ -7,17 +7,17 @@ output: html_document
 `AllPeptides.psmtsv` file collects for each identified peptide the following information:
 
 * 'Base Sequence': a character string indicating the peptide name/id/amino acids sequence;
-* 'Decoy/Contaminant/Target': a character string indicating if the peptide is a decoy, contaminant or, or target;
-* 'PSM Count (unambiguous, <0.01 q-value)': a numeric variable indicating how many times the peptide has been identified (peptide abundance);
+* 'Decoy/Contaminant/Target': a character string indicating if the peptide is a decoy, contaminant or, target;
+* 'PSM Count (unambiguous, <0.01 q-value)': a numeric variable indicating how many times the peptide was identified (peptide abundance);
 * 'Protein Accession': a character string indicating the isoform(s) name the peptide maps to;
 * 'QValue': a numeric variable indicating the false discovery rate associated to the peptide;
 * 'PEP': a numeric variable indicating the Peptide Error Probability.
 
 `AllQuantifiedPeptides.tsv` lists for each identified peptide the base sequence and several peptide intensities.
 
-Below is the script used to create `AllPeptides.psmtsv` and `AllQuantifiedPeptides.tsv`, both available inside SIMBA package.
-[Codice MM]
+Below we report the script used to create `AllPeptides.psmtsv` and `AllQuantifiedPeptides.tsv`, both available inside SIMBA package.
 
+[Codice MetaMorpheus]
 ```{r, eval=FALSE}
 data_path = "/path/to/AllPeptides.psmtsv"
 df = as.data.frame(data.table::fread(data_path))
@@ -39,9 +39,8 @@ df = df[, c("Base Sequence", colnames(df)[sel_intensities])]
 data.table::fwrite(df, "AllQuantifiedPeptides.tsv", sep = "\t")
 ```
 
-# Code to get jurkat_isoform_kallisto.tsv
-[code kallisto?]
-
+# mRNA data integration: jurkat_isoform_kallisto.tsv
+To reduce the size of jurkat_isoform_kallisto.tsv, we take only those isoforms that are present in the peptide dataset.
 ```{r, eval=FALSE}
 data_path = "/path/to/AllPeptides.psmtsv"
 tpm_path = "/path/to/tpm.tsv"
@@ -55,8 +54,7 @@ tpm = merge(tpm, as.data.frame(iso_names_prot), by.x = "isoname", by.y = "iso_na
 data.table::fwrite(tpm, "jurkat_isoform_kallisto.tsv", sep = "\t")
 ```
 
-# Code to create map_iso_gene.csv
-
+# Mapping protein isofors to gene: map_iso_gene.csv
 ```{r, eval=FALSE}
 library(SIMBA)
 data_dir = system.file("extdata", package = "SIMBA")

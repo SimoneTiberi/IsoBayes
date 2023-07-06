@@ -35,22 +35,10 @@ List MCMC_Unique(Rcpp::NumericVector const& Y_unique,
   pi.fill(1);
   
   for (k=0 ; k<K ; k++) {
-    // sample Y|pi
-    // .copy or .clone
-
-    // Dirichlter sampling, pi|Y, delta
-    dir_sample_sum = 0.0;
-    
+    // Dirichlet sampling, pi|Y, delta    
     for (i=0 ; i < N; i++) {
       alpha = Y_unique[i] + delta_prior[i];
       pi[i] = as<double>(Rcpp::rgamma(1, alpha, 1));
-      // test:
-      // pi[i] = R::rgamma( alpha, 1);
-      dir_sample_sum += pi[i];
-    }
-    
-    for (i=0 ; i < N; i++) {
-      pi[i] /= dir_sample_sum;
     }
     
     // store 1 value every "thin" iterations:

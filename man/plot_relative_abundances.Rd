@@ -47,7 +47,7 @@ path_to_map_iso_gene = paste0(data_dir, "/map_iso_gene.csv")
 
 # Run the algorithm
 set.seed(169612)
-results = inference(data_loaded, prior = 0.1, map_iso_gene = path_to_map_iso_gene)
+results = inference(data_loaded, map_iso_gene = path_to_map_iso_gene)
 
 # Plotting results
 plot_relative_abundances(results, gene_id = "HLA")

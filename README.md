@@ -19,7 +19,7 @@ We further identify isoforms where the relative abundance of proteins and transc
 We use a two-layer latent variable approach to model two sources of uncertainty typical of MS data:
 i) peptides may be erroneously detected (even when absent);
 ii) many peptides are compatible with multiple protein isoforms.
-In the first layer, we sample the presence/absence of each peptide based on its estimated probability 
+In the first layer, we sample the presence/absence of each peptide based on its estimated probability
 of being mistakenly detected, also known as PEP.
 In the second layer, for peptides that were estimated as being present, 
 we allocate their abundance across the protein isoforms they map to.
@@ -34,8 +34,7 @@ BiocManager::install("SIMBA")
 ```
 
 ## Vignette
-The vignette illustrating how to use the package can be accessed on 
-[Bioconductor](https://bioconductor.org/packages/SIMBA)
+The vignette illustrating how to use the package can be accessed on [Bioconductor](https://bioconductor.org/packages/SIMBA)
 or from R via:
 ``` r
 vignette("SIMBA")
@@ -46,7 +45,7 @@ browseVignettes("SIMBA")
 ```
 
 ## Percolator compatibility
-SIMBA is compatible with the output returned by *Percolator* tool [@Percolator] provided within the *OpenMS* Toolkit [@OpenMS].
+SIMBA is compatible with the output returned by *Percolator* tool provided within the *OpenMS* Toolkit.
 Here, we provide a brief pipeline where several *OpenMS* applications are chained together to generate an idXML file required to run SIMBA with *Percolator* output. The pipeline starts from peptide identification results stored in mzID files.
 
 First, install *OpenMS* toolkit and *Percolator* tool. For instructions on how to install them on your operating system see [OpenMS Installation](https://openms.readthedocs.io/en/latest/openms-applications-and-tools/installation.html) and [Percolator Installation](https://github.com/percolator/percolator).
@@ -62,17 +61,16 @@ DECOY_STRING="mz|DECOY_"
 fdr=0.01
 ```
 
-Here we are showing an example with chymotrypsin enzyme. If the data has been generated with another enzyme, please search the corresponding one
+We are showing an example with chymotrypsin enzyme. If the data was generated with another enzyme, please search the corresponding one
 inside the following documentations
 ``` shell
 PeptideIndexer --help
 PercolatorAdapter --help
 ```
 and reset the global variables `ENZYME_indexer` and `ENZYME_percolator` with the correct enzyme.
-The pipeline also assume that in the `/path/to/mzIDfiles` folder there is a fasta file listing target and decoy protein isoforms.
+This pipeline also assume that in the `/path/to/mzIDfiles` folder there is a fasta file listing target and decoy protein isoforms.
 The `DECOY_STRING` allow you to change the string needed to identify a decoy in the fasta file.
 
-Now, the next pipeline will create the final idXML suitable for SIMBA.
 ``` shell
 cd $path_out
 
@@ -106,3 +104,7 @@ rm $path_out/merge_index_percolator_pep_$fdr.idXML
 For more details on *OpenMS* tools see its [Documentation](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_documentation.html).
 
 # References
+
+"OpenMS: a flexible open-source software platform for mass spectrometry data analysis" (2016), R{\"o}st, Hannes L and Sachsenberg, Timo and Aiche, Stephan and Bielow, Chris and Weisser, Hendrik and Aicheler, Fabian and Andreotti, Sandro and Ehrlich, Hans-Christian and Gutenbrunner, Petra and Kenar, Erhan and others, *Nature methods*.
+
+"Fast and accurate protein false discovery rates on large-scale proteomics data sets with percolator 3.0" (2016), The, Matthew and MacCoss, Michael J and Noble, William S and K{\"a}ll, Lukas, *Journal of the American Society for Mass Spectrometry*.

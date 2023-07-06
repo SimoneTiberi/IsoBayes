@@ -34,7 +34,7 @@
 #'
 #' # Run the algorithm
 #' set.seed(169612)
-#' results = inference(data_loaded, prior = 0.1, map_iso_gene = path_to_map_iso_gene)
+#' results = inference(data_loaded, map_iso_gene = path_to_map_iso_gene)
 #' # For more examples see the vignettes:
 #' #browseVignettes("SIMBA")
 #'
@@ -49,7 +49,7 @@ inference = function(loaded_data,
                      K = 2000,
                      burn_in = 1000,
                      thin = 1) {
-  browser()
+
   input_check_inference(loaded_data, map_iso_gene, n_cores, K, burn_in, thin)
 
   if (is.null(loaded_data$PROTEIN_DF$TPM)) {
@@ -71,9 +71,8 @@ inference = function(loaded_data,
   }
 
   if (args_MCMC$params$n_cores > 1) {
-    old_order = unlist(lapply(results_MCMC$groups, function(x) {
-      x$proteins
-    }))
+    old_order = unlist(lapply(results_MCMC$groups, function(x) {x$proteins})
+                       )
     old_order = c(old_order, results_MCMC$one_pept_one_prot)
     old_order = sort(old_order, index.return = T)$ix
     results_MCMC$PI = results_MCMC$PI[, old_order]

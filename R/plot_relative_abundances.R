@@ -30,7 +30,7 @@
 #'
 #' # Run the algorithm
 #' set.seed(169612)
-#' results = inference(data_loaded, prior = 0.1, map_iso_gene = path_to_map_iso_gene)
+#' results = inference(data_loaded, map_iso_gene = path_to_map_iso_gene)
 #'
 #' # Plotting results
 #' plot_relative_abundances(results, gene_id = "HLA")
@@ -64,7 +64,7 @@ plot_relative_abundances = function(res_inference,
     CI = df_sub[, c("Pi_CI_LB", "Pi_CI_UB")]
     prop_transc = df_sub$TPM / sum(res_inference$isoform_results$TPM)
   }
-  # impose an order to the isoforms (according to the over-all relative abudance)
+  # impose an order to the isoforms (according to the overall relative abudances)
   ord = order(rel_abundances, decreasing = TRUE)
 
   prop_samp = data.frame(feature_id = factor(res_inference$isoform_results$Isoform[sel],
