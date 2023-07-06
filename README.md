@@ -1,7 +1,3 @@
----
-bibliography: References.bib
----
-
 # SIMBA: Single Isoform protein inference Method via Bayesian Analyses
 
 <img src="inst/extdata/SIMBA.png" width="200" align="right"/> 
@@ -105,6 +101,6 @@ For more details on *OpenMS* tools see its [Documentation](https://abibuilder.cs
 
 # References
 
-"OpenMS: a flexible open-source software platform for mass spectrometry data analysis" (2016), R{\"o}st, Hannes L and Sachsenberg, Timo and Aiche, Stephan and Bielow, Chris and Weisser, Hendrik and Aicheler, Fabian and Andreotti, Sandro and Ehrlich, Hans-Christian and Gutenbrunner, Petra and Kenar, Erhan and others, *Nature methods*.
+Röst, H. L., Sachsenberg, T., Aiche, S., Bielow, C., Weisser, H., Aicheler, F., ... & Kohlbacher, O. (2016). OpenMS: a flexible open-source software platform for mass spectrometry data analysis. *Nature methods*, 13(9), 741-748.
 
-"Fast and accurate protein false discovery rates on large-scale proteomics data sets with percolator 3.0" (2016), The, Matthew and MacCoss, Michael J and Noble, William S and K{\"a}ll, Lukas, *Journal of the American Society for Mass Spectrometry*.
+The, M., MacCoss, M. J., Noble, W. S., & Käll, L. (2016). Fast and accurate protein false discovery rates on large-scale proteomics data sets with percolator 3.0. *Journal of the American Society for Mass Spectrometry*, 27, 1719-1727.
