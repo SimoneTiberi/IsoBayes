@@ -2,11 +2,11 @@
 % Please edit documentation in R/inference.R
 \name{inference}
 \alias{inference}
-\title{Run latent variable Bayesian model}
+\title{Run our two-layer latent variable Bayesian model}
 \usage{
 inference(
   loaded_data,
-  map_iso_gene = "",
+  map_iso_gene = NULL,
   n_cores = 1,
   K = 2000,
   burn_in = 1000,
@@ -14,25 +14,30 @@ inference(
 )
 }
 \arguments{
-\item{loaded_data}{\code{list} of \code{data.frame} returned by \code{\link{load_data}}.}
+\item{loaded_data}{\code{list} of \code{data.frame} objects, returned by \code{\link{load_data}}.}
 
-\item{map_iso_gene}{a character string indicating the path to a csv file with two fields: isoform and gene name. Required to return protein
-isoforms relative abundances normalized within each gene and to plot results via \code{\link{plot_relative_abundances}}.}
+\item{map_iso_gene}{(optional) a character string indicating the path to a csv file with two columns:
+the 1st one containing the isoform id, and the 2nd one with the gene name.
+This argument is required to return protein isoform relative abundances, normalized within each gene 
+(i.e., adding to 1 within a gene), and to plot results via \code{\link{plot_relative_abundances}}.}
 
-\item{n_cores}{the number of cores to use during algorithm execution. Default is 1.}
+\item{n_cores}{the number of cores to use during algorithm execution.
+We suggest increasing the number of threads for large datasets only.}
 
-\item{K}{the number of MCMC iterations. Default is 2000.}
+\item{K}{the number of MCMC iterations. Minimum 2000.}
 
-\item{burn_in}{the number of initial iterations to discard. Default is 1000.}
+\item{burn_in}{the number of initial iterations to discard. Minimum 1000.}
 
-\item{thin}{thinning value to apply to the final MCMC chain. Default is 1.}
+\item{thin}{thinning value to apply to the final MCMC chain.
+Useful for decreasing the memory (RAM) usage.}
 }
 \value{
-A \code{list} of two \code{data.frame}: 'isoform_results' and 'normalized_isoform_results' (relative abundances normalized
-within each gene, if `map_iso_gene` is provided).
+A \code{list} of two \code{data.frame} objects: 'isoform_results', 
+and (only if `map_iso_gene` is provided) 'normalized_isoform_results' 
+(relative abundances normalized within each gene).
 }
 \description{
-\code{inference} run latent variable Bayesian model taking as input the data created by \code{\link{load_data}}.
+\code{inference} runs our two-layer latent variable Bayesian model, taking as input the data created by \code{\link{load_data}}.
 }
 \examples{
 # Load internal data to the package:
@@ -75,5 +80,5 @@ head(results$normalized_isoform_results)
 \code{\link{load_data}} and \code{\link{plot_relative_abundances}}
 }
 \author{
-Simone Tiberi \email{simone.tiberi@unibo.it} and Jordy Bollon \email{jordy.bollon@iit.it}
+Jordy Bollon \email{jordy.bollon@iit.it} and Simone Tiberi \email{simone.tiberi@unibo.it}
 }

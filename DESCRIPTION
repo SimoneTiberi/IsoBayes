@@ -5,7 +5,7 @@ Version: 0.99.0
 Description: SIMBA is a Bayesian method to perform inference on single protein isoforms.
   Our approach infers the presence/absence of protein isoforms, and also estimates their abundance;
   additionally, it provides a measure of the uncertainty of these estimates, via:
-  i) the posterior probability the a protein isoform is present in the sample;
+  i) the posterior probability that a protein isoform is present in the sample;
   ii) a posterior credible interval of its abundance.
   SIMBA inputs liquid cromatography mass spectrometry (MS) data,
   and can work with both PSM counts, and intensities.
@@ -16,7 +16,7 @@ Description: SIMBA is a Bayesian method to perform inference on single protein i
   i) peptides may be erroneously detected (even when absent);
   ii) many peptides are compatible with multiple protein isoforms.
   In the first layer, we sample the presence/absence of each peptide based on its estimated probability 
-  of being mistakenly detected, also known as PEP.
+  of being mistakenly detected, also known as PEP (i.e., posterior error probability).
   In the second layer, for peptides that were estimated as being present, 
   we allocate their abundance across the protein isoforms they map to.
   These two steps allow us to recover the presence and abundance of each protein isoform.

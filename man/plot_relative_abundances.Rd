@@ -12,19 +12,21 @@ plot_relative_abundances(
 )
 }
 \arguments{
-\item{res_inference}{\code{list} of \code{data.frame} returned by \code{\link{inference}}.}
+\item{res_inference}{\code{list} of two \code{data.frame} objects returned by \code{\link{inference}}.}
 
-\item{gene_id}{a character string indicating the gene to be plot.}
+\item{gene_id}{a character string indicating the gene to be plotted.}
 
-\item{plot_CI}{logical; if TRUE (default), plot Credibility Intervals for each isoform.}
+\item{plot_CI}{logical; if TRUE (default), plot 0.95 level Credibility Intervals for each isoform.}
 
-\item{normalize_gene}{logical; if TRUE (default), plot isoforms relative abundances normalized within the specified gene.}
+\item{normalize_gene}{logical; if TRUE (default), plot isoform relative abundances, 
+normalized within the specified gene (they add to 1 within a gene).}
 }
 \value{
-A plot showing isoforms relative abundances for a specific gene.
+A \code{ggplot} object, showing isoform relative abundances for a specific gene.
 }
 \description{
-\code{plot_relative_abundances} plots protein isoforms results for a specific gene together with transcripts abundances if available.
+\code{plot_relative_abundances} plots protein isoforms results, obtained by \code{\link{inference}},
+for a specific gene, together with transcripts abundances if available.
 }
 \examples{
 # Load internal data to the package:
@@ -76,5 +78,5 @@ plot_relative_abundances(results, gene_id = "TUBB",
 \code{\link{load_data}}, \code{\link{inference}}
 }
 \author{
-Simone Tiberi \email{simone.tiberi@unibo.it} and Jordy Bollon \email{jordy.bollon@iit.it}
+Jordy Bollon \email{jordy.bollon@iit.it} and Simone Tiberi \email{simone.tiberi@unibo.it}
 }

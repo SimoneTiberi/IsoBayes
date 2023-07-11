@@ -5,9 +5,9 @@
 `SIMBA` is a Bayesian method to perform inference on single protein isoforms.
 Our approach infers the presence/absence of protein isoforms, and also estimates their abundance;
 additionally, it provides a measure of the uncertainty of these estimates, via:
-i) the posterior probability the a protein isoform is present in the sample;
+i) the posterior probability that a protein isoform is present in the sample;
 ii) a posterior credible interval of its abundance.
-SIMBA inputs liquid cromatography mass spectrometry (MS) data,
+`SIMBA` inputs liquid cromatography mass spectrometry (MS) data,
 and can work with both PSM counts, and intensities.
 When available, trascript isoform abundances (i.e., TPMs) are also incorporated:
 TPMs are used to formulate an informative prior for the respective protein isoform relative abundance.
@@ -15,8 +15,8 @@ We further identify isoforms where the relative abundance of proteins and transc
 We use a two-layer latent variable approach to model two sources of uncertainty typical of MS data:
 i) peptides may be erroneously detected (even when absent);
 ii) many peptides are compatible with multiple protein isoforms.
-In the first layer, we sample the presence/absence of each peptide based on its estimated probability
-of being mistakenly detected, also known as PEP.
+In the first layer, we sample the presence/absence of each peptide based on its estimated probability 
+of being mistakenly detected, also known as PEP (i.e., posterior error probability).
 In the second layer, for peptides that were estimated as being present, 
 we allocate their abundance across the protein isoforms they map to.
 These two steps allow us to recover the presence and abundance of each protein isoform.
@@ -40,11 +40,18 @@ or
 browseVignettes("SIMBA")
 ```
 
-## Percolator compatibility
-SIMBA is compatible with the output returned by *Percolator* tool provided within the *OpenMS* Toolkit.
-Here, we provide a brief pipeline where several *OpenMS* applications are chained together to generate an idXML file required to run SIMBA with *Percolator* output. The pipeline starts from peptide identification results stored in mzID files.
+## Input data
+*SIMBA* works with the output of both *MetaMorpheus* (MM), or *Percolator* (via the *OpenMS* toolkit).
+Other tools can be used as well to generate out input data, as long as the input files follow the structure mentioned in the "Input user-provided data" Section of the vignettes.
+In our benchmarks, we tested our model using both *MetaMorpheus* and *Percolator* data, and obtained slightly better results, and a shorter runtime with *MetaMorpheus*.
 
-First, install *OpenMS* toolkit and *Percolator* tool. For instructions on how to install them on your operating system see [OpenMS Installation](https://openms.readthedocs.io/en/latest/openms-applications-and-tools/installation.html) and [Percolator Installation](https://github.com/percolator/percolator).
+### Percolator pipeline
+SIMBA is compatible with the output returned by *Percolator* tool, provided within the *OpenMS* Toolkit.
+Here, we provide a brief pipeline where several *OpenMS* applications are chained together to generate an idXML file required to run SIMBA with *Percolator* output.
+The pipeline starts from peptide identification results stored in mzID files.
+
+First, install *OpenMS* toolkit and *Percolator* tool.
+For instructions on how to install them on your operating system see [OpenMS Installation](https://openms.readthedocs.io/en/latest/openms-applications-and-tools/installation.html) and [Percolator Installation](https://github.com/percolator/percolator).
 
 Next, declare some useful global variable:
 ``` shell
@@ -57,20 +64,20 @@ DECOY_STRING="mz|DECOY_"
 fdr=0.01
 ```
 
-We are showing an example with chymotrypsin enzyme. If the data was generated with another enzyme, please search the corresponding one
-inside the following documentations
+Below, we show an example with chymotrypsin enzyme.
+If the data was generated with another enzyme, please search for the corresponding enzyme in the following documentation below, and reset the global variables `ENZYME_indexer` and `ENZYME_percolator` with the correct enzyme.
 ``` shell
 PeptideIndexer --help
 PercolatorAdapter --help
 ```
-and reset the global variables `ENZYME_indexer` and `ENZYME_percolator` with the correct enzyme.
-This pipeline also assume that in the `/path/to/mzIDfiles` folder there is a fasta file listing target and decoy protein isoforms.
-The `DECOY_STRING` allow you to change the string needed to identify a decoy in the fasta file.
+
+This pipeline also assumes that in the `/path/to/mzIDfiles` folder there is a fasta file listing target and decoy protein isoforms.
+The `DECOY_STRING` allows you to change the string needed to identify a decoy in the fasta file.
 
 ``` shell
 cd $path_out
 
-# convert mzID file into idXML files
+# convert mzID files into idXML files
 for mz in $path_to_data/*.mzID
 do
         IDFileConverter -in $mz -threads $NTHREADS -out $mz.idXML

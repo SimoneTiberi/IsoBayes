@@ -1,13 +1,15 @@
 #' Plot isoform results
 #'
-#' \code{plot_relative_abundances} plots protein isoforms results for a specific gene together with transcripts abundances if available.
+#' \code{plot_relative_abundances} plots protein isoforms results, obtained by \code{\link{inference}},
+#' for a specific gene, together with transcripts abundances if available.
 #'
-#' @param res_inference \code{list} of \code{data.frame} returned by \code{\link{inference}}.
-#' @param gene_id a character string indicating the gene to be plot.
-#' @param plot_CI logical; if TRUE (default), plot Credibility Intervals for each isoform.
-#' @param normalize_gene logical; if TRUE (default), plot isoforms relative abundances normalized within the specified gene.
+#' @param res_inference \code{list} of two \code{data.frame} objects returned by \code{\link{inference}}.
+#' @param gene_id a character string indicating the gene to be plotted.
+#' @param plot_CI logical; if TRUE (default), plot 0.95 level Credibility Intervals for each isoform.
+#' @param normalize_gene logical; if TRUE (default), plot isoform relative abundances, 
+#' normalized within the specified gene (they add to 1 within a gene).
 #'
-#' @return A plot showing isoforms relative abundances for a specific gene.
+#' @return A \code{ggplot} object, showing isoform relative abundances for a specific gene.
 #'
 #' @examples
 #' # Load internal data to the package:
@@ -54,7 +56,7 @@
 #' # For more examples see the vignettes:
 #' #browseVignettes("SIMBA")
 #'
-#' @author Simone Tiberi \email{simone.tiberi@unibo.it} and Jordy Bollon \email{jordy.bollon@iit.it}
+#' @author Jordy Bollon \email{jordy.bollon@iit.it} and Simone Tiberi \email{simone.tiberi@unibo.it}
 #'
 #' @seealso \code{\link{load_data}}, \code{\link{inference}}
 #'
