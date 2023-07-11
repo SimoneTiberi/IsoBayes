@@ -1,5 +1,5 @@
 get_list_pept_prot = function(pept_unique_df, groups, N_peptides_per_protein, pp, params){
-  pept_unique_not_in_prot = !(pept_unique_df$EC_numeric %in% unique(unlist(sapply(groups, function(x){x$proteins}))))
+  pept_unique_not_in_prot = !(pept_unique_df$EC_numeric %in% unique(unlist(lapply(groups, function(x){x$proteins}))))
   pept_prot = unique(pept_unique_df[pept_unique_not_in_prot,]$EC_numeric)
   pept_prot_df = pept_unique_df[pept_unique_not_in_prot,]
   
