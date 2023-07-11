@@ -1,7 +1,7 @@
 aggregate_components = function(components, ncores) {
   nc = length(components)
-  for (i in 1:ncores) {
-    for (j in 1:floor(nc / ncores)) {
+  for (i in seq_len(ncores)) {
+    for (j in seq_len(floor(nc / ncores))){
       if (i < length(components)) {
         a = lapply(components[[i + 1]]$EC_numeric, function(x) {
           x + components[[i]]$N

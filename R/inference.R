@@ -26,8 +26,7 @@
 #' # Load the data
 #' data_loaded = load_data(
 #'   path_to_peptides_psm = path_to_peptides_psm,
-#'   path_to_tpm = tpm_path
-#' )
+#'   path_to_tpm = tpm_path)
 #'
 #' # Define the path to the map_iso_gene.csv file
 #' path_to_map_iso_gene = paste0(data_dir, "/map_iso_gene.csv")
@@ -35,6 +34,18 @@
 #' # Run the algorithm
 #' set.seed(169612)
 #' results = inference(data_loaded, map_iso_gene = path_to_map_iso_gene)
+#' 
+#' # results is a list of 2 data.frames:
+#' names(results)
+#' 
+#' # main results:
+#' head(results$isoform_results)
+#' 
+#' # results normalized within genes
+#' # (relative abunances add to 1 within each gene):
+#' # useful to study alternative splicing within genes:
+#' head(results$normalized_isoform_results)
+#' 
 #' # For more examples see the vignettes:
 #' #browseVignettes("SIMBA")
 #'
@@ -74,7 +85,7 @@ inference = function(loaded_data,
     old_order = unlist(lapply(results_MCMC$groups, function(x) {x$proteins})
                        )
     old_order = c(old_order, results_MCMC$one_pept_one_prot)
-    old_order = sort(old_order, index.return = T)$ix
+    old_order = sort(old_order, index.return = TRUE)$ix
     results_MCMC$PI = results_MCMC$PI[, old_order]
     results_MCMC$isoform_results = results_MCMC$isoform_results[old_order, ]
   }

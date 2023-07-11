@@ -47,8 +47,7 @@ tpm_path = paste0(data_dir, "/jurkat_isoform_kallisto.tsv")
 # Load the data
 data_loaded = load_data(
   path_to_peptides_psm = path_to_peptides_psm,
-  path_to_tpm = tpm_path
-)
+  path_to_tpm = tpm_path)
 
 # Define the path to the map_iso_gene.csv file
 path_to_map_iso_gene = paste0(data_dir, "/map_iso_gene.csv")
@@ -56,6 +55,18 @@ path_to_map_iso_gene = paste0(data_dir, "/map_iso_gene.csv")
 # Run the algorithm
 set.seed(169612)
 results = inference(data_loaded, map_iso_gene = path_to_map_iso_gene)
+
+# results is a list of 2 data.frames:
+names(results)
+
+# main results:
+head(results$isoform_results)
+
+# results normalized within genes
+# (relative abunances add to 1 within each gene):
+# useful to study alternative splicing within genes:
+head(results$normalized_isoform_results)
+
 # For more examples see the vignettes:
 #browseVignettes("SIMBA")
 

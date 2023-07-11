@@ -10,8 +10,8 @@ set_MCMC_args = function(pept_df, pept_unique_df, prot_df, PEP, prior) {
     arguments$pept_unique_df$EC_numeric = unlist(arguments$pept_unique_df$EC_numeric)
     arguments$pept_unique_df$Y = as.integer(arguments$pept_unique_df$Y)
 
-    if (any(class(arguments$pept_unique_df$EC_numeric) != "integer", class(arguments$pept_unique_df$Y) != "integer")) {
-      stop("Error: classes types don't respect C++ classes")
+    if (any(!is.integer(arguments$pept_unique_df$EC_numeric), !is.integer(arguments$pept_unique_df$Y))) {
+      stop("classes types don't respect C++ classes")
     }
   } else {
     arguments$prot_df = prot_df
@@ -19,8 +19,8 @@ set_MCMC_args = function(pept_df, pept_unique_df, prot_df, PEP, prior) {
   }
   arguments$pept_df$Y = as.numeric(arguments$pept_df$Y)
 
-  if (any(class(arguments$pept_df$EC_numeric) != "list", class(arguments$pept_df$Y) != "numeric", class(arguments$prot_df$Y_unique) != "numeric")) {
-    stop("Error: classes types don't respect C++ classes")
+  if (any(!is.list(arguments$pept_df$EC_numeric), !is.numeric(arguments$pept_df$Y), !is.numeric(arguments$prot_df$Y_unique))) {
+    stop("classes types don't respect C++ classes")
   }
 
   arguments$N = nrow(arguments$prot_df) # number of proteins

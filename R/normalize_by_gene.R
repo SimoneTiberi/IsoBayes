@@ -5,7 +5,7 @@ normalize_by_gene = function(results_MCMC, tpm){
   
   id_genes = lapply(list_unique_gene, function(x){which(x == id_genes)})
   norm_gene = lapply(id_genes, function(x){matrix(apply(as.matrix(results_MCMC$PI[, x]), 1, function(y){y/sum(y)}),
-                                                  nrow = nrow(results_MCMC$PI), byrow = T)})
+                                                  nrow = nrow(results_MCMC$PI), byrow = TRUE)})
   norm_gene = do.call("cbind", norm_gene)
   chain = norm_gene[, order(unlist(id_genes))]
   

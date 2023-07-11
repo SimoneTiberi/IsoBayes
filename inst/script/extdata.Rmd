@@ -17,7 +17,6 @@ output: html_document
 
 Below we report the script used to create `AllPeptides.psmtsv` and `AllQuantifiedPeptides.tsv`, both available inside SIMBA package.
 
-[Codice MetaMorpheus]
 ```{r, eval=FALSE}
 data_path = "/path/to/AllPeptides.psmtsv"
 df = as.data.frame(data.table::fread(data_path))

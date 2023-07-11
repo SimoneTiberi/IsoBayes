@@ -22,12 +22,12 @@ get_peptides_from_idXML = function(file, pep){
     list_id_pep = lapply(unique(temp_PEPTIDES$sequence), function(x){
       id = which(temp_PEPTIDES$sequence == x)
       pep_values = temp_PEPTIDES[id, "PEP"]
-      keep = rep(T, length(pep_values))
+      keep = rep(TRUE, length(pep_values))
       
       while (any(keep)) {
         equal = abs(pep_values[keep][1] - pep_values[keep]) < 0.01
         pep_values[keep][equal] = median(pep_values[keep][equal])
-        keep[keep][equal] = F
+        keep[keep][equal] = FALSE
       }
       list(id, pep_values)
     })

@@ -1,8 +1,8 @@
 get_components = function(EC_numeric) {
-  graph = lapply(1:length(EC_numeric), function(i) {
+  graph = lapply(seq_len(length(EC_numeric)), function(i) {
     x = EC_numeric[[i]]
     out = rbind()
-    for (ii in 1:length(x)) {
+    for (ii in seq_len(length(x))) {
       out = rbind(out, c(i, x[ii]))
     }
     out

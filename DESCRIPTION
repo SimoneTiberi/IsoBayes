@@ -20,19 +20,20 @@ Description: SIMBA is a Bayesian method to perform inference on single protein i
   In the second layer, for peptides that were estimated as being present, 
   we allocate their abundance across the protein isoforms they map to.
   These two steps allow us to recover the presence and abundance of each protein isoform.
-Authors@R: c(person(given = "Simone",
-           family = "Tiberi",
-           role = c("aut", "cre"),
-           email = "simone.tiberi@unibo.ch",
-           comment = c(ORCID = "0000-0002-3054-9964")),
-           person(given = "Jordy",
-           family = "Bollon",
-           role = c("aut", "cte"),
-           email = "jordy.bollon@iit.it"))
-biocViews: StatisticalMethod, Bayesian, Proteomics, MassSpectrometry, Transcriptomics, Sequencing
+Authors@R: c(person(given = "Jordy",
+  family = "Bollon",
+  role = c("aut"),
+  email = "jordy.bollon@iit.it"),
+  person(given = "Simone",
+  family = "Tiberi",
+  role = c("aut", "cre"),
+  email = "simone.tiberi@unibo.ch",
+  comment = c(ORCID = "0000-0002-3054-9964")))
+biocViews: StatisticalMethod, Bayesian, Proteomics, MassSpectrometry,
+  Sequencing, RNASeq, GeneExpression, Genetics, Visualization, Software
 License: GPL-3
 Depends: R (>= 4.3.0)
-Imports: methods, Rcpp, Biostrings, data.table, glue, xml2, DescTools, stats, doParallel, doRNG, foreach, iterators, ggplot2
+Imports: methods, Rcpp, Biostrings, data.table, glue, xml2, DescTools, stats, doParallel, parallel, doRNG, foreach, iterators, ggplot2
 LinkingTo: Rcpp, RcppArmadillo
 Suggests: knitr, rmarkdown, testthat, BiocStyle
 SystemRequirements: C++11

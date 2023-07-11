@@ -25,7 +25,7 @@ parallel_MCMC = function(pep_df, prot_df, protein_length, pp, N, params){
                                      length(one_pept_one_prot_Y), params$K,
                                      params$burn_in, params$thin
                                      )
-  isoform_results_unique = stat_from_MCMC_Y(matrix(rep(one_pept_one_prot_Y, params$K), params$K, byrow = T)
+  isoform_results_unique = stat_from_MCMC_Y(matrix(rep(one_pept_one_prot_Y, params$K), params$K, byrow = TRUE)
                                             )
   res = list(PI = do.call("cbind", lapply(res, function(x){x[[2]]})),
              isoform_results = do.call("rbind", lapply(res, function(x){x[[1]]})),

@@ -1,14 +1,14 @@
 ---
 title: "SIMBA: name"
 author:
-- name: Simone Tiberi
-  affiliation:
-  - Department of Statistical Sciences, University of Bologna, Bologna, Italy
-  email: simone.tiberi@unibo.it
 - name: Jordy Bollon
   affiliation: 
   - Research Center dedicated to Personalized, Preventive and Predictive Medicine (CMP3VDA), Computational Department, Aosta, Italy
   email: jordy.bollon@iit.it
+- name: Simone Tiberi
+  affiliation:
+  - Department of Statistical Sciences, University of Bologna, Bologna, Italy
+  email: simone.tiberi@unibo.it
 package: "`r BiocStyle::pkg_ver('SIMBA')`"
 date: "`r format(Sys.Date(), '%m/%d/%Y')`"
 bibliography: References.bib
@@ -176,7 +176,7 @@ plot_relative_abundances(results_normalized, gene_id = "TUBB")
 By default `plot_relative_abundances` normalizes the relative abundances. To disable the normalization, we just need to set as `FALSE` the
 `normalize_gene` argument.
 ```{r plotting results no normalization}
-plot_relative_abundances(results_normalized, gene_id = "TUBB", normalize_gene = F)
+plot_relative_abundances(results_normalized, gene_id = "TUBB", normalize_gene = FALSE)
 ```
 
 Please note that `plot_relative_abundances` properly works because, before running the `inference` function, we provided a csv file that maps all the protein isoforms to the corresponding gene.

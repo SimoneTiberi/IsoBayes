@@ -30,7 +30,7 @@ List MCMC_Unique(Rcpp::NumericVector const& Y_unique,
 
   unsigned int k, i;
   
-  double dir_sample_sum, alpha;
+  double alpha;
   
   pi.fill(1);
   
