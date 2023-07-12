@@ -1,6 +1,6 @@
 # SIMBA: Single Isoform protein inference Method via Bayesian Analyses
 
-<img src="inst/extdata/SIMBA.png" width="200" align="right"/> 
+<img src="inst/extdata/IsoBayes.png" width="200" align="right"/> 
 
 `SIMBA` is a Bayesian method to perform inference on single protein isoforms.
 Our approach infers the presence/absence of protein isoforms, and also estimates their abundance;
