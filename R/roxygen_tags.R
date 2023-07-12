@@ -31,4 +31,5 @@
 #' @importFrom stats median
 #' @importFrom stats na.omit
 #' @importFrom stats quantile
+#' @importFrom HDInterval hdi
 NULL
