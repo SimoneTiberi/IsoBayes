@@ -6,13 +6,12 @@ stat_from_MCMC_Y = function(chains){
   post_mean = colMeans(chains)
   
   # 0.95 CI for protein abundance:
-  CI = apply(chains, 2, quantile, probs = c(0.025, 0.975))
-  CI = matrix(CI, ncol = 2, byrow = TRUE)
+  CI = hdi(chains, credMass = 0.95)
   
   out = data.frame(Prob_present = p_non_zero,
                    Abundance = post_mean,
-                   CI_LB = CI[,1], 
-                   CI_UB = CI[,2]
+                   CI_LB = CI[1, ], 
+                   CI_UB = CI[2, ]
                    )
   out
 }

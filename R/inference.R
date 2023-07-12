@@ -65,6 +65,7 @@ inference = function(loaded_data,
                      K = 2000,
                      burn_in = 1000,
                      thin = 1) {
+  
   if(is.null(map_iso_gene)){
     map_iso_gene = ""
   }
