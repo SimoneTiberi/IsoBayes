@@ -1,3 +1,3 @@
 library(testthat)
-library(SIMBA)
-test_check("SIMBA")
+library(IsoBayes)
+test_check("IsoBayes")

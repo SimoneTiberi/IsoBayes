@@ -1,13 +1,13 @@
-Package: SIMBA
+Package: IsoBayes
 Type: Package
-Title: SIMBA: Single Isoform protein inference Method via Bayesian Analyses
+Title: IsoBayes: Single Isoform protein inference Method via Bayesian Analyses
 Version: 0.99.0
-Description: SIMBA is a Bayesian method to perform inference on single protein isoforms.
+Description: IsoBayes is a Bayesian method to perform inference on single protein isoforms.
   Our approach infers the presence/absence of protein isoforms, and also estimates their abundance;
   additionally, it provides a measure of the uncertainty of these estimates, via:
   i) the posterior probability that a protein isoform is present in the sample;
   ii) a posterior credible interval of its abundance.
-  SIMBA inputs liquid cromatography mass spectrometry (MS) data,
+  IsoBayes inputs liquid cromatography mass spectrometry (MS) data,
   and can work with both PSM counts, and intensities.
   When available, trascript isoform abundances (i.e., TPMs) are also incorporated:
   TPMs are used to formulate an informative prior for the respective protein isoform relative abundance.
@@ -40,5 +40,5 @@ SystemRequirements: C++11
 VignetteBuilder: knitr
 RoxygenNote: 7.2.3
 ByteCompile: true
-URL: https://github.com/SimoneTiberi/SIMBA
-BugReports: https://github.com/SimoneTiberi/SIMBA/issues
+URL: https://github.com/SimoneTiberi/IsoBayes
+BugReports: https://github.com/SimoneTiberi/IsoBayes/issues

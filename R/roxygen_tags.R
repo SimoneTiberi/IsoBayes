@@ -1,4 +1,4 @@
-#' @useDynLib SIMBA, .registration = TRUE
+#' @useDynLib IsoBayes, .registration = TRUE
 #' @importFrom methods formalArgs
 #' @importFrom stats aggregate.data.frame
 #' @importFrom Biostrings fasta.seqlengths
@@ -30,6 +30,5 @@
 #' @importFrom iterators iter
 #' @importFrom stats median
 #' @importFrom stats na.omit
-#' @importFrom stats quantile
 #' @importFrom HDInterval hdi
 NULL

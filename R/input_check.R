@@ -11,6 +11,10 @@ input_check = function(path_to_peptides_psm, path_to_peptides_intensities,
     stop(glue("{first_error_arg} must be a character string."))
   }
   
+  if (input_type == "openMS" & abundance_type == 'intensities') {
+    stop("With input_type = 'openMS' only psm abundance can be inputted. Please set abundance_type equal to 'psm'.")
+  }
+  
   file_exist = file.exists(path_to_peptides_psm, path_to_peptides_intensities, path_to_tpm)
   file_not_specified = c(path_to_peptides_psm, path_to_peptides_intensities, path_to_tpm) == ""
   check_path = (file_exist + file_not_specified) == 1

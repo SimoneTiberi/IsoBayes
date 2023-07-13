@@ -9,11 +9,11 @@ author:
   affiliation:
   - Department of Statistical Sciences, University of Bologna, Bologna, Italy
   email: simone.tiberi@unibo.it
-package: "`r BiocStyle::pkg_ver('SIMBA')`"
+package: "`r BiocStyle::pkg_ver('IsoBayes')`"
 date: "`r format(Sys.Date(), '%m/%d/%Y')`"
 bibliography: References.bib
 vignette: >
-  %\VignetteIndexEntry{SIMBA}
+  %\VignetteIndexEntry{IsoBayes}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 header-includes: 
@@ -30,12 +30,12 @@ knitr::opts_chunk$set(tidy=FALSE, cache=TRUE,
 ```
 
 # Introduction
-*SIMBA* is a Bayesian method to perform inference on single protein isoforms.
+*IsoBayes* is a Bayesian method to perform inference on single protein isoforms.
 Our approach infers the presence/absence of protein isoforms, and also estimates their abundance;
 additionally, it provides a measure of the uncertainty of these estimates, via:
 i) the posterior probability that a protein isoform is present in the sample;
 ii) a posterior credible interval of its abundance.
-*SIMBA* inputs liquid cromatography mass spectrometry (MS) data,
+*IsoBayes* inputs liquid cromatography mass spectrometry (MS) data,
 and can work with both PSM counts, and intensities.
 When available, trascript isoform abundances (i.e., TPMs) are also incorporated:
 TPMs are used to formulate an informative prior for the respective protein isoform relative abundance.
@@ -50,44 +50,44 @@ we allocate their abundance across the protein isoforms they map to.
 These two steps allow us to recover the presence and abundance of each protein isoform.
 
 ## Bioconductor installation
-*SIMBA* is available on [Bioconductor](https://bioconductor.org/packages/SIMBA) and can be installed with the command:
+*IsoBayes* is available on [Bioconductor](https://bioconductor.org/packages/IsoBayes) and can be installed with the command:
 ```{r Bioconductor_installation, eval=FALSE}
 if (!requireNamespace("BiocManager", quietly=TRUE))
   install.packages("BiocManager")
-BiocManager::install("SIMBA")
+BiocManager::install("IsoBayes")
 ```
 
 To access the R code used in the vignettes, type:
 ```{r vignettes, eval=FALSE} 
-browseVignettes("SIMBA")
+browseVignettes("IsoBayes")
 ```
 
 # Questions, issues and citation
-Questions relative to *SIMBA* should be reported as a new issue at *[BugReports](https://github.com/SimoneTiberi/SIMBA/issues)*.
+Questions relative to *IsoBayes* should be reported as a new issue at *[BugReports](https://github.com/SimoneTiberi/IsoBayes/issues)*.
 
-To cite *SIMBA*, type:
+To cite *IsoBayes*, type:
 ```{r citation} 
-citation("SIMBA")
+citation("IsoBayes")
 ```
 
 # Load the package
-Load *SIMBA*:
+Load *IsoBayes*:
 ```{r load, message=FALSE}
-library(SIMBA)
+library(IsoBayes)
 ```
 
 # Key options
 
 ## Input data
-*SIMBA* works with the output of both *MetaMorpheus* (MM) [@MetaMorpheus], or *Percolator* [@Percolator] (via the *OpenMS* toolkit [@OpenMS]).
+*IsoBayes* works with the output of both *MetaMorpheus* (MM) [@MetaMorpheus], or *Percolator* [@Percolator] (via the *OpenMS* toolkit [@OpenMS]).
 Other tools can be used as well to generate out input data, as long as the input files follow the structure mentioned in the [Input user-provided data](#input-user-provided-data) Section.
 In our benchmarks, we tested our model using both *MetaMorpheus* and *Percolator* data, and obtained slightly better results, and a shorter runtime with *MetaMorpheus*.
 
 In this tutorial, we use a small dataset created by *MetaMorpheus*.
-The code to generate the data can be found [here](https://github.com/SimoneTiberi/SIMBA/blob/main/inst/script/extdata.Rmd).
+The code to generate the data can be found [here](https://github.com/SimoneTiberi/IsoBayes/blob/main/inst/script/extdata.Rmd).
 
 ## PSM counts vs. intensities
-We can run *SIMBA* on either PSM counts or intensities.
+We can run *IsoBayes* on either PSM counts or intensities.
 In our benchmarks, we found that, although results are consistent between the two types of input data, intensities led to a marginal improvement in performance.
 
 ## TPMs (optional)
@@ -100,7 +100,7 @@ Here, we also specify the path to TPMs (optional); which must be stored in a `.t
 Column names must be 'isoname' and 'tpm'.
 
 ## PEP vs. FDR cutoff
-Additionally, we suggest to provide the probability that peptides are erroneously detected (usually called PEP): *SIMBA* will use the PEP to sample the presence/absence of each peptide; this will propagate the peptide identification uncertainty throughout the inference process.
+Additionally, we suggest to provide the probability that peptides are erroneously detected (usually called PEP): *IsoBayes* will use the PEP to sample the presence/absence of each peptide; this will propagate the peptide identification uncertainty throughout the inference process.
 Alternatively, unreliable peptides can be discarded by specifying a peptide False Discovery Rate (FDR) threshold (also known as qvalue).
 In our benchmarks, we found that using `PEP` provides a (minor) increase in performace, at the cost of a (marginally) higher runtime.
 By default, \code{load_data} uses the PEP (`PEP = TRUE`); if we want to disable the PEP integration, and filter based on the FDR, we can set `PEP = FALSE` and specify an FDR cutoff, e.g., as `FDR_thd = 0.01`.
@@ -111,7 +111,7 @@ First, we load and process the input data using the \code{load_data} function.
 ## Input *MetaMorpheus* data
 We set the directory of the data (internal in the package):
 ```{r specify extdata path}
-data_dir = system.file("extdata", package = "SIMBA")
+data_dir = system.file("extdata", package = "IsoBayes")
 ```
 
 We set the path to the AllPeptides.psmtsv file returned by *MetaMorpheus*:
@@ -125,7 +125,7 @@ tpm_path = paste0(data_dir, "/jurkat_isoform_kallisto.tsv")
 ```
 
 ### Peptide-Spectrum Match (PSM) counts
-The AllPeptides.psmtsv file contains all the information required to run *SIMBA* with PSM counts;
+The AllPeptides.psmtsv file contains all the information required to run *IsoBayes* with PSM counts;
 we load the file via \code{load_data}:
 ```{r load psm}
 PSM_data_loaded = load_data(path_to_peptides_psm = path_to_peptides_psm,
@@ -144,8 +144,8 @@ data_loaded = load_data(path_to_peptides_psm = path_to_peptides_psm,
 ```
 
 ## Input *Percolator* data
-*SIMBA* is also compatible with the PSM file from *Percolator* (from the *OpenMS* toolkit).
-The [README](https://github.com/SimoneTiberi/SIMBA/tree/main#readme) shows how to use *OpenMS* tools to generate an idXML file containing PSM data.
+*IsoBayes* is also compatible with the PSM file from *Percolator* (from the *OpenMS* toolkit).
+The [README](https://github.com/SimoneTiberi/IsoBayes/tree/main#readme) shows how to use *OpenMS* tools to generate an idXML file containing PSM data.
 Once the file has been created, we can pass its path to \code{load_data} and set `input_type` as "openMS".
 ```{r set path OpenMS, eval = FALSE}
 Percolator_data_loaded = load_data(path_to_peptides_psm = "/path/to/file.idXML",
@@ -153,7 +153,6 @@ Percolator_data_loaded = load_data(path_to_peptides_psm = "/path/to/file.idXML",
                         path_to_tpm = tpm_path)
 ```
 Please note that when using data generated by *Percolator*, the algorithm can only process PSM counts and not intensities.
-Additionally, the `FDR_thd` option is not considered in \code{load_data}; FDR filtering should be performed during the data generation via *OpenMS*, as shown in the [README](https://github.com/SimoneTiberi/SIMBA/tree/main#readme).
 
 ## Input user-provided data
 We can also input MS data obtained from any bioinformatics tool.
@@ -161,7 +160,7 @@ To this aim, the data must be organized in a `.tsv` file where each row correspo
 
 * 'Y': a numeric variable indicating the peptide abundance (PSM counts or intensities, as defined by the user);
 * 'EC': Equivalent Classes, a character string indicating the isoform(s) name the peptide maps to. If the peptide maps to multiple protein isoforms, the names must be separated with "|" , i.e. "name_isoform_1|name_isoform_2";
-* 'FDR_thd': (optional) a numeric variable indicating the FDR of each peptide;
+* 'FDR': (optional) a numeric variable indicating the FDR of each peptide;
 * 'PEP': (optional) a numeric variable indicating the probability that a peptide is erroneously detected;
 * 'sequence': (required when using PEP) a character string indicating the peptide name/id/amino acids sequence.
 
@@ -181,7 +180,7 @@ set.seed(169612)
 results = inference(data_loaded)
 ```
 
-By default, *SIMBA* uses one single core.
+By default, *IsoBayes* uses one single core.
 For large datasets, to speed up the execution time, the number of cores can be increased via the `n_cores` argument.
 
 ## Gene Normalization (optional)
@@ -195,7 +194,7 @@ results_normalized = inference(data_loaded, map_iso_gene = path_to_map_iso_gene)
 Specifying the `map_iso_gene` argument, also enables users to plot results via `plot_relative_abundances` function.
 
 # Visualize results
-Finally, *SIMBA* provides the `plot_relative_abundances` function to visualize differential relative abundances between transcriptomics and proteomics isoforms within a specific gene:
+Finally, *IsoBayes* provides the `plot_relative_abundances` function to visualize differential relative abundances between transcriptomics and proteomics isoforms within a specific gene:
 ```{r plotting results}
 plot_relative_abundances(results_normalized, gene_id = "TUBB")
 ```

@@ -1,16 +1,21 @@
-get_peptides_from_idXML = function(file, pep){
+get_peptides_from_idXML = function(file, pep, FDR_thd){
   PG = read_xml(file)
   PEPTIDES = get_records(PG, "//PeptideHit")
   PEPTIDES = data.frame(Y = 1,
                         EC = get_attributes(PEPTIDES, "protein_refs=\"", "\">\n  <UserParam"),
-                        target_decoy = get_attributes(PEPTIDES, "name=\"target_decoy\" value=\"", "\"/>\n  <UserParam type"),
-                        PEP = get_attributes(PEPTIDES, "score=\"", "\" sequence", isNumeric = TRUE),
-                        sequence = get_attributes(PEPTIDES, "sequence=\"", "\" charge=")
+                        target_decoy = get_attributes(PEPTIDES, "name=\"target_decoy\" value=\"", "\"/>\n  <UserParam type"), 
+                        PEP = get_attributes(PEPTIDES, "score=\"", "\" sequence", 
+                                             isNumeric = TRUE),
+                        sequence = get_attributes(PEPTIDES, "sequence=\"", "\" charge="),
+                        FDR = get_attributes(PEPTIDES, "q-value\" value=\"", "\"/>\n</PeptideHit>", 
+                                             isNumeric = TRUE)
                         )
   rm(PG)
   
   PEPTIDES = PEPTIDES[PEPTIDES$target_decoy == "target", ]
+  PEPTIDES = PEPTIDES[PEPTIDES$FDR < FDR_thd, ]
   PEPTIDES$target_decoy = NULL
+  PEPTIDES$FDR = NULL
   
   if(pep){
     # set equal pep if difference < 1% and sequence is equal

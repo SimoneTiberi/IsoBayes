@@ -15,7 +15,7 @@ output: html_document
 
 `AllQuantifiedPeptides.tsv` lists for each identified peptide the base sequence and several peptide intensities.
 
-Below we report the script used to create `AllPeptides.psmtsv` and `AllQuantifiedPeptides.tsv`, both available inside SIMBA package.
+Below we report the script used to create `AllPeptides.psmtsv` and `AllQuantifiedPeptides.tsv`, both available inside IsoBayes package.
 
 ```{r, eval=FALSE}
 data_path = "/path/to/AllPeptides.psmtsv"
@@ -55,8 +55,8 @@ data.table::fwrite(tpm, "jurkat_isoform_kallisto.tsv", sep = "\t")
 
 # Mapping protein isofors to gene: map_iso_gene.csv
 ```{r, eval=FALSE}
-library(SIMBA)
-data_dir = system.file("extdata", package = "SIMBA")
+library(IsoBayes)
+data_dir = system.file("extdata", package = "IsoBayes")
 path_to_peptides_psm = paste0(data_dir, "/AllPeptides.psmtsv")
 f = as.data.frame(data.table::fread(path_to_peptides_psm))
 iso_names_prot = unique(unlist(lapply(df$`Protein Accession`, function(x){strsplit(x, "\\|")})))

@@ -19,9 +19,10 @@ normalize_by_gene = function(results_MCMC, tpm){
     Pi_norm_TPM = NULL
   }
   
+  CI = hdi(chain, credMass = 0.95)
   results_norm_by_gene = data.frame(Pi_norm = colMeans(chain),
-                                    Pi_norm_CI_LB = apply(chain, 2, function(x){quantile(x, 0.025)}),
-                                    Pi_norm_CI_UB = apply(chain, 2, function(x){quantile(x, 0.975)})
+                                    Pi_norm_CI_LB = CI[1, ],
+                                    Pi_norm_CI_UB = CI[2, ]
                                     )
   if(tpm){
     cbind(results_MCMC$isoform_results[, c("Gene", "Isoform")], results_norm_by_gene, Pi_norm_TPM)
@@ -30,4 +31,3 @@ normalize_by_gene = function(results_MCMC, tpm){
   }
   
 }
-

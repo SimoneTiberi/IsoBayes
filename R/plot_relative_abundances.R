@@ -13,7 +13,7 @@
 #'
 #' @examples
 #' # Load internal data to the package:
-#' data_dir = system.file("extdata", package = "SIMBA")
+#' data_dir = system.file("extdata", package = "IsoBayes")
 #'
 #' # Define the path to the AllPeptides.psmtsv file returned by MetaMorpheus tool
 #' path_to_peptides_psm = paste0(data_dir, "/AllPeptides.psmtsv")
@@ -54,7 +54,7 @@
 #'                           normalize_gene = FALSE)
 #' 
 #' # For more examples see the vignettes:
-#' #browseVignettes("SIMBA")
+#' #browseVignettes("IsoBayes")
 #'
 #' @author Jordy Bollon \email{jordy.bollon@iit.it} and Simone Tiberi \email{simone.tiberi@unibo.it}
 #'

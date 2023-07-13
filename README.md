@@ -1,13 +1,13 @@
-# SIMBA: Single Isoform protein inference Method via Bayesian Analyses
+# IsoBayes: Single Isoform protein inference Method via Bayesian Analyses
 
-<img src="inst/extdata/SIMBA.png" width="200" align="right"/> 
+<img src="inst/extdata/IsoBayes.png" width="200" align="right"/> 
 
-`SIMBA` is a Bayesian method to perform inference on single protein isoforms.
+`IsoBayes` is a Bayesian method to perform inference on single protein isoforms.
 Our approach infers the presence/absence of protein isoforms, and also estimates their abundance;
 additionally, it provides a measure of the uncertainty of these estimates, via:
 i) the posterior probability that a protein isoform is present in the sample;
 ii) a posterior credible interval of its abundance.
-`SIMBA` inputs liquid cromatography mass spectrometry (MS) data,
+`IsoBayes` inputs liquid cromatography mass spectrometry (MS) data,
 and can work with both PSM counts, and intensities.
 When available, trascript isoform abundances (i.e., TPMs) are also incorporated:
 TPMs are used to formulate an informative prior for the respective protein isoform relative abundance.
@@ -22,32 +22,32 @@ we allocate their abundance across the protein isoforms they map to.
 These two steps allow us to recover the presence and abundance of each protein isoform.
 
 ## Bioconductor installation 
-`SIMBA` is available on [Bioconductor](https://bioconductor.org/packages/SIMBA) and can be installed with the command:
+`IsoBayes` is available on [Bioconductor](https://bioconductor.org/packages/IsoBayes) and can be installed with the command:
 ``` r
 if (!requireNamespace("BiocManager", quietly=TRUE))
 install.packages("BiocManager")
-BiocManager::install("SIMBA")
+BiocManager::install("IsoBayes")
 ```
 
 ## Vignette
-The vignette illustrating how to use the package can be accessed on [Bioconductor](https://bioconductor.org/packages/SIMBA)
+The vignette illustrating how to use the package can be accessed on [Bioconductor](https://bioconductor.org/packages/IsoBayes)
 or from R via:
 ``` r
-vignette("SIMBA")
+vignette("IsoBayes")
 ```
 or
 ``` r
-browseVignettes("SIMBA")
+browseVignettes("IsoBayes")
 ```
 
 ## Input data
-*SIMBA* works with the output of both *MetaMorpheus* (MM), or *Percolator* (via the *OpenMS* toolkit).
+*IsoBayes* works with the output of both *MetaMorpheus* (MM), or *Percolator* (via the *OpenMS* toolkit).
 Other tools can be used as well to generate out input data, as long as the input files follow the structure mentioned in the "Input user-provided data" Section of the vignettes.
 In our benchmarks, we tested our model using both *MetaMorpheus* and *Percolator* data, and obtained slightly better results, and a shorter runtime with *MetaMorpheus*.
 
 ### Percolator pipeline
-SIMBA is compatible with the output returned by *Percolator* tool, provided within the *OpenMS* Toolkit.
-Here, we provide a brief pipeline where several *OpenMS* applications are chained together to generate an idXML file required to run SIMBA with *Percolator* output.
+IsoBayes is compatible with the output returned by *Percolator* tool, provided within the *OpenMS* Toolkit.
+Here, we provide a brief pipeline where several *OpenMS* applications are chained together to generate an idXML file required to run IsoBayes with *Percolator* output.
 The pipeline starts from peptide identification results stored in mzID files.
 
 First, install *OpenMS* toolkit and *Percolator* tool.
@@ -61,7 +61,7 @@ NTHREADS=4
 ENZYME_indexer="Chymotrypsin"
 ENZYME_percolator="chymotrypsin"
 DECOY_STRING="mz|DECOY_"
-fdr=0.01
+fdr=1
 ```
 
 Below, we show an example with chymotrypsin enzyme.
@@ -95,7 +95,7 @@ rm $path_out/merge.idXML
 PercolatorAdapter -in $path_out/merge_index.idXML -enzyme $ENZYME_percolator -threads $NTHREADS -generic_feature_set -score_type pep -out $path_out/merge_index_percolator_pep.idXML
 rm $path_out/merge_index.idXML
 
-# Filter out unreliable peptides (FDR greater than $fdr)
+# Estimate the false discovery rate on peptide level using decoy searches and keep the ones with FDR < $fdr
 FalseDiscoveryRate -in $path_out/merge_index_percolator_pep.idXML -out $path_out/merge_index_percolator_pep_$fdr.idXML -protein false -threads $NTHREADS -FDR:PSM $fdr -algorithm:add_decoy_peptides -algorithm:add_decoy_proteins
 rm $path_out/merge_index_percolator_pep.idXML
 
@@ -111,3 +111,5 @@ For more details on *OpenMS* tools see its [Documentation](https://abibuilder.cs
 Röst, H. L., Sachsenberg, T., Aiche, S., Bielow, C., Weisser, H., Aicheler, F., ... & Kohlbacher, O. (2016). OpenMS: a flexible open-source software platform for mass spectrometry data analysis. *Nature methods*, 13(9), 741-748.
 
 The, M., MacCoss, M. J., Noble, W. S., & Käll, L. (2016). Fast and accurate protein false discovery rates on large-scale proteomics data sets with percolator 3.0. *Journal of the American Society for Mass Spectrometry*, 27, 1719-1727.
+
+Solntsev, S. K., Shortreed, M. R., Frey, B. L., & Smith, L. M. (2018). Enhanced global post-translational modification discovery with MetaMorpheus. *Journal of proteome research*, 17(5), 1844-1851.

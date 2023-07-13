@@ -13,7 +13,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 
 // MCMC
 List MCMC(Rcpp::ListOf<Rcpp::NumericVector> const& EC_numeric_multi_map, Rcpp::NumericVector const& Y_unique, Rcpp::NumericVector const& N_peptides_per_protein, Rcpp::NumericVector const& delta_prior, Rcpp::NumericVector const& PSM_multi_map, unsigned int const& N, unsigned int const& M, unsigned int const& K, unsigned int const& burn_in, unsigned int const& thin);
-RcppExport SEXP _SIMBA_MCMC(SEXP EC_numeric_multi_mapSEXP, SEXP Y_uniqueSEXP, SEXP N_peptides_per_proteinSEXP, SEXP delta_priorSEXP, SEXP PSM_multi_mapSEXP, SEXP NSEXP, SEXP MSEXP, SEXP KSEXP, SEXP burn_inSEXP, SEXP thinSEXP) {
+RcppExport SEXP _IsoBayes_MCMC(SEXP EC_numeric_multi_mapSEXP, SEXP Y_uniqueSEXP, SEXP N_peptides_per_proteinSEXP, SEXP delta_priorSEXP, SEXP PSM_multi_mapSEXP, SEXP NSEXP, SEXP MSEXP, SEXP KSEXP, SEXP burn_inSEXP, SEXP thinSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -33,7 +33,7 @@ END_RCPP
 }
 // MCMC_PEP
 List MCMC_PEP(Rcpp::ListOf<Rcpp::NumericVector> const& EC_numeric_multi_map, Rcpp::NumericVector const& PSM_multi_map, Rcpp::NumericVector const& PEP, unsigned int const& M, Rcpp::IntegerVector const& EC_numeric_unique, Rcpp::NumericVector const& PSM_unique, Rcpp::NumericVector const& PEP_unique, unsigned int const& M_unique, Rcpp::NumericVector const& N_peptides_per_protein, Rcpp::NumericVector const& delta_prior, unsigned int const& N, unsigned int const& K, unsigned int const& burn_in, unsigned int const& thin);
-RcppExport SEXP _SIMBA_MCMC_PEP(SEXP EC_numeric_multi_mapSEXP, SEXP PSM_multi_mapSEXP, SEXP PEPSEXP, SEXP MSEXP, SEXP EC_numeric_uniqueSEXP, SEXP PSM_uniqueSEXP, SEXP PEP_uniqueSEXP, SEXP M_uniqueSEXP, SEXP N_peptides_per_proteinSEXP, SEXP delta_priorSEXP, SEXP NSEXP, SEXP KSEXP, SEXP burn_inSEXP, SEXP thinSEXP) {
+RcppExport SEXP _IsoBayes_MCMC_PEP(SEXP EC_numeric_multi_mapSEXP, SEXP PSM_multi_mapSEXP, SEXP PEPSEXP, SEXP MSEXP, SEXP EC_numeric_uniqueSEXP, SEXP PSM_uniqueSEXP, SEXP PEP_uniqueSEXP, SEXP M_uniqueSEXP, SEXP N_peptides_per_proteinSEXP, SEXP delta_priorSEXP, SEXP NSEXP, SEXP KSEXP, SEXP burn_inSEXP, SEXP thinSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -57,7 +57,7 @@ END_RCPP
 }
 // MCMC_Unique
 List MCMC_Unique(Rcpp::NumericVector const& Y_unique, Rcpp::NumericVector const& delta_prior, unsigned int const& N, unsigned int const& K, unsigned int const& burn_in, unsigned int const& thin);
-RcppExport SEXP _SIMBA_MCMC_Unique(SEXP Y_uniqueSEXP, SEXP delta_priorSEXP, SEXP NSEXP, SEXP KSEXP, SEXP burn_inSEXP, SEXP thinSEXP) {
+RcppExport SEXP _IsoBayes_MCMC_Unique(SEXP Y_uniqueSEXP, SEXP delta_priorSEXP, SEXP NSEXP, SEXP KSEXP, SEXP burn_inSEXP, SEXP thinSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -73,13 +73,13 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_SIMBA_MCMC", (DL_FUNC) &_SIMBA_MCMC, 10},
-    {"_SIMBA_MCMC_PEP", (DL_FUNC) &_SIMBA_MCMC_PEP, 14},
-    {"_SIMBA_MCMC_Unique", (DL_FUNC) &_SIMBA_MCMC_Unique, 6},
+    {"_IsoBayes_MCMC", (DL_FUNC) &_IsoBayes_MCMC, 10},
+    {"_IsoBayes_MCMC_PEP", (DL_FUNC) &_IsoBayes_MCMC_PEP, 14},
+    {"_IsoBayes_MCMC_Unique", (DL_FUNC) &_IsoBayes_MCMC_Unique, 6},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_SIMBA(DllInfo *dll) {
+RcppExport void R_init_IsoBayes(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }

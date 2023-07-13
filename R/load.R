@@ -29,7 +29,7 @@
 #'
 #' @examples
 #' # Load internal data to the package:
-#' data_dir = system.file("extdata", package = "SIMBA")
+#' data_dir = system.file("extdata", package = "IsoBayes")
 #'
 #' # Define the path to the AllPeptides.psmtsv file returned by *MetaMorpheus* tool
 #' path_to_peptides_psm = paste0(data_dir, "/AllPeptides.psmtsv")
@@ -38,7 +38,7 @@
 #' data_loaded = load_data(path_to_peptides_psm = path_to_peptides_psm)
 #'
 #' # For more examples see the vignettes:
-#' #browseVignettes("SIMBA")
+#' #browseVignettes("IsoBayes")
 #'
 #' @author Jordy Bollon \email{jordy.bollon@iit.it} and Simone Tiberi \email{simone.tiberi@unibo.it}
 #'
@@ -51,8 +51,8 @@ load_data = function(path_to_peptides_psm,
                       input_type = "metamorpheus",
                       abundance_type = "psm",
                       PEP = TRUE,
-                      FDR_thd = NULL
-) {
+                      FDR_thd = NULL) {
+
   if(is.null(FDR_thd)){
     FDR_thd = 1
   }
@@ -64,11 +64,6 @@ load_data = function(path_to_peptides_psm,
   }
 
   input_check(path_to_peptides_psm, path_to_peptides_intensities, path_to_tpm, input_type, abundance_type, PEP, FDR_thd)
-
-  if (input_type == "openMS") {
-    abundance_type = "psm"
-    message("input_type = 'openMS'. 'FDR_thd' is ignored and abundance_type = 'psm'.")
-  }
 
   if (input_type == "metamorpheus") {
     variables = c("Protein Accession", "QValue", "Decoy/Contaminant/Target", "Base Sequence")
@@ -88,7 +83,7 @@ load_data = function(path_to_peptides_psm,
     message("We found:")
     protein_df_args = list(protein_name = get_prot_from_EC(PEPTIDE_DF$EC))
   } else if (input_type == "openMS") {
-    PEPTIDE_DF = get_peptides_from_idXML(path_to_peptides_psm, PEP)
+    PEPTIDE_DF = get_peptides_from_idXML(path_to_peptides_psm, PEP, FDR_thd)
     PROTEIN_DF_openMS = get_proteins_from_idXML(path_to_peptides_psm)
     message("We found:")
     protein_name_openMS = get_prot_from_EC(PEPTIDE_DF$EC)
@@ -97,6 +92,9 @@ load_data = function(path_to_peptides_psm,
                            )
   } else if (input_type == "other") {
     PEPTIDE_DF = as.data.frame(data.table::fread(path_to_peptides_psm))
+    if(!is.null(PEPTIDE_DF$FDR)){
+      PEPTIDE_DF = PEPTIDE_DF[PEPTIDE_DF$FDR < FDR_thd, ]
+    }
     if(PEP & !("PEP" %in% colnames(PEPTIDE_DF))){
       stop(glue("'PEP'=TRUE, but PEP not present in the data. If PEP not available, please set 'PEP'=FALSE."))
     }
@@ -124,7 +122,7 @@ load_data = function(path_to_peptides_psm,
   if (input_type %in% c("metamorpheus", "other")) {
     PROTEIN_DF = PROTEIN_DF[PROTEIN_DF$protein_name %in% protein_name_to_keep, ]
     UNIQUE_PEPT_ABUNDANCE = unique_protein_abundance(PEPTIDE_DF$Y, PEPTIDE_DF$EC, PROTEIN_DF$protein_name)
-  } else if (input_type == "OpenMS") {
+  } else if (input_type == "openMS") {
     PROTEIN_DF = PROTEIN_DF[PROTEIN_DF$id_openMS %in% protein_name_to_keep, ]
     UNIQUE_PEPT_ABUNDANCE = unique_protein_abundance(PEPTIDE_DF$Y, PEPTIDE_DF$EC, PROTEIN_DF$id_openMS)
   }

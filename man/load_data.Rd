@@ -52,7 +52,7 @@ A \code{list} of \code{data.frame} objects, with the data needed to run \code{\l
 }
 \examples{
 # Load internal data to the package:
-data_dir = system.file("extdata", package = "SIMBA")
+data_dir = system.file("extdata", package = "IsoBayes")
 
 # Define the path to the AllPeptides.psmtsv file returned by *MetaMorpheus* tool
 path_to_peptides_psm = paste0(data_dir, "/AllPeptides.psmtsv")
@@ -61,7 +61,7 @@ path_to_peptides_psm = paste0(data_dir, "/AllPeptides.psmtsv")
 data_loaded = load_data(path_to_peptides_psm = path_to_peptides_psm)
 
 # For more examples see the vignettes:
-#browseVignettes("SIMBA")
+#browseVignettes("IsoBayes")
 
 }
 \seealso{

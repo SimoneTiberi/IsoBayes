@@ -1,21 +1,21 @@
-\name{SIMBA-package}
-\alias{SIMBA-package}
-\alias{SIMBA}
+\name{IsoBayes-package}
+\alias{IsoBayes-package}
+\alias{IsoBayes}
 \docType{package}
 \title{
-\packageTitle{SIMBA}
+\packageTitle{IsoBayes}
 }
 \description{
-\packageDescription{SIMBA}
+\packageDescription{IsoBayes}
 }
 \details{
 The DESCRIPTION file:
-\packageDESCRIPTION{SIMBA}
-Questions relative to SIMBA should be reported as a new issue at \href{https://github.com/SimoneTiberi/SIMBA/issues}{https://github.com/SimoneTiberi/SIMBA/issues}.
+\packageDESCRIPTION{IsoBayes}
+Questions relative to IsoBayes should be reported as a new issue at \href{https://github.com/SimoneTiberi/IsoBayes/issues}{https://github.com/SimoneTiberi/IsoBayes/issues}.
 
-To access the vignettes, type: \code{browseVignettes("SIMBA")}.
+To access the vignettes, type: \code{browseVignettes("IsoBayes")}.
 
-\packageIndices{SIMBA}
+\packageIndices{IsoBayes}
 }
 \author{
 Jordy Bollon \email{jordy.bollon@iit.it},
