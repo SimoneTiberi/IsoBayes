@@ -1,14 +1,25 @@
 get_peptides_from_idXML = function(file, pep, FDR_thd){
   PG = read_xml(file)
   PEPTIDES = get_records(PG, "//PeptideHit")
+  
+  if(FDR_thd < 1){
+    FDR = get_attributes(PEPTIDES, "q-value\" value=\"", "\"/>\n</PeptideHit>", 
+                         isNumeric = TRUE)
+  }else{
+    FDR = NULL
+  }
+  if(pep){
+    PEP = get_attributes(PEPTIDES, "score=\"", "\" sequence", isNumeric = TRUE)
+  }else{
+    PEP = NULL
+  }
   PEPTIDES = data.frame(Y = 1,
                         EC = get_attributes(PEPTIDES, "protein_refs=\"", "\">\n  <UserParam"),
-                        target_decoy = get_attributes(PEPTIDES, "name=\"target_decoy\" value=\"", "\"/>\n  <UserParam type"), 
-                        PEP = get_attributes(PEPTIDES, "score=\"", "\" sequence", 
-                                             isNumeric = TRUE),
+                        target_decoy = get_attributes(PEPTIDES, "name=\"target_decoy\" value=\"",
+                                                      "\"/>\n  <UserParam type"), 
+                        PEP = PEP,
                         sequence = get_attributes(PEPTIDES, "sequence=\"", "\" charge="),
-                        FDR = get_attributes(PEPTIDES, "q-value\" value=\"", "\"/>\n</PeptideHit>", 
-                                             isNumeric = TRUE)
+                        FDR = FDR
                         )
   rm(PG)
   

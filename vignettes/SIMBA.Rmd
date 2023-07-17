@@ -201,11 +201,15 @@ names(results_normalized)
 
 Inside the 'isoform_results' `data.frame`, each raw corresponds to a protein isoform. The columns report the following results:
 
-* 'Prob_present': the protein isoform probability of being present in the biological sample;
-* 'Abundance': protein isoform abundance  CI_LB CI_UB           Pi     Pi_CI_LB
+* 'Prob_present': protein isoform probability of being present in the biological sample;
+* 'Abundance': estimation of the protein isoform absolute abundance;
+* 'CI_LB': lower bound of the highest posterior density interval estimation of the protein isoform absolute abundance;
+* 'CI_UB': upper bound of the highest posterior density interval estimation protein isoform absolute abundance;
+* 'Pi': estimation of the protein isoform relative abundance;
+* 'Pi_CI_LB': lower bound of the highest posterior density interval estimation of the protein isoform relative abundance;
+* 'Pi_CI_UB': upper bound of the highest posterior density interval estimation of the protein isoform relative abundance;
 
 
-we have the lists all the isoforms names with 
 ```{r get iso res}
 head(results_normalized$isoform_results)
 ```

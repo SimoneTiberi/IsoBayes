@@ -5,7 +5,7 @@
 #' @param path_to_peptides_psm a character string indicating the path to one of the following files:
 #' i) the psmtsv file from *MetaMorpheus* tool with PSM counts,
 #' ii) the idXML file from *OpenMS* toolkit, or
-#' iii) the tsv file obtained from any bioinformatics tool.
+#' iii) a tsv file, formatted as explained in the "Input user-provided data" Section of the vignettes.
 #' For more details on how to create these files see the vignettes.
 #' @param path_to_peptides_intensities (optional) a character string indicating the path to the psmtsv file from *MetaMorpheus* with intensity values.
 #' Required if 'abundance_type' equals to "intensities".
