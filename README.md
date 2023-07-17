@@ -45,10 +45,26 @@ browseVignettes("IsoBayes")
 Other tools can be used as well to generate out input data, as long as the input files follow the structure mentioned in the "Input user-provided data" Section of the vignettes.
 In our benchmarks, we tested our model using both *MetaMorpheus* and *Percolator* data, and obtained slightly better results, and a shorter runtime with *MetaMorpheus*.
 
-### Percolator pipeline
-IsoBayes is compatible with the output returned by *Percolator* tool, provided within the *OpenMS* Toolkit.
-Here, we provide a brief pipeline where several *OpenMS* applications are chained together to generate an idXML file required to run IsoBayes with *Percolator* output.
-The pipeline starts from peptide identification results stored in mzID files.
+### *MetaMorpheus* pipeline
+To generate the MM output files required to run *IsoBayes*, we need to execute the following commands:
+
+* Install *MetaMorpheus* via [*Conda*](https://docs.conda.io/en/latest/miniconda.html):
+```shell
+conda install -c conda-forge metamorpheus
+```
+
+* Inside the folder with the configuration (.toml), spectra (.mzML or .raw) and database (.xml) files run:
+```shell
+metamorpheus -t Task1-SearchTaskconfig.toml Task2-CalibrateTaskconfig.toml Task3-SearchTaskconfig.toml Task4-GPTMDTaskconfig.toml Task5-SearchTaskconfig.toml -s 04-30-13_CAST_Frac4_6uL.raw 04-30-13_CAST_Frac5_4uL.raw -d uniprot-mouse-reviewed-1-24-2018.xml.gz uniprot-cRAP-1-24-2018.xml.gz
+```
+or
+```shell
+metamorpheus -t Task1-SearchTaskconfig.toml Task2-CalibrateTaskconfig.toml Task3-SearchTaskconfig.toml Task4-GPTMDTaskconfig.toml Task5-SearchTaskconfig.toml -s mzML/04-30-13_CAST_Frac4_6uL.mzML mzML/04-30-13_CAST_Frac5_4uL.mzML -d uniprot-mouse-reviewed-1-24-2018.xml.gz uniprot-cRAP-1-24-2018.xml.gz
+```
+There are several ways to install and run MM. For more details see the MM [tutorial](https://github.com/smith-chem-wisc/MetaMorpheus/wiki/Getting-Started#test-installation-via-net-core-dll---linux-macos-windows), where you can also find the example files used here.
+
+### *Percolator* pipeline
+We provide a brief pipeline where several *OpenMS* applications are chained together to generate an idXML file required to run IsoBayes with *Percolator* output. The pipeline starts from peptide identification results stored in mzID files.
 
 First, install *OpenMS* toolkit and *Percolator* tool.
 For instructions on how to install them on your operating system see [OpenMS Installation](https://openms.readthedocs.io/en/latest/openms-applications-and-tools/installation.html) and [Percolator Installation](https://github.com/percolator/percolator).

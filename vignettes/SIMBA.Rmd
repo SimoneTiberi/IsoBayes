@@ -193,7 +193,28 @@ results_normalized = inference(data_loaded, map_iso_gene = path_to_map_iso_gene)
 
 Specifying the `map_iso_gene` argument, also enables users to plot results via `plot_relative_abundances` function.
 
-# Visualize results
+# Visualizing results
+Results are stored as a `list` with two `data.frame` objects: 'isoform_results' and 'normalized_isoform_results' (NULL if 'map_iso_gene' was not provided).
+```{r get res}
+names(results_normalized)
+```
+
+Inside the 'isoform_results' `data.frame`, each raw corresponds to a protein isoform. The columns report the following results:
+
+* 'Prob_present': the protein isoform probability of being present in the biological sample;
+* 'Abundance': protein isoform abundance  CI_LB CI_UB           Pi     Pi_CI_LB
+
+
+we have the lists all the isoforms names with 
+```{r get iso res}
+head(results_normalized$isoform_results)
+```
+
+
+where columns `gene` and `cluster_id` contain the gene and cell-cluster name, while `p_val`, `p_adj.loc` and `p_adj.glb` report the raw p-values, locally and globally adjusted p-values, via Benjamini and Hochberg (BH) correction.
+In locally adjusted p-values (`p_adj.loc`) BH correction is applied in each cluster separately, while in globally adjusted p-values (`p_adj.glb`) BH correction is performed to the results from all clusters.
+
+
 Finally, *IsoBayes* provides the `plot_relative_abundances` function to visualize differential relative abundances between transcriptomics and proteomics isoforms within a specific gene:
 ```{r plotting results}
 plot_relative_abundances(results_normalized, gene_id = "TUBB")
