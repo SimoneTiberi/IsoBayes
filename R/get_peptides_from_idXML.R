@@ -1,10 +1,14 @@
 get_peptides_from_idXML = function(file, pep, FDR_thd){
   PG = read_xml(file)
   PEPTIDES = get_records(PG, "//PeptideHit")
-  
+
   if(FDR_thd < 1){
     FDR = get_attributes(PEPTIDES, "q-value\" value=\"", "\"/>\n</PeptideHit>", 
                          isNumeric = TRUE)
+    if(mean(is.na(FDR)) > 0){
+      stop(glue("{mean(is.na(FDR)*100}% of FDRs not found. Check the .idXML file: for each 'PeptideHit', 'UserParam' q-value should be present.
+                For more details on how to generate an .idXML, see the vignettes."))
+    }
   }else{
     FDR = NULL
   }
@@ -13,18 +17,21 @@ get_peptides_from_idXML = function(file, pep, FDR_thd){
   }else{
     PEP = NULL
   }
+  
   PEPTIDES = data.frame(Y = 1,
                         EC = get_attributes(PEPTIDES, "protein_refs=\"", "\">\n  <UserParam"),
                         target_decoy = get_attributes(PEPTIDES, "name=\"target_decoy\" value=\"",
                                                       "\"/>\n  <UserParam type"), 
-                        PEP = PEP,
-                        sequence = get_attributes(PEPTIDES, "sequence=\"", "\" charge="),
-                        FDR = FDR
+                        sequence = get_attributes(PEPTIDES, "sequence=\"", "\" charge=")
                         )
+  PEPTIDES$PEP = PEP
+  PEPTIDES$FDR = FDR  
   rm(PG)
   
   PEPTIDES = PEPTIDES[PEPTIDES$target_decoy == "target", ]
-  PEPTIDES = PEPTIDES[PEPTIDES$FDR < FDR_thd, ]
+  if(FDR_thd < 1){
+    PEPTIDES = PEPTIDES[PEPTIDES$FDR < FDR_thd, ]
+  }
   PEPTIDES$target_decoy = NULL
   PEPTIDES$FDR = NULL
   

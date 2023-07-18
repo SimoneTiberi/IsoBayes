@@ -52,7 +52,7 @@ load_data = function(path_to_peptides_psm,
                       abundance_type = "psm",
                       PEP = TRUE,
                       FDR_thd = NULL) {
-
+  browser()
   if(is.null(FDR_thd)){
     FDR_thd = 1
   }

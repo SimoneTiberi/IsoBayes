@@ -204,20 +204,22 @@ Inside the 'isoform_results' `data.frame`, each raw corresponds to a protein iso
 * 'Prob_present': protein isoform probability of being present in the biological sample;
 * 'Abundance': estimation of the protein isoform absolute abundance;
 * 'CI_LB': lower bound of the highest posterior density interval estimation of the protein isoform absolute abundance;
-* 'CI_UB': upper bound of the highest posterior density interval estimation protein isoform absolute abundance;
+* 'CI_UB': upper bound of the highest posterior density interval estimation of the protein isoform absolute abundance;
 * 'Pi': estimation of the protein isoform relative abundance;
 * 'Pi_CI_LB': lower bound of the highest posterior density interval estimation of the protein isoform relative abundance;
 * 'Pi_CI_UB': upper bound of the highest posterior density interval estimation of the protein isoform relative abundance;
-
+* 'TPM': transcript isoform abundance;
+* 'Log2_FC' : logarithm to the base 2 of the ratio between 'Pi' and 'TPM' normalized, indicating how much the isoform abundance changed after transcription;
+* 'Prob_prot_inc' : probability that the abundance of the protein isoform is greater than the abundance of the transcript isoform.
 
 ```{r get iso res}
 head(results_normalized$isoform_results)
 ```
 
-
-where columns `gene` and `cluster_id` contain the gene and cell-cluster name, while `p_val`, `p_adj.loc` and `p_adj.glb` report the raw p-values, locally and globally adjusted p-values, via Benjamini and Hochberg (BH) correction.
-In locally adjusted p-values (`p_adj.loc`) BH correction is applied in each cluster separately, while in globally adjusted p-values (`p_adj.glb`) BH correction is performed to the results from all clusters.
-
+In 'normalized_isoform_results' `data.frame`, we report protein isoform relative abundances, normalized within each gene (i.e., adding to 1 within a gene).
+```{r get iso res norm}
+head(results_normalized$normalized_isoform_results)
+```
 
 Finally, *IsoBayes* provides the `plot_relative_abundances` function to visualize differential relative abundances between transcriptomics and proteomics isoforms within a specific gene:
 ```{r plotting results}
