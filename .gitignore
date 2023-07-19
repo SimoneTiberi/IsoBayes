@@ -15,7 +15,7 @@ src/*rds
 inst/script/*
 !inst/script/extdata.Rmd
 vignettes/*
-!vignettes/SIMBA.Rmd
+!vignettes/IsoBayes.Rmd
 !vignettes/References.bib
 *.renviron
 *.rprofile

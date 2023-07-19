@@ -29,7 +29,7 @@ Authors@R: c(person(given = "Jordy",
   role = c("aut", "cre"),
   email = "simone.tiberi@unibo.ch",
   comment = c(ORCID = "0000-0002-3054-9964")))
-biocViews: StatisticalMethod, Bayesian, Proteomics, MassSpectrometry,
+biocViews: StatisticalMethod, Bayesian, Proteomics, MassSpectrometry, AlternativeSplicing,
   Sequencing, RNASeq, GeneExpression, Genetics, Visualization, Software
 License: GPL-3
 Depends: R (>= 4.3.0)
