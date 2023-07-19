@@ -1,4 +1,4 @@
-# IsoBayes: Single Isoform protein inference Method via Bayesian Analyses
+# IsoBayes: Isoform-level Bayesian proteogenomics inference
 
 <img src="inst/extdata/IsoBayes.png" width="200" align="right"/> 
 
