@@ -21,17 +21,16 @@ In the second layer, for peptides that were estimated as being present,
 we allocate their abundance across the protein isoforms they map to.
 These two steps allow us to recover the presence and abundance of each protein isoform.
 
-## Bioconductor installation 
-`IsoBayes` is available on [Bioconductor](https://bioconductor.org/packages/IsoBayes) and can be installed with the command:
+## Installation 
+`IsoBayes` should appear on Bioconductor in a few weeks.
+In the meantime, you can install it from GitHub:
 ``` r
-if (!requireNamespace("BiocManager", quietly=TRUE))
-install.packages("BiocManager")
-BiocManager::install("IsoBayes")
+devtools::install_github("SimoneTiberi/IsoBayes")
 ```
 
+
 ## Vignette
-The vignette illustrating how to use the package can be accessed on [Bioconductor](https://bioconductor.org/packages/IsoBayes)
-or from R via:
+The vignette illustrating how to use the package can be accessed from R via:
 ``` r
 vignette("IsoBayes")
 ```
