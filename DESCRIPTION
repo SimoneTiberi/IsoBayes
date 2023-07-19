@@ -22,7 +22,7 @@ Description: IsoBayes is a Bayesian method to perform inference on single protei
   These two steps allow us to recover the presence and abundance of each protein isoform.
 Authors@R: c(person(given = "Jordy",
   family = "Bollon",
-  role = c("aut"),
+  role = c("aut", "cre"),
   email = "jordy.bollon@iit.it"),
   person(given = "Simone",
   family = "Tiberi",
