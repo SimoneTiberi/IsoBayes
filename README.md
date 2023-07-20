@@ -30,14 +30,7 @@ devtools::install_github("SimoneTiberi/IsoBayes")
 
 
 ## Vignette
-The vignette illustrating how to use the package can be accessed from R via:
-``` r
-vignette("IsoBayes")
-```
-or
-``` r
-browseVignettes("IsoBayes")
-```
+The vignette illustrating how to use the package can be obtained by running the `IsoBayes.Rmd` file in the vignettes folder.
 
 ## Input data
 *IsoBayes* works with the output of both *MetaMorpheus* (MM), or *Percolator* (via the *OpenMS* toolkit).
