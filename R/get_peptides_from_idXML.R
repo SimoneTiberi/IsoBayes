@@ -1,9 +1,24 @@
 get_peptides_from_idXML = function(file, pep, FDR_thd){
-  PG = read_xml(file)
-  PEPTIDES = get_records(PG, "//PeptideHit")
-
+  #PG = read_xml(file)
+  idXML = data.table::fread(file, sep = NULL, header = FALSE)
+  
+  keep = rep(FALSE, nrow(idXML))
+  keep = keep + (substr(idXML$V1, 1, 14) == "\t\t\t<PeptideHit")
+  #keep = keep + (substr(idXML$V1, 1, 14) == "\t\t\t<ProteinHit")
+  keep = keep + (substr(idXML$V1, 1, 48) == "\t\t\t\t<UserParam type=\"string\" name=\"target_decoy\"")
+  keep = keep + (substr(idXML$V1, 1, 68) == "\t\t\t\t<UserParam type=\"float\" name=\"Posterior Error Probability_score\"")
+  keep = keep + (substr(idXML$V1, 1, 42) == "\t\t\t\t<UserParam type=\"float\" name=\"q-value\"")
+  
+  idXML = idXML[keep > 0, ]
+  first_pept = which(substr(idXML$V1, 1, 14) == "\t\t\t<PeptideHit")[1]
+  #PEPTIDES = get_records(PG, "//PeptideHit")
+  PEPTIDES = idXML[first_pept:nrow(idXML), ]
+  rm(idXML)
+  
   if(FDR_thd < 1){
-    FDR = get_attributes(PEPTIDES, "q-value\" value=\"", "\"/>\n</PeptideHit>", 
+    #FDR = get_attributes(PEPTIDES, "q-value\" value=\"", "\"/>\n</PeptideHit>", 
+     #                    isNumeric = TRUE)
+    FDR = get_attributes(PEPTIDES$V1[seq(4, nrow(PEPTIDES), 4)], "q-value\" value=\"", "\"/>", 
                          isNumeric = TRUE)
     if(mean(is.na(FDR)) > 0){
       stop(glue("{mean(is.na(FDR)*100}% of FDRs not found. Check the .idXML file: for each 'PeptideHit', 'UserParam' q-value should be present.
@@ -13,20 +28,26 @@ get_peptides_from_idXML = function(file, pep, FDR_thd){
     FDR = NULL
   }
   if(pep){
-    PEP = get_attributes(PEPTIDES, "score=\"", "\" sequence", isNumeric = TRUE)
+    #PEP = get_attributes(PEPTIDES, "score=\"", "\" sequence", isNumeric = TRUE)
+    PEP = get_attributes(PEPTIDES$V1[seq(3, nrow(PEPTIDES), 4)], "value=\"", "\"/>", isNumeric = TRUE)
   }else{
     PEP = NULL
   }
-  
+  #PEPTIDES = data.frame(Y = 1,
+   #                     EC = get_attributes(PEPTIDES, "protein_refs=\"", "\">\n  <UserParam"),
+    #                    target_decoy = get_attributes(PEPTIDES, "name=\"target_decoy\" value=\"",
+     #                                                 "\"/>\n  <UserParam type"), 
+      #                  sequence = get_attributes(PEPTIDES, "sequence=\"", "\" charge=")
+       #                 )
   PEPTIDES = data.frame(Y = 1,
-                        EC = get_attributes(PEPTIDES, "protein_refs=\"", "\">\n  <UserParam"),
-                        target_decoy = get_attributes(PEPTIDES, "name=\"target_decoy\" value=\"",
-                                                      "\"/>\n  <UserParam type"), 
-                        sequence = get_attributes(PEPTIDES, "sequence=\"", "\" charge=")
+                        EC = get_attributes(PEPTIDES$V1[seq(1, nrow(PEPTIDES), 4)], "protein_refs=\"", "\" >"),
+                        target_decoy = get_attributes(PEPTIDES$V1[seq(2, nrow(PEPTIDES), 4)], "name=\"target_decoy\" value=\"",
+                                                      "\"/>"), 
+                        sequence = get_attributes(PEPTIDES$V1[seq(1, nrow(PEPTIDES), 4)], "sequence=\"", "\" charge=")
                         )
   PEPTIDES$PEP = PEP
   PEPTIDES$FDR = FDR  
-  rm(PG)
+  #rm(PG)
   
   PEPTIDES = PEPTIDES[PEPTIDES$target_decoy == "target", ]
   if(FDR_thd < 1){
