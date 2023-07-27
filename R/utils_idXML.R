@@ -1,6 +1,6 @@
-get_records = function(pg, record){
-  as.character(xml_find_all(pg, record))
-}
+#get_records = function(pg, record){
+#  as.character(xml_find_all(pg, record))
+#}
 
 get_attributes = function(record, begins, ends, isNumeric = FALSE){
   out = vapply(record, function(x){gsub(paste0(".*", begins), "", x)}, FUN.VALUE = character(1))
