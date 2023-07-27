@@ -33,7 +33,7 @@ biocViews: StatisticalMethod, Bayesian, Proteomics, MassSpectrometry, Alternativ
   Sequencing, RNASeq, GeneExpression, Genetics, Visualization, Software
 License: GPL-3
 Depends: R (>= 4.3.0)
-Imports: methods, Rcpp, Biostrings, data.table, glue, xml2, DescTools, stats, doParallel, parallel, doRNG, foreach, iterators, ggplot2, HDInterval
+Imports: methods, Rcpp, data.table, glue, stats, doParallel, parallel, doRNG, foreach, iterators, ggplot2, HDInterval
 LinkingTo: Rcpp, RcppArmadillo
 Suggests: knitr, rmarkdown, testthat, BiocStyle
 SystemRequirements: C++11
