@@ -27,7 +27,7 @@ Authors@R: c(person(given = "Jordy",
   person(given = "Simone",
   family = "Tiberi",
   role = c("aut", "cre"),
-  email = "simone.tiberi@unibo.ch",
+  email = "simone.tiberi@unibo.it",
   comment = c(ORCID = "0000-0002-3054-9964")))
 biocViews: StatisticalMethod, Bayesian, Proteomics, MassSpectrometry, AlternativeSplicing,
   Sequencing, RNASeq, GeneExpression, Genetics, Visualization, Software
