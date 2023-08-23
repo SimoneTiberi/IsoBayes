@@ -14,14 +14,5 @@ build_intensity = function(z, path_to_peptides_psm, variables) {
   INTENSITY = intensity[matches]
   INTENSITY[is.na(INTENSITY)] = 0
 
-  # numerical ISSUE with intensities: intensities have VERY large values, so sometimes multi-mapping peptides
-  # will distribute at least 1 "intensity" to all proteins -> all with have a high probability of being present!
-  # Solution: we compute TPM-like intensities (sum of all intensities = 10^5).
-  # We choose 10^5 because it's similar to the sum of PSMs in some example datasets we looked at.
-  INTENSITY = INTENSITY / sum(INTENSITY) * 10^5
-
-  # round intensities to closest integer, BUT we add 0.5 so that very small intensities (between 0 and 0.5) are rounded to 1.
-  INTENSITY = round(INTENSITY + 0.5)
-
   list(y = INTENSITY, x = x)
 }

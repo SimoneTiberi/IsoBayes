@@ -1,7 +1,7 @@
 Package: IsoBayes
 Type: Package
 Title: IsoBayes: Single Isoform protein inference Method via Bayesian Analyses
-Version: 0.99.3
+Version: 0.99.4
 Description: IsoBayes is a Bayesian method to perform inference on single protein isoforms.
   Our approach infers the presence/absence of protein isoforms, and also estimates their abundance;
   additionally, it provides a measure of the uncertainty of these estimates, via:

@@ -194,7 +194,7 @@ results_normalized = inference(data_loaded, map_iso_gene = path_to_map_iso_gene)
 Specifying the `map_iso_gene` argument, also enables users to plot results via `plot_relative_abundances` function.
 
 # Visualizing results
-Results are stored as a `list` with two `data.frame` objects: 'isoform_results' and 'normalized_isoform_results' (`NULL` if 'map_iso_gene' was not provided).
+Results are stored as a `list` with three `data.frame` objects: 'isoform_results', 'normalized_isoform_results' and 'gene_abundance'. If 'map_iso_gene' was not provided, only 'isoform_results' is returned.
 ```{r get res}
 names(results_normalized)
 ```
@@ -213,7 +213,6 @@ Inside the 'isoform_results' `data.frame`, each row corresponds to a protein iso
 positive (negative) values indicate higher (lower) relative isoform abundance at the protein level, compared to the transcript level;
 * 'Prob_prot_inc': estimated probability that the relative abundance of the protein isoform is greater than the relative abundance of the corresponding transcript isoform (to be interpreted in conjunction with 'Log2_FC'); values towards 1 (towards 0) suggest that isoform relative abundances are higher (lower) at the protein-level than at the transcript-level.
 
-
 ```{r get iso res}
 head(results_normalized$isoform_results)
 ```
@@ -221,6 +220,15 @@ head(results_normalized$isoform_results)
 In 'normalized_isoform_results' `data.frame`, we report the protein isoform relative abundances, normalized within each gene (i.e., adding to 1 within a gene).
 ```{r get iso res norm}
 head(results_normalized$normalized_isoform_results)
+```
+
+In 'gene_abundance' `data.frame`, for each gene (row) we return:
+
+* 'Abundance': estimate (posterior mean) of the gene absolute abundance;
+* 'CI_LB': lower bound of the HPD credible interval (0.95 level) for the gene absolute abundance;
+* 'CI_UB': upper bound of the HPD credible interval (0.95 level) for the gene absolute abundance.
+```{r get iso res norm}
+head(results_normalized$gene_abundance)
 ```
 
 Finally, *IsoBayes* provides the `plot_relative_abundances` function to visualize protein-level and transcript-level relative abundances across the isoforms of a specific gene:

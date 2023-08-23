@@ -33,11 +33,14 @@
 #' set.seed(169612)
 #' results = inference(data_loaded, map_iso_gene = path_to_map_iso_gene)
 #'
-#' # results is a list of 2 data.frames:
+#' # results is a list of 3 data.frames:
 #' names(results)
 #' 
 #' # main results:
 #' head(results$isoform_results)
+#' 
+#' # gene abundance
+#' head(results$gene_abundance)
 #' 
 #' # results normalized within genes (total abundance of each gene),
 #' # useful to study alternative splicing within genes:

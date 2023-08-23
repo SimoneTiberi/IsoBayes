@@ -16,6 +16,7 @@ aggregate_components = function(components, ncores) {
         components[[i + 1]] = NULL
       }
     }
+    #components[[i]]$id = i
   }
   components
 }

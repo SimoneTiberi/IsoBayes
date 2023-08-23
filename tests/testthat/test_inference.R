@@ -21,6 +21,6 @@ test_that("inference() works faultlessly.", {
   results = inference(data_loaded, map_iso_gene = path_to_map_iso_gene)
   
   expect_is(results, "list")
-  expect_true(length(results) == 2)
+  expect_true(length(results) == 3)
   expect_is(results[[1]], "data.frame")
 })

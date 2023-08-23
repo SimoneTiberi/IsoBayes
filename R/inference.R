@@ -6,7 +6,8 @@
 #' @param map_iso_gene (optional) a character string indicating the path to a csv file with two columns:
 #' the 1st one containing the isoform id, and the 2nd one with the gene name.
 #' This argument is required to return protein isoform relative abundances, normalized within each gene 
-#' (i.e., adding to 1 within a gene), and to plot results via \code{\link{plot_relative_abundances}}.
+#' (i.e., adding to 1 within a gene), to plot results via \code{\link{plot_relative_abundances}}, and to return protein abundances aggregated
+#' by gene with HPD credible interval.
 #' @param n_cores the number of cores to use during algorithm execution.
 #' We suggest increasing the number of threads for large datasets only.
 #' @param K the number of MCMC iterations. Minimum 2000.
@@ -14,9 +15,9 @@
 #' @param thin thinning value to apply to the final MCMC chain.
 #' Useful for decreasing the memory (RAM) usage.
 #'
-#' @return A \code{list} of two \code{data.frame} objects: 'isoform_results', 
+#' @return A \code{list} of three \code{data.frame} objects: 'isoform_results', 
 #' and (only if `map_iso_gene` is provided) 'normalized_isoform_results' 
-#' (relative abundances normalized within each gene).
+#' (relative abundances normalized within each gene) and 'gene_abundance'.
 #'
 #' @examples
 #' # Load internal data to the package:
@@ -40,7 +41,7 @@
 #' set.seed(169612)
 #' results = inference(data_loaded, map_iso_gene = path_to_map_iso_gene)
 #' 
-#' # results is a list of 2 data.frames:
+#' # results is a list of 3 data.frames:
 #' names(results)
 #' 
 #' # main results:
@@ -50,6 +51,9 @@
 #' # (relative abunances add to 1 within each gene):
 #' # useful to study alternative splicing within genes:
 #' head(results$normalized_isoform_results)
+#' 
+#' # gene abundance
+#' head(results$gene_abundance)
 #' 
 #' # For more examples see the vignettes:
 #' #browseVignettes("IsoBayes")
@@ -78,10 +82,14 @@ inference = function(loaded_data,
   } else {
     loaded_data$prior = 0.1
   }
+  if (file.exists(map_iso_gene)) {
+    map_iso_gene_file = fread(map_iso_gene, header = FALSE)
+  } 
 
   names(loaded_data) = formalArgs(set_MCMC_args)
   args_MCMC = do.call("set_MCMC_args", loaded_data)
   args_MCMC$params = list(n_cores = n_cores, K = K, burn_in = burn_in, thin = thin, PEP = loaded_data$PEP)
+  sel_unique = loaded_data$PROTEIN_DF$Y_unique > 0
   rm(loaded_data)
 
   if (args_MCMC$params$PEP) {
@@ -91,14 +99,16 @@ inference = function(loaded_data,
   }
 
   if (args_MCMC$params$n_cores > 1) {
-    old_order = unlist(lapply(results_MCMC$groups, function(x) {x$proteins})
+    old_order = unlist(lapply(results_MCMC$groups, function(x){x$proteins})
                        )
     old_order = c(old_order, results_MCMC$one_pept_one_prot)
     old_order = sort(old_order, index.return = TRUE)$ix
     results_MCMC$PI = results_MCMC$PI[, old_order]
-    results_MCMC$isoform_results = results_MCMC$isoform_results[old_order, ]
+    results_MCMC$Y = results_MCMC$Y[, old_order]
+    #results_MCMC$isoform_results = results_MCMC$isoform_results[old_order, ]
   }
-
+  
+  results_MCMC$isoform_results = stat_from_MCMC_Y(results_MCMC$Y)
   results_MCMC = get_res_MCMC(results_MCMC, args_MCMC$prot_df$protein_name)
 
   if (!is.null(args_MCMC$prot_df$TPM)) {
@@ -111,16 +121,32 @@ inference = function(loaded_data,
   }
 
   if (file.exists(map_iso_gene)) {
-    map_iso_gene_file = fread(map_iso_gene, header = FALSE)
     results_MCMC$isoform_results = merge(results_MCMC$isoform_results, map_iso_gene_file, by.x = "Isoform", by.y = "V1")
     colnames(results_MCMC$isoform_results)[ncol(results_MCMC$isoform_results)] = "Gene"
+    
     res_norm = normalize_by_gene(results_MCMC, tpm = !is.null(args_MCMC$prot_df$TPM))
     reorder_col = c("Gene", reorder_col)
+  
+    results_MCMC$Y = aggregate.data.frame(t(results_MCMC$Y), by = list(results_MCMC$isoform_results$Gene), FUN = sum)
+    Gene = results_MCMC$Y[, 1]
+    results_MCMC$Y = t(results_MCMC$Y[, -1])
+    # 0.95 CI for protein abundance:
+    CI = hdi(results_MCMC$Y, credMass = 0.95)
+    gene_abundance = data.frame(Gene = Gene,
+                                Abundance = colMeans(results_MCMC$Y),
+                                CI_LB = CI[1, ],
+                                CI_UB = CI[2, ]
+                                )
   } else {
     res_norm = NULL
+    gene_abundance = NULL
   }
+  
+  # add a small threshold to isoform with unique peptides
+  results_MCMC$isoform_results$Prob_present[sel_unique] = results_MCMC$isoform_results$Prob_present[sel_unique] + 0.0001
 
   list(isoform_results = results_MCMC$isoform_results[, reorder_col],
-       normalized_isoform_results = res_norm
+       normalized_isoform_results = res_norm,
+       gene_abundance = gene_abundance
        )
 }

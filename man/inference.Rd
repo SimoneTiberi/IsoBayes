@@ -19,7 +19,8 @@ inference(
 \item{map_iso_gene}{(optional) a character string indicating the path to a csv file with two columns:
 the 1st one containing the isoform id, and the 2nd one with the gene name.
 This argument is required to return protein isoform relative abundances, normalized within each gene 
-(i.e., adding to 1 within a gene), and to plot results via \code{\link{plot_relative_abundances}}.}
+(i.e., adding to 1 within a gene), to plot results via \code{\link{plot_relative_abundances}}, and to return protein abundances aggregated
+by gene with HPD credible interval.}
 
 \item{n_cores}{the number of cores to use during algorithm execution.
 We suggest increasing the number of threads for large datasets only.}
@@ -32,9 +33,9 @@ We suggest increasing the number of threads for large datasets only.}
 Useful for decreasing the memory (RAM) usage.}
 }
 \value{
-A \code{list} of two \code{data.frame} objects: 'isoform_results', 
+A \code{list} of three \code{data.frame} objects: 'isoform_results', 
 and (only if `map_iso_gene` is provided) 'normalized_isoform_results' 
-(relative abundances normalized within each gene).
+(relative abundances normalized within each gene) and 'gene_abundance'.
 }
 \description{
 \code{inference} runs our two-layer latent variable Bayesian model, taking as input the data created by \code{\link{load_data}}.
@@ -61,7 +62,7 @@ path_to_map_iso_gene = paste0(data_dir, "/map_iso_gene.csv")
 set.seed(169612)
 results = inference(data_loaded, map_iso_gene = path_to_map_iso_gene)
 
-# results is a list of 2 data.frames:
+# results is a list of 3 data.frames:
 names(results)
 
 # main results:
@@ -71,6 +72,9 @@ head(results$isoform_results)
 # (relative abunances add to 1 within each gene):
 # useful to study alternative splicing within genes:
 head(results$normalized_isoform_results)
+
+# gene abundance
+head(results$gene_abundance)
 
 # For more examples see the vignettes:
 #browseVignettes("IsoBayes")

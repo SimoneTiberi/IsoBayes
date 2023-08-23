@@ -14,8 +14,8 @@ run_MCMC_pep = function(pept_df, pept_unique_df, prot_df, protein_length, N, M, 
   }else{
     res = MCMC_PEP(pept_df$EC_numeric, pept_df$Y, pept_df$PEP, M, pept_unique_df$EC_numeric, pept_unique_df$Y,
                    pept_unique_df$PEP, M_unique, protein_length, pp, N, params$K, params$burn_in, params$thin)
-    res$isoform_results = stat_from_MCMC_Y(res$Y)
-    res$Y = NULL
+    #res$isoform_results = stat_from_MCMC_Y(res$Y)
+    #res$Y = NULL
   }
   # normalize PI
   res$PI = t(apply(res$PI, 1, function(x){x/sum(x)}))

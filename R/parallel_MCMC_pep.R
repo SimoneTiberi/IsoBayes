@@ -12,16 +12,17 @@ parallel_MCMC_pep = function(pep_df, pept_unique_df, prot_df, protein_length, pp
   res = foreach(component = iter(components)) %dorng% {
     names(component) = formalArgs(MCMC_PEP)
     res = do.call(MCMC_PEP, component)
-    isoform_results = stat_from_MCMC_Y(res$Y)
+    #isoform_results = stat_from_MCMC_Y(res$Y)
     
-    list(isoform_results, res$PI)
+    #list(isoform_results, res$PI)
+    res
   }
   stopCluster(cluster)
   
-  res = list(PI = do.call("cbind", lapply(res, function(x){x[[2]]})),
-             isoform_results = do.call("rbind", lapply(res, function(x){x[[1]]})),
+  res = list(PI = do.call("cbind", lapply(res, function(x){x$PI})),
+             Y = do.call("cbind", lapply(res, function(x){x$Y})),
+             #isoform_results = do.call("rbind", lapply(res, function(x){x[[1]]})),
              groups = groups, one_pept_one_prot = one_pept_one_prot
-  )
-  
+             )
   res
 }
