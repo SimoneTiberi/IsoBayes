@@ -16,8 +16,9 @@
 #' Useful for decreasing the memory (RAM) usage.
 #'
 #' @return A \code{list} of three \code{data.frame} objects: 'isoform_results', 
-#' and (only if `map_iso_gene` is provided) 'normalized_isoform_results' 
-#' (relative abundances normalized within each gene) and 'gene_abundance'.
+#' and (only if `map_iso_gene` is provided) 'normalized_isoform_results' (relative abundances normalized within each gene)
+#' and 'gene_abundance'. For more information about the results stored in the three \code{data.frame} objects, see the vignettes:
+#' #browseVignettes("IsoBayes")
 #'
 #' @examples
 #' # Load internal data to the package:
@@ -41,18 +42,18 @@
 #' set.seed(169612)
 #' results = inference(data_loaded, map_iso_gene = path_to_map_iso_gene)
 #' 
-#' # results is a list of 3 data.frames:
+#' # Results is a list of 3 data.frames:
 #' names(results)
 #' 
-#' # main results:
+#' # Main results:
 #' head(results$isoform_results)
 #' 
-#' # results normalized within genes
+#' # Results normalized within genes
 #' # (relative abunances add to 1 within each gene):
 #' # useful to study alternative splicing within genes:
 #' head(results$normalized_isoform_results)
 #' 
-#' # gene abundance
+#' # Gene abundance
 #' head(results$gene_abundance)
 #' 
 #' # For more examples see the vignettes:
@@ -121,8 +122,7 @@ inference = function(loaded_data,
   }
 
   if (file.exists(map_iso_gene)) {
-    results_MCMC$isoform_results = merge(results_MCMC$isoform_results, map_iso_gene_file, by.x = "Isoform", by.y = "V1")
-    colnames(results_MCMC$isoform_results)[ncol(results_MCMC$isoform_results)] = "Gene"
+    results_MCMC = map_isoform_to_gene(results_MCMC, map_iso_gene_file)
     
     res_norm = normalize_by_gene(results_MCMC, tpm = !is.null(args_MCMC$prot_df$TPM))
     reorder_col = c("Gene", reorder_col)

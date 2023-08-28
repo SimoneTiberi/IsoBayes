@@ -227,7 +227,7 @@ In 'gene_abundance' `data.frame`, for each gene (row) we return:
 * 'Abundance': estimate (posterior mean) of the gene absolute abundance;
 * 'CI_LB': lower bound of the HPD credible interval (0.95 level) for the gene absolute abundance;
 * 'CI_UB': upper bound of the HPD credible interval (0.95 level) for the gene absolute abundance.
-```{r get iso res norm}
+```{r get iso res norm gene}
 head(results_normalized$gene_abundance)
 ```
 
