@@ -164,7 +164,7 @@ To this aim, the data must be organized in a `.tsv` file where each row correspo
 * 'PEP': (optional) a numeric variable indicating the probability that a peptide is erroneously detected;
 * 'sequence': (required when using PEP) a character string indicating the peptide name/id/amino acids sequence.
 
-Note that, when using user-provided data, arguments `abundance_type` and `path_to_peptides_intensities` are not considered, because users are free to set column `Y` to PSM counts or intensities.
+Note that, when using user-provided data, argument `path_to_peptides_intensities` is not considered, because users are free to set column `Y` to PSM counts or intensities.
 
 To load the tsv file with user data, we just need to pass the file path and set `input_type` as "other" .
 ```{r set path user, eval = FALSE}
