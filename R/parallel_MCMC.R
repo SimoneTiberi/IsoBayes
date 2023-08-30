@@ -34,7 +34,9 @@ parallel_MCMC = function(pep_df, prot_df, protein_length, pp, N, params){
   )
   #res$isoform_results = rbind(res$isoform_results, isoform_results_unique)
   res$PI = cbind(res$PI, PI_one_pept_one_prot$PI)
-  res$Y = cbind(res$Y, matrix(rep(one_pept_one_prot_Y, params$K), nrow(res$Y), byrow = TRUE))
+  res$Y = cbind(res$Y, matrix(rep(one_pept_one_prot_Y, round((params$K - params$burn_in) / params$thin)),
+                              nrow(res$Y), byrow = TRUE)
+                )
   res$one_pept_one_prot = one_pept_one_prot
   
   res
