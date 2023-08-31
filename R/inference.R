@@ -70,6 +70,7 @@ inference = function(loaded_data,
                      K = 2000,
                      burn_in = 1000,
                      thin = 1) {
+
   if(is.null(map_iso_gene)){
     map_iso_gene = ""
   }
@@ -89,7 +90,7 @@ inference = function(loaded_data,
   names(loaded_data) = formalArgs(set_MCMC_args)
   args_MCMC = do.call("set_MCMC_args", loaded_data)
   args_MCMC$params = list(n_cores = n_cores, K = K, burn_in = burn_in, thin = thin, PEP = loaded_data$PEP)
-  sel_unique = loaded_data$PROTEIN_DF$Y_unique > 0
+  sel_unique = loaded_data$prot_df$Y_unique > 0
   rm(loaded_data)
 
   if (args_MCMC$params$PEP) {
