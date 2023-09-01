@@ -1,10 +1,7 @@
-get_peptides_from_idXML = function(file, pep, FDR_thd){
-  #PG = read_xml(file)
-  idXML = data.table::fread(file, sep = NULL, header = FALSE)
+get_peptides_from_idXML = function(idXML, pep, FDR_thd){
   
   keep = rep(FALSE, nrow(idXML))
   keep = keep + (substr(idXML$V1, 1, 14) == "\t\t\t<PeptideHit")
-  #keep = keep + (substr(idXML$V1, 1, 14) == "\t\t\t<ProteinHit")
   keep = keep + (substr(idXML$V1, 1, 48) == "\t\t\t\t<UserParam type=\"string\" name=\"target_decoy\"")
   keep = keep + (substr(idXML$V1, 1, 68) == "\t\t\t\t<UserParam type=\"float\" name=\"Posterior Error Probability_score\"")
   keep = keep + (substr(idXML$V1, 1, 42) == "\t\t\t\t<UserParam type=\"float\" name=\"q-value\"")

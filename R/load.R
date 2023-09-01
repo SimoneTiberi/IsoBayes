@@ -83,8 +83,9 @@ load_data = function(path_to_peptides_psm,
     message("We found:")
     protein_df_args = list(protein_name = get_prot_from_EC(PEPTIDE_DF$EC))
   } else if (input_type == "openMS") {
-    PEPTIDE_DF = get_peptides_from_idXML(path_to_peptides_psm, PEP, FDR_thd)
-    PROTEIN_DF_openMS = get_proteins_from_idXML(path_to_peptides_psm)
+    file_idXML = data.table::fread(path_to_peptides_psm, sep = NULL, header = FALSE)
+    PEPTIDE_DF = get_peptides_from_idXML(file_idXML, PEP, FDR_thd)
+    PROTEIN_DF_openMS = get_proteins_from_idXML(file_idXML)
     message("We found:")
     protein_name_openMS = get_prot_from_EC(PEPTIDE_DF$EC)
     protein_df_args = list(protein_name = PROTEIN_DF_openMS$isoform[match(protein_name_openMS, PROTEIN_DF_openMS$id)],
