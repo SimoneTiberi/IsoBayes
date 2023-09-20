@@ -32,7 +32,7 @@
 #'
 #' # Load the data
 #' data_loaded = load_data(
-#'   path_to_peptides_psm = path_to_peptides_psm,
+#'   x = path_to_peptides_psm,
 #'   path_to_tpm = tpm_path)
 #'
 #' # Define the path to the map_iso_gene.csv file
@@ -141,10 +141,10 @@ inference = function(loaded_data,
     res_norm = NULL
     gene_abundance = NULL
   }
-  
-  # add a small threshold to isoform with unique peptides
-  results_MCMC$isoform_results$Prob_present[sel_unique] = results_MCMC$isoform_results$Prob_present[sel_unique] + 0.0001
-
+  if(!args_MCMC$params$PEP){
+    #add a small threshold to isoform with unique peptides
+    results_MCMC$isoform_results$Prob_present[sel_unique] = results_MCMC$isoform_results$Prob_present[sel_unique] + 0.01
+  }
   list(isoform_results = results_MCMC$isoform_results[, reorder_col],
        normalized_isoform_results = res_norm,
        gene_abundance = gene_abundance

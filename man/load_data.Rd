@@ -5,7 +5,7 @@
 \title{Load and process input data}
 \usage{
 load_data(
-  path_to_peptides_psm,
+  x,
   path_to_peptides_intensities = NULL,
   path_to_tpm = NULL,
   input_type = "metamorpheus",
@@ -15,10 +15,10 @@ load_data(
 )
 }
 \arguments{
-\item{path_to_peptides_psm}{a character string indicating the path to one of the following files:
+\item{x}{a character string indicating the path to one of the following files:
 i) the psmtsv file from *MetaMorpheus* tool with PSM counts,
 ii) the idXML file from *OpenMS* toolkit, or
-iii) a tsv file, formatted as explained in the "Input user-provided data" Section of the vignettes.
+iii) a \code{data.frame} or a path to a tsv file, formatted as explained in the "Input user-provided data" Section of the vignettes.
 For more details on how to create these files see the vignettes.}
 
 \item{path_to_peptides_intensities}{(optional) a character string indicating the path to the psmtsv file from *MetaMorpheus* with intensity values.
@@ -58,7 +58,7 @@ data_dir = system.file("extdata", package = "IsoBayes")
 path_to_peptides_psm = paste0(data_dir, "/AllPeptides.psmtsv")
 
 # Load the data
-data_loaded = load_data(path_to_peptides_psm = path_to_peptides_psm)
+data_loaded = load_data(x = path_to_peptides_psm)
 
 # For more examples see the vignettes:
 #browseVignettes("IsoBayes")

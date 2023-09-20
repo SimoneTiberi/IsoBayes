@@ -34,8 +34,9 @@ Useful for decreasing the memory (RAM) usage.}
 }
 \value{
 A \code{list} of three \code{data.frame} objects: 'isoform_results', 
-and (only if `map_iso_gene` is provided) 'normalized_isoform_results' 
-(relative abundances normalized within each gene) and 'gene_abundance'.
+and (only if `map_iso_gene` is provided) 'normalized_isoform_results' (relative abundances normalized within each gene)
+and 'gene_abundance'. For more information about the results stored in the three \code{data.frame} objects, see the vignettes:
+#browseVignettes("IsoBayes")
 }
 \description{
 \code{inference} runs our two-layer latent variable Bayesian model, taking as input the data created by \code{\link{load_data}}.
@@ -52,7 +53,7 @@ tpm_path = paste0(data_dir, "/jurkat_isoform_kallisto.tsv")
 
 # Load the data
 data_loaded = load_data(
-  path_to_peptides_psm = path_to_peptides_psm,
+  x = path_to_peptides_psm,
   path_to_tpm = tpm_path)
 
 # Define the path to the map_iso_gene.csv file
@@ -62,18 +63,18 @@ path_to_map_iso_gene = paste0(data_dir, "/map_iso_gene.csv")
 set.seed(169612)
 results = inference(data_loaded, map_iso_gene = path_to_map_iso_gene)
 
-# results is a list of 3 data.frames:
+# Results is a list of 3 data.frames:
 names(results)
 
-# main results:
+# Main results:
 head(results$isoform_results)
 
-# results normalized within genes
+# Results normalized within genes
 # (relative abunances add to 1 within each gene):
 # useful to study alternative splicing within genes:
 head(results$normalized_isoform_results)
 
-# gene abundance
+# Gene abundance
 head(results$gene_abundance)
 
 # For more examples see the vignettes:

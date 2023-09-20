@@ -40,7 +40,7 @@ tpm_path = paste0(data_dir, "/jurkat_isoform_kallisto.tsv")
 
 # Load the data
 data_loaded = load_data(
-  path_to_peptides_psm = path_to_peptides_psm,
+  x = path_to_peptides_psm,
   path_to_tpm = tpm_path)
 
 # Define the path to the map_iso_gene.csv file

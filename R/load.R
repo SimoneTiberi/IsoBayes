@@ -2,10 +2,10 @@
 #'
 #' \code{load_data} reads and processes all the input files required to run our model.
 #
-#' @param path_to_peptides_psm a character string indicating the path to one of the following files:
+#' @param x a character string indicating the path to one of the following files:
 #' i) the psmtsv file from *MetaMorpheus* tool with PSM counts,
 #' ii) the idXML file from *OpenMS* toolkit, or
-#' iii) a tsv file, formatted as explained in the "Input user-provided data" Section of the vignettes.
+#' iii) a \code{data.frame} or a path to a tsv file, formatted as explained in the "Input user-provided data" Section of the vignettes.
 #' For more details on how to create these files see the vignettes.
 #' @param path_to_peptides_intensities (optional) a character string indicating the path to the psmtsv file from *MetaMorpheus* with intensity values.
 #' Required if 'abundance_type' equals to "intensities".
@@ -35,7 +35,7 @@
 #' path_to_peptides_psm = paste0(data_dir, "/AllPeptides.psmtsv")
 #'
 #' # Load the data
-#' data_loaded = load_data(path_to_peptides_psm = path_to_peptides_psm)
+#' data_loaded = load_data(x = path_to_peptides_psm)
 #'
 #' # For more examples see the vignettes:
 #' #browseVignettes("IsoBayes")
@@ -45,13 +45,13 @@
 #' @seealso \code{\link{inference}} and \code{\link{plot_relative_abundances}}.
 #'
 #' @export
-load_data = function(path_to_peptides_psm,
-                      path_to_peptides_intensities = NULL,
-                      path_to_tpm = NULL,
-                      input_type = "metamorpheus",
-                      abundance_type = "psm",
-                      PEP = TRUE,
-                      FDR_thd = NULL) {
+load_data = function(x,
+                     path_to_peptides_intensities = NULL,
+                     path_to_tpm = NULL,
+                     input_type = "metamorpheus",
+                     abundance_type = "psm",
+                     PEP = TRUE,
+                     FDR_thd = NULL) {
 
   if(is.null(FDR_thd)){
     FDR_thd = 1
@@ -63,7 +63,7 @@ load_data = function(path_to_peptides_psm,
     path_to_tpm = ""
   }
 
-  input_check(path_to_peptides_psm, path_to_peptides_intensities, path_to_tpm, input_type, abundance_type, PEP, FDR_thd)
+  input_check(x, path_to_peptides_intensities, path_to_tpm, input_type, abundance_type, PEP, FDR_thd)
 
   if (input_type == "metamorpheus") {
     variables = c("Protein Accession", "QValue", "Decoy/Contaminant/Target", "Base Sequence")
@@ -72,10 +72,10 @@ load_data = function(path_to_peptides_psm,
     }
     if (abundance_type == "intensities") {
       data_list = list(x = fread(path_to_peptides_intensities, data.table = FALSE), y = NULL)
-      data_list = build_intensity(data_list$x, path_to_peptides_psm, variables)
+      data_list = build_intensity(data_list$x, x, variables)
     } else if (abundance_type == "psm") {
-      data_list = list(x = fread(path_to_peptides_psm, select = variables, data.table = FALSE), y = NULL)
-      data_list$y = as.numeric(fread(path_to_peptides_psm, select = "PSM Count (unambiguous, <0.01 q-value)", data.table = FALSE)[, 1])
+      data_list = list(x = fread(x, select = variables, data.table = FALSE), y = NULL)
+      data_list$y = as.numeric(fread(x, select = "PSM Count (unambiguous, <0.01 q-value)", data.table = FALSE)[, 1])
     }
 
     PEPTIDE_DF = do.call("build_peptide_df", data_list)
@@ -83,7 +83,7 @@ load_data = function(path_to_peptides_psm,
     message("We found:")
     protein_df_args = list(protein_name = get_prot_from_EC(PEPTIDE_DF$EC))
   } else if (input_type == "openMS") {
-    file_idXML = data.table::fread(path_to_peptides_psm, sep = NULL, header = FALSE)
+    file_idXML = fread(x, sep = NULL, header = FALSE)
     PEPTIDE_DF = get_peptides_from_idXML(file_idXML, PEP, FDR_thd)
     PROTEIN_DF_openMS = get_proteins_from_idXML(file_idXML)
     message("We found:")
@@ -92,7 +92,11 @@ load_data = function(path_to_peptides_psm,
                            id_openMS = PROTEIN_DF_openMS$id[match(protein_name_openMS, PROTEIN_DF_openMS$id)]
                            )
   } else if (input_type == "other") {
-    PEPTIDE_DF = as.data.frame(data.table::fread(path_to_peptides_psm))
+    if(is.data.frame(x)){
+      PEPTIDE_DF = x ; rm(x)
+    }else{
+      PEPTIDE_DF = as.data.frame(fread(x))
+    }
     if(!is.null(PEPTIDE_DF$FDR)){
       PEPTIDE_DF = PEPTIDE_DF[PEPTIDE_DF$FDR < FDR_thd, ]
     }
