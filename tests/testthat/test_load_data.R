@@ -6,7 +6,7 @@ test_that("load_data() works faultlessly.", {
   path_to_peptides_psm = paste0(data_dir, "/AllPeptides.psmtsv")
   
   # Load the data
-  data_loaded = load_data(x = path_to_peptides_psm)
+  data_loaded = load_data(path_to_peptides_psm = path_to_peptides_psm)
   
   expect_is(data_loaded, "list")
   expect_true(length(data_loaded) == 4)

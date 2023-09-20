@@ -32,7 +32,7 @@
 #'
 #' # Load the data
 #' data_loaded = load_data(
-#'   x = path_to_peptides_psm,
+#'   path_to_peptides_psm = path_to_peptides_psm,
 #'   path_to_tpm = tpm_path)
 #'
 #' # Define the path to the map_iso_gene.csv file
