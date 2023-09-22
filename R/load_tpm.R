@@ -12,8 +12,6 @@ load_tpm = function(protein_name, mRNAfile){
 	          check if the format name of the protein isoforms is consistent with those of the transcripts.")
 	  tpm[is.na(tpm)] = 0
 	}
-	# normalize TPMs:
-	tpm = tpm/sum(tpm) * 10^6
 	
 	tpm
 }
