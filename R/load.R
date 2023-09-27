@@ -120,18 +120,6 @@ load_data = function(path_to_peptides_psm,
   }
 
   PEPTIDE_DF = collapse_pept_w_equal_EC(PEPTIDE_DF, PEP)
-  
-  if(abundance_type == "intensities"){
-    # numerical ISSUE with intensities: intensities have VERY large values, so sometimes multi-mapping peptides
-    # will distribute at least 1 "intensity" to all proteins -> all with have a high probability of being present!
-    # Solution: we compute TPM-like intensities (sum of all intensities = 10^5).
-    # We choose 10^5 because it's similar to the sum of PSMs in some example datasets we looked at.
-    PEPTIDE_DF$Y = PEPTIDE_DF$Y / sum(PEPTIDE_DF$Y) * 10^5
-    
-    # round intensities to closest integer, BUT we add 0.5 so that very small intensities (between 0 and 0.5) are rounded to 1.
-    PEPTIDE_DF$Y = round(PEPTIDE_DF$Y + 0.5)
-  }
-  
   PEPTIDE_DF = PEPTIDE_DF[PEPTIDE_DF$Y > 0, ]
 
   message("After FDR filtering (if used), we will analyze:")
@@ -157,7 +145,21 @@ load_data = function(path_to_peptides_psm,
   PEPTIDE_DF = PEPTIDE_DF[!UNIQUE_PEPT_ABUNDANCE$sel_unique, ] # keep multi-mapping peptides
   PEPTIDE_DF$EC_numeric = UNIQUE_PEPT_ABUNDANCE$EC_numeric[!UNIQUE_PEPT_ABUNDANCE$sel_unique]
   PEPTIDE_DF$EC = NULL
-
+  
+  overall_abundance = get_overall_abundance(PEPTIDE_DF, PEPTIDE_DF_unique, PROTEIN_DF$Y_unique)
+  
+  if(overall_abundance > 2*10^5){
+    PEPTIDE_DF$Y = PEPTIDE_DF$Y / overall_abundance * 10^5
+    # round abundances to closest integer, BUT we add 0.5 so that very small abundances (between 0 and 0.5) are rounded to 1.
+    PEPTIDE_DF$Y = round(PEPTIDE_DF$Y + 0.5)
+    if(is.null(PEPTIDE_DF_unique)){
+      PROTEIN_DF$Y_unique = PROTEIN_DF$Y_unique / overall_abundance * 10^5
+      PROTEIN_DF$Y_unique = round(PROTEIN_DF$Y_unique + 0.5)
+    }else{
+      PEPTIDE_DF_unique$Y = PEPTIDE_DF_unique$Y / overall_abundance * 10^5
+      PEPTIDE_DF_unique$Y = round(PEPTIDE_DF_unique$Y + 0.5)
+    }
+  }
   # message(glue("Number of multi-mapping peptides: {nrow(PEPTIDE_DF)}"))
   list(PEPTIDE_DF = PEPTIDE_DF, PEPTIDE_DF_unique = PEPTIDE_DF_unique, PROTEIN_DF = PROTEIN_DF, PEP = PEP)
 }
