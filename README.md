@@ -36,7 +36,7 @@ The vignette illustrating how to use the package can be obtained by running the 
 Additionally, users can also provide MS data obtained from any bioinformatics tool.
 
 ### User-provided data
-To this aim, the data must be organized in a `.tsv` file, a data.frame or in the rowData object of a SummarizedExperimen.
+To this aim, the data must be organized in a `.tsv` file, a data.frame or in the rowData object of a SummarizedExperiment.
 In all cases, each row corresponds to a peptide, and columns refer to:
 
 * 'Y': a numeric variable indicating the peptide abundance (PSM counts or intensities, as defined by the user);
