@@ -7,10 +7,10 @@
 #' the following files:
 #' i) the psmtsv file from *MetaMorpheus* tool with PSM counts,
 #' ii) the idXML file from *OpenMS* toolkit, or
-#' iii) a \code{data.frame} or a path to a tsv file, formatted as explained
+#' iii) a \code{SummarizedExperiment} object, a \code{data.frame} or
+#' a path to a tsv file, formatted as explained
 #' in the "Input user-provided data" Section of the vignettes
-#' (only when input_type = "other"). For more details on how to create
-#' these files see the vignettes.
+#' (only when input_type = "other").
 #' @param path_to_peptides_intensities (optional) a character string indicating
 #' the path to the psmtsv file from *MetaMorpheus* with intensity values.
 #' Required if 'abundance_type' equals to "intensities".
@@ -66,7 +66,7 @@ load_data = function(path_to_peptides_psm,
                       abundance_type = "psm",
                       PEP = TRUE,
                       FDR_thd = NULL) {
-    a = 1
+    
     if (is.null(FDR_thd)) {
         FDR_thd = 1
     }
@@ -119,10 +119,13 @@ load_data = function(path_to_peptides_psm,
     } else if (input_type == "other") {
         if (is.data.frame(path_to_peptides_psm)) {
             PEPTIDE_DF = path_to_peptides_psm
-            rm(path_to_peptides_psm)
-        } else {
+        } else if (is(path_to_peptides_psm, "SummarizedExperiment")) {
+            PEPTIDE_DF = rowData(path_to_peptides_psm)
+        } else{
             PEPTIDE_DF = as.data.frame(fread(path_to_peptides_psm))
         }
+        check_variables(PEPTIDE_DF) ; rm(path_to_peptides_psm)
+        
         if (!is.null(PEPTIDE_DF$FDR)) {
             PEPTIDE_DF = PEPTIDE_DF[PEPTIDE_DF$FDR < FDR_thd, ]
         }

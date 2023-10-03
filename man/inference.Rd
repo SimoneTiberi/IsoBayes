@@ -14,12 +14,16 @@ inference(
 )
 }
 \arguments{
-\item{loaded_data}{\code{list} of \code{data.frame} objects, returned by \code{\link{load_data}}.}
+\item{loaded_data}{\code{list} of \code{data.frame} objects,
+returned by \code{\link{load_data}}.}
 
-\item{map_iso_gene}{(optional) a character string indicating the path to a csv file with two columns:
+\item{map_iso_gene}{(optional) a character string indicating
+the path to a csv file with two columns:
 the 1st one containing the isoform id, and the 2nd one with the gene name.
-This argument is required to return protein isoform relative abundances, normalized within each gene 
-(i.e., adding to 1 within a gene), to plot results via \code{\link{plot_relative_abundances}}, and to return protein abundances aggregated
+This argument is required to return protein isoform relative abundances,
+normalized within each gene
+(i.e., adding to 1 within a gene), to plot results via \code{\link{plot_relative_abundances}},
+and to return protein abundances aggregated
 by gene with HPD credible interval.}
 
 \item{n_cores}{the number of cores to use during algorithm execution.
@@ -33,13 +37,16 @@ We suggest increasing the number of threads for large datasets only.}
 Useful for decreasing the memory (RAM) usage.}
 }
 \value{
-A \code{list} of three \code{data.frame} objects: 'isoform_results', 
-and (only if `map_iso_gene` is provided) 'normalized_isoform_results' (relative abundances normalized within each gene)
-and 'gene_abundance'. For more information about the results stored in the three \code{data.frame} objects, see the vignettes:
+A \code{list} of three \code{data.frame} objects: 'isoform_results',
+and (only if `map_iso_gene` is provided) 'normalized_isoform_results'
+(relative abundances normalized within each gene)
+and 'gene_abundance'. For more information about the results stored
+in the three \code{data.frame} objects, see the vignettes:
 #browseVignettes("IsoBayes")
 }
 \description{
-\code{inference} runs our two-layer latent variable Bayesian model, taking as input the data created by \code{\link{load_data}}.
+\code{inference} runs our two-layer latent variable Bayesian model,
+taking as input the data created by \code{\link{load_data}}.
 }
 \examples{
 # Load internal data to the package:
@@ -53,8 +60,9 @@ tpm_path = paste0(data_dir, "/jurkat_isoform_kallisto.tsv")
 
 # Load the data
 data_loaded = load_data(
-  path_to_peptides_psm = path_to_peptides_psm,
-  path_to_tpm = tpm_path)
+    path_to_peptides_psm = path_to_peptides_psm,
+    path_to_tpm = tpm_path
+)
 
 # Define the path to the map_iso_gene.csv file
 path_to_map_iso_gene = paste0(data_dir, "/map_iso_gene.csv")
@@ -78,12 +86,13 @@ head(results$normalized_isoform_results)
 head(results$gene_abundance)
 
 # For more examples see the vignettes:
-#browseVignettes("IsoBayes")
+# browseVignettes("IsoBayes")
 
 }
 \seealso{
 \code{\link{load_data}} and \code{\link{plot_relative_abundances}}
 }
 \author{
-Jordy Bollon \email{jordy.bollon@iit.it} and Simone Tiberi \email{simone.tiberi@unibo.it}
+Jordy Bollon \email{jordy.bollon@iit.it}
+and Simone Tiberi \email{simone.tiberi@unibo.it}
 }

@@ -7,7 +7,7 @@ Our approach infers the presence/absence of protein isoforms, and also estimates
 additionally, it provides a measure of the uncertainty of these estimates, via:
 i) the posterior probability that a protein isoform is present in the sample;
 ii) a posterior credible interval of its abundance.
-`IsoBayes` inputs liquid cromatography mass spectrometry (MS) data,
+`IsoBayes` inputs liquid cromatography Mass Spectrometry (MS) data,
 and can work with both PSM counts, and intensities.
 When available, trascript isoform abundances (i.e., TPMs) are also incorporated:
 TPMs are used to formulate an informative prior for the respective protein isoform relative abundance.
@@ -28,13 +28,23 @@ In the meantime, you can install it from GitHub:
 devtools::install_github("SimoneTiberi/IsoBayes")
 ```
 
-
 ## Vignette
 The vignette illustrating how to use the package can be obtained by running the `IsoBayes.Rmd` file in the vignettes folder.
 
 ## Input data
 *IsoBayes* works with the output of both *MetaMorpheus* (MM), or *Percolator* (via the *OpenMS* toolkit).
-Other tools can be used as well to generate out input data, as long as the input files follow the structure mentioned in the "Input user-provided data" Section of the vignettes.
+
+### User-provided data
+The user can also input MS data obtained from any bioinformatics tool. To this aim, the data must be organized in a `.tsv` file, a data.frame or a SummarizedExperiment object where each row corresponds to a peptide, and columns refer to:
+
+* 'Y': a numeric variable indicating the peptide abundance (PSM counts or intensities, as defined by the user);
+* 'EC': Equivalent Classes, a character string indicating the isoform(s) name the peptide maps to. If the peptide maps to multiple protein isoforms, the names must be separated with "|" , i.e. "name_isoform_1|name_isoform_2";
+* 'FDR': (optional) a numeric variable indicating the FDR of each peptide;
+* 'PEP': (optional) a numeric variable indicating the probability that a peptide is erroneously detected;
+* 'sequence': (required when using PEP) a character string indicating the peptide name/id/amino acids sequence.
+
+For more details and examples on how to load user-provided data, see the "Input user-provided data" Section of the vignettes.
+
 In our benchmarks, we tested our model using both *MetaMorpheus* and *Percolator* data, and obtained slightly better results, and a shorter runtime with *MetaMorpheus*.
 
 ### *MetaMorpheus* pipeline

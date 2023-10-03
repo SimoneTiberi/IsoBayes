@@ -4,18 +4,14 @@ input_check = function(path_to_peptides_psm, path_to_peptides_intensities,
         path_to_peptides_intensities, path_to_tpm, input_type,
         abundance_type
     )
-
-    args_name = c(
-        "path_to_peptides_intensities", "path_to_tpm", "input_type",
-        "abundance_type"
-    )
-
+    args_name = c("path_to_peptides_intensities", "path_to_tpm", "input_type",
+                  "abundance_type"
+                  )
     for (i in 1:length(character_inputs)) {
         if (!is(character_inputs[i], "character")) {
             stop(glue("{args_name[i]} must be a character string."))
         }
     }
-
     if (!(input_type %in% c("openMS", "metamorpheus", "other"))) {
         stop("Invalid input_type. Choose one of 'openMS',
              'metamorpheus' or 'other'.")
@@ -29,24 +25,24 @@ input_check = function(path_to_peptides_psm, path_to_peptides_intensities,
     if (FDR_thd < 0 | FDR_thd > 1) {
         stop("FDR_thd must be a numeric value between 0 and 1.")
     }
-
     if (input_type == "other") {
-        if (!is.character(path_to_peptides_psm) & !is.data.frame(path_to_peptides_psm)) {
-            stop("path_to_peptides_psm must be a character string or
-                 a data.frame.")
+        if (!is.character(path_to_peptides_psm) &
+            !is.data.frame(path_to_peptides_psm) &
+            !is(path_to_peptides_psm, "SummarizedExperiment")) {
+            
+            stop("path_to_peptides_psm must be a character string,
+                 a data.frame or a SummarizedExperiment object.")
         }
     } else {
         if (!is.character(path_to_peptides_psm)) {
             stop("path_to_peptides_psm must be a character string.")
         }
     }
-
     if (input_type == "openMS" & abundance_type == "intensities") {
         stop("With input_type = 'openMS' only psm abundance can be inputted.
          Please set abundance_type equal to 'psm'.")
     }
-
-    if (!is.data.frame(path_to_peptides_psm)) {
+    if (!is.data.frame(path_to_peptides_psm) & !is(path_to_peptides_psm, "SummarizedExperiment")) {
         vec_files = c(
             path_to_peptides_psm, path_to_peptides_intensities,
             path_to_tpm

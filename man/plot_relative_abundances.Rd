@@ -12,20 +12,24 @@ plot_relative_abundances(
 )
 }
 \arguments{
-\item{res_inference}{\code{list} of two \code{data.frame} objects returned by \code{\link{inference}}.}
+\item{res_inference}{\code{list} of two \code{data.frame} objects
+returned by \code{\link{inference}}.}
 
 \item{gene_id}{a character string indicating the gene to be plotted.}
 
-\item{plot_CI}{logical; if TRUE (default), plot 0.95 level Credibility Intervals for each isoform.}
+\item{plot_CI}{logical; if TRUE (default),
+plot 0.95 level Credibility Intervals for each isoform.}
 
-\item{normalize_gene}{logical; if TRUE (default), plot isoform relative abundances, 
+\item{normalize_gene}{logical; if TRUE (default),
+plot isoform relative abundances,
 normalized within the specified gene (they add to 1 within a gene).}
 }
 \value{
 A \code{ggplot} object, showing isoform relative abundances for a specific gene.
 }
 \description{
-\code{plot_relative_abundances} plots protein isoforms results, obtained by \code{\link{inference}},
+\code{plot_relative_abundances} plots protein isoforms results,
+obtained by \code{\link{inference}},
 for a specific gene, together with transcripts abundances if available.
 }
 \examples{
@@ -40,8 +44,9 @@ tpm_path = paste0(data_dir, "/jurkat_isoform_kallisto.tsv")
 
 # Load the data
 data_loaded = load_data(
-  path_to_peptides_psm = path_to_peptides_psm,
-  path_to_tpm = tpm_path)
+    path_to_peptides_psm = path_to_peptides_psm,
+    path_to_tpm = tpm_path
+)
 
 # Define the path to the map_iso_gene.csv file
 path_to_map_iso_gene = paste0(data_dir, "/map_iso_gene.csv")
@@ -65,21 +70,26 @@ head(results$normalized_isoform_results)
 
 # Plotting results, normalizing within genes
 # (relative abundances add to 1 within each gene):
-plot_relative_abundances(results, gene_id = "TUBB",
-                          normalize_gene = TRUE)
+plot_relative_abundances(results,
+    gene_id = "TUBB",
+    normalize_gene = TRUE
+)
 
 # Plotting results, NOT normalized
 # (relative abundances add to 1 across all isoforms in the dataset):
-plot_relative_abundances(results, gene_id = "TUBB",
-                          normalize_gene = FALSE)
+plot_relative_abundances(results,
+    gene_id = "TUBB",
+    normalize_gene = FALSE
+)
 
 # For more examples see the vignettes:
-#browseVignettes("IsoBayes")
+# browseVignettes("IsoBayes")
 
 }
 \seealso{
 \code{\link{load_data}}, \code{\link{inference}}
 }
 \author{
-Jordy Bollon \email{jordy.bollon@iit.it} and Simone Tiberi \email{simone.tiberi@unibo.it}
+Jordy Bollon \email{jordy.bollon@iit.it}
+and Simone Tiberi \email{simone.tiberi@unibo.it}
 }

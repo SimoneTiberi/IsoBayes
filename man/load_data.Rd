@@ -15,40 +15,53 @@ load_data(
 )
 }
 \arguments{
-\item{path_to_peptides_psm}{a character string indicating the path to one of the following files:
+\item{path_to_peptides_psm}{a character string indicating the path to one of
+the following files:
 i) the psmtsv file from *MetaMorpheus* tool with PSM counts,
 ii) the idXML file from *OpenMS* toolkit, or
-iii) a \code{data.frame} or a path to a tsv file, formatted as explained in the "Input user-provided data" Section of the vignettes
-(only when input_type = "other"). For more details on how to create these files see the vignettes.}
+iii) a \code{data.frame} or a path to a tsv file, formatted as explained
+in the "Input user-provided data" Section of the vignettes
+(only when input_type = "other"). For more details on how to create
+these files see the vignettes.}
 
-\item{path_to_peptides_intensities}{(optional) a character string indicating the path to the psmtsv file from *MetaMorpheus* with intensity values.
+\item{path_to_peptides_intensities}{(optional) a character string indicating
+the path to the psmtsv file from *MetaMorpheus* with intensity values.
 Required if 'abundance_type' equals to "intensities".}
 
-\item{path_to_tpm}{(optional) a character string indicating the path to a tsv file with mRNA isoform TPMs.
+\item{path_to_tpm}{(optional) a character string indicating
+the path to a tsv file with mRNA isoform TPMs.
 The tsv file must have 1 row per isoform, and 2 columns:
 i) 'isoname': a character string indicating the isoform name;
-ii) 'tpm': a numeric variable indicating the Transcripts Per Million (TPM) count.
+ii) 'tpm': a numeric variable indicating
+the Transcripts Per Million (TPM) count.
 Column names must be 'isoname' and 'tpm'.}
 
-\item{input_type}{a character string indicating the tool used to obtain the peptides file: 
+\item{input_type}{a character string indicating the tool used to obtain
+the peptides file:
 "metamorpheus" (default), "openMS" or "other".}
 
-\item{abundance_type}{a character string indicating the type of input: 
+\item{abundance_type}{a character string indicating the type of input:
 "psm" (default) or "intensities" (only when "input_type = metamorpheus").}
 
-\item{PEP}{logical; 
-if TRUE (default), the algorithm will account for the probability that peptides are erroneously detected.
+\item{PEP}{logical;
+if TRUE (default), the algorithm will account for the probability
+that peptides are erroneously detected.
 If FALSE, PEP is ignored.
-Although FDR_thd and PEP can be jointly used; they are meant to be alternatives.}
+Although FDR_thd and PEP can be jointly used;
+they are meant to be alternatives.}
 
-\item{FDR_thd}{a numeric value indicating the False Discovery Rate threshold to be used to discard unreliable peptides.
-Although FDR_thd and PEP can be jointly used; they are meant to be alternatives.}
+\item{FDR_thd}{a numeric value indicating the False Discovery Rate threshold
+to be used to discard unreliable peptides.
+Although FDR_thd and PEP can be jointly used;
+they are meant to be alternatives.}
 }
 \value{
-A \code{list} of \code{data.frame} objects, with the data needed to run \code{\link{inference}} function.
+A \code{list} of \code{data.frame} objects, with the data needed
+to run \code{\link{inference}} function.
 }
 \description{
-\code{load_data} reads and processes all the input files required to run our model.
+\code{load_data} reads and processes all the input files required to run our
+model.
 }
 \examples{
 # Load internal data to the package:
@@ -61,12 +74,13 @@ path_to_peptides_psm = paste0(data_dir, "/AllPeptides.psmtsv")
 data_loaded = load_data(path_to_peptides_psm = path_to_peptides_psm)
 
 # For more examples see the vignettes:
-#browseVignettes("IsoBayes")
+# browseVignettes("IsoBayes")
 
 }
 \seealso{
 \code{\link{inference}} and \code{\link{plot_relative_abundances}}.
 }
 \author{
-Jordy Bollon \email{jordy.bollon@iit.it} and Simone Tiberi \email{simone.tiberi@unibo.it}
+Jordy Bollon \email{jordy.bollon@iit.it}
+and Simone Tiberi \email{simone.tiberi@unibo.it}
 }

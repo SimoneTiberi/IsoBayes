@@ -27,4 +27,5 @@
 #' @importFrom stats median
 #' @importFrom stats na.omit
 #' @importFrom HDInterval hdi
+#' @importFrom SummarizedExperiment rowData
 NULL
