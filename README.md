@@ -32,10 +32,12 @@ devtools::install_github("SimoneTiberi/IsoBayes")
 The vignette illustrating how to use the package can be obtained by running the `IsoBayes.Rmd` file in the vignettes folder.
 
 ## Input data
-*IsoBayes* works with the output of both *MetaMorpheus* (MM), or *Percolator* (via the *OpenMS* toolkit).
+*IsoBayes* works directly with the output of *MetaMorpheus* (MM), or *Percolator* (via the *OpenMS* toolkit).
+Additionally, users can also provide MS data obtained from any bioinformatics tool.
 
 ### User-provided data
-The user can also input MS data obtained from any bioinformatics tool. To this aim, the data must be organized in a `.tsv` file, a data.frame or a SummarizedExperiment object where each row corresponds to a peptide, and columns refer to:
+To this aim, the data must be organized in a `.tsv` file, a data.frame or in the rowData object of a SummarizedExperiment.
+In all cases, each row corresponds to a peptide, and columns refer to:
 
 * 'Y': a numeric variable indicating the peptide abundance (PSM counts or intensities, as defined by the user);
 * 'EC': Equivalent Classes, a character string indicating the isoform(s) name the peptide maps to. If the peptide maps to multiple protein isoforms, the names must be separated with "|" , i.e. "name_isoform_1|name_isoform_2";
