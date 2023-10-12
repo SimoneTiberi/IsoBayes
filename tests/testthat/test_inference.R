@@ -4,6 +4,9 @@ test_that("inference() works faultlessly.", {
 
     # Define the path to the AllPeptides.psmtsv file returned by MetaMorpheus tool
     path_to_peptides_psm <- paste0(data_dir, "/AllPeptides.psmtsv")
+    
+    # Define the path to the AllPeptides.psmtsv file returned by MetaMorpheus tool
+    path_to_peptides_intensities <- paste0(data_dir, "/AllQuantifiedPeptides.tsv")
 
     # Define the path to the jurkat_isoform_kallisto.tsv with mRNA relative abundance
     tpm_path <- paste0(data_dir, "/jurkat_isoform_kallisto.tsv")
@@ -11,7 +14,9 @@ test_that("inference() works faultlessly.", {
     # Load the data
     data_loaded <- load_data(
         path_to_peptides_psm = path_to_peptides_psm,
-        path_to_tpm = tpm_path
+        path_to_peptides_intensities = path_to_peptides_intensities,
+        path_to_tpm = tpm_path,
+        abundance_type = "intensities"
     )
 
     # Define the path to the map_iso_gene.csv file
@@ -20,8 +25,13 @@ test_that("inference() works faultlessly.", {
     # Run the algorithm
     set.seed(169612)
     results <- inference(data_loaded, map_iso_gene = path_to_map_iso_gene)
+    results_par <- inference(data_loaded, map_iso_gene = path_to_map_iso_gene, n_cores = 2)
 
     expect_is(results, "list")
     expect_true(length(results) == 3)
     expect_is(results[[1]], "data.frame")
+    
+    expect_is(results_par, "list")
+    expect_true(length(results_par) == 3)
+    expect_is(results_par[[1]], "data.frame")
 })

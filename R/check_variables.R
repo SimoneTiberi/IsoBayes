@@ -15,13 +15,13 @@ check_variables = function(x){
     stop("Equivalent Classes 'EC' should be character.")
   }
   
-  if (!is.null(FDR)){
+  if (!is.null(x$FDR)){
     if (!is.numeric(x$FDR)){
       stop("False Discovery Rate 'FDR' should be numeric.")
     }
   }
   
-  if (!is.null(PEP)){
+  if (!is.null(x$FDR)){
     if (!is.numeric(x$PEP)){
       stop("Peptide Error Probability 'PEP' should be numeric.")
     }

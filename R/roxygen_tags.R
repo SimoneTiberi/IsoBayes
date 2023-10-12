@@ -28,4 +28,5 @@
 #' @importFrom stats na.omit
 #' @importFrom HDInterval hdi
 #' @importFrom SummarizedExperiment rowData
+#' @importFrom methods is
 NULL

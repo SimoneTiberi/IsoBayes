@@ -266,4 +266,84 @@ Note that `plot_relative_abundances` can be used only when, in the `map_iso_gene
 sessionInfo()
 ```
 
+# *OpenMS* and *Metamorpheus* pipeline
+*IsoBayes* works directly with the output of *MetaMorpheus*, or *Percolator* (via the *OpenMS* toolkit).
+
+### *MetaMorpheus* pipeline
+To generate the MM output files required to run *IsoBayes*, we need to execute the following commands:
+
+* Install *MetaMorpheus* via [*Conda*](https://docs.conda.io/en/latest/miniconda.html):
+```shell
+conda install -c conda-forge metamorpheus
+```
+
+* Inside the folder with the configuration (.toml), spectra (.mzML or .raw) and database (.xml) files run:
+```shell
+metamorpheus -t Task1-SearchTaskconfig.toml Task2-CalibrateTaskconfig.toml Task3-SearchTaskconfig.toml Task4-GPTMDTaskconfig.toml Task5-SearchTaskconfig.toml -s 04-30-13_CAST_Frac4_6uL.raw 04-30-13_CAST_Frac5_4uL.raw -d uniprot-mouse-reviewed-1-24-2018.xml.gz uniprot-cRAP-1-24-2018.xml.gz
+```
+or
+```shell
+metamorpheus -t Task1-SearchTaskconfig.toml Task2-CalibrateTaskconfig.toml Task3-SearchTaskconfig.toml Task4-GPTMDTaskconfig.toml Task5-SearchTaskconfig.toml -s mzML/04-30-13_CAST_Frac4_6uL.mzML mzML/04-30-13_CAST_Frac5_4uL.mzML -d uniprot-mouse-reviewed-1-24-2018.xml.gz uniprot-cRAP-1-24-2018.xml.gz
+```
+There are several ways to install and run MM. For more details see the MM [tutorial](https://github.com/smith-chem-wisc/MetaMorpheus/wiki/Getting-Started#test-installation-via-net-core-dll---linux-macos-windows), where you can also find the example files used here.
+
+### *Percolator* pipeline
+We provide a brief pipeline where several *OpenMS* applications are chained together to generate an idXML file required to run *IsoBayes* with *Percolator* output. The pipeline starts from peptide identification results stored in mzID files.
+
+First, install *OpenMS* toolkit and *Percolator* tool.
+For instructions on how to install them on your operating system see [OpenMS Installation](https://openms.readthedocs.io/en/latest/openms-applications-and-tools/installation.html) and [Percolator Installation](https://github.com/percolator/percolator).
+
+Next, declare some useful global variable:
+``` shell
+path_to_data=/path/to/mzIDfiles
+path_out=/path/to/output
+NTHREADS=4
+ENZYME_indexer="Chymotrypsin"
+ENZYME_percolator="chymotrypsin"
+DECOY_STRING="mz|DECOY_"
+fdr=1
+```
+
+Below, we show an example with chymotrypsin enzyme.
+If the data was generated with another enzyme, please search for the corresponding enzyme in the documentation below, and reset the global variables `ENZYME_indexer` and `ENZYME_percolator` with the correct enzyme.
+``` shell
+PeptideIndexer --help
+PercolatorAdapter --help
+```
+
+This pipeline also assumes that in the `/path/to/mzIDfiles` folder there is a fasta file listing target and decoy protein isoforms.
+The `DECOY_STRING` allows you to change the string needed to identify a decoy in the fasta file.
+
+``` shell
+cd $path_out
+
+# convert mzID files into idXML files
+for mz in $path_to_data/*.mzID
+do
+        IDFileConverter -in $mz -threads $NTHREADS -out $mz.idXML
+done
+
+# merge the files
+IDMerger -in $path_to_data/*.idXML -threads $NTHREADS -merge_proteins_add_PSMs -out $path_out/merge.idXML
+rm $path_to_data/*.idXML
+
+# index the peptide file with the fasta file
+PeptideIndexer -in $path_out/merge.idXML -enzyme:name $ENZYME_indexer -threads $NTHREADS -decoy_string_position prefix -decoy_string $DECOY_STRING -fasta $path_to_data/genecodeAndDecoy.fasta -out $path_out/merge_index.idXML
+rm $path_out/merge.idXML
+
+# run percolator
+PercolatorAdapter -in $path_out/merge_index.idXML -enzyme $ENZYME_percolator -threads $NTHREADS -generic_feature_set -score_type pep -out $path_out/merge_index_percolator_pep.idXML
+rm $path_out/merge_index.idXML
+
+# Estimate the false discovery rate on peptide level using decoy searches and keep the ones with FDR < $fdr
+FalseDiscoveryRate -in $path_out/merge_index_percolator_pep.idXML -out $path_out/merge_index_percolator_pep_$fdr.idXML -protein false -threads $NTHREADS -FDR:PSM $fdr -algorithm:add_decoy_peptides -algorithm:add_decoy_proteins
+rm $path_out/merge_index_percolator_pep.idXML
+
+# Associate each peptite with Posterior Error Probability score
+IDScoreSwitcher -in $path_out/merge_index_percolator_pep_$fdr.idXML -out $path_out/merge_index_percolator_pep_switched_$fdr.idXML -new_score 'Posterior Error Probability_score' -new_score_orientation lower_better -new_score_type pep -threads $NTHREADS
+rm $path_out/merge_index_percolator_pep_$fdr.idXML
+```
+
+For more details on *OpenMS* tools see its [Documentation](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_documentation.html).
+
 # References

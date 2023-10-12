@@ -19,10 +19,10 @@ load_data(
 the following files:
 i) the psmtsv file from *MetaMorpheus* tool with PSM counts,
 ii) the idXML file from *OpenMS* toolkit, or
-iii) a \code{data.frame} or a path to a tsv file, formatted as explained
+iii) a \code{SummarizedExperiment} object, a \code{data.frame} or
+a path to a tsv file, formatted as explained
 in the "Input user-provided data" Section of the vignettes
-(only when input_type = "other"). For more details on how to create
-these files see the vignettes.}
+(only when input_type = "other").}
 
 \item{path_to_peptides_intensities}{(optional) a character string indicating
 the path to the psmtsv file from *MetaMorpheus* with intensity values.

@@ -11,7 +11,8 @@ test_that("plot_relative_abundances() works faultlessly.", {
     # Load the data
     data_loaded <- load_data(
         path_to_peptides_psm = path_to_peptides_psm,
-        path_to_tpm = tpm_path
+        path_to_tpm = tpm_path,
+        PEP = FALSE
     )
 
     # Define the path to the map_iso_gene.csv file
@@ -19,7 +20,8 @@ test_that("plot_relative_abundances() works faultlessly.", {
 
     # Run the algorithm
     set.seed(169612)
-    results <- inference(data_loaded, map_iso_gene = path_to_map_iso_gene)
+    results <- inference(data_loaded, map_iso_gene = path_to_map_iso_gene,
+                         n_cores = 2)
 
     # Plotting results, NOT normalized
     # (relative abundances add to 1 across all isoforms in the dataset):
