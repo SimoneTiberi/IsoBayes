@@ -82,8 +82,10 @@ library(IsoBayes)
 
 ## Input data
 *IsoBayes* works with the output of both *MetaMorpheus* (MM) [@MetaMorpheus], or *Percolator* [@Percolator] (via the *OpenMS* toolkit [@OpenMS]).
-Other tools can be used as well to generate out input data, as long as the input files follow the structure mentioned in the [Input user-provided data](#input-user-provided-data) Section.
+Additionally, users can also provide MS data obtained from any bioinformatics tool, as long as the input files follow the structure mentioned in the [Input user-provided data](#input-user-provided-data) Section.
 In our benchmarks, we tested our model using both *MetaMorpheus* and *Percolator* data, and obtained slightly better results, and a shorter runtime with *MetaMorpheus*.
+
+At the bottom of the vignette, in Section [*OpenMS* and *Metamorpheus* pipeline](#openms-and-metamorpheus-pipeline) we provide example scripts for both *OpenMS* and *Metamorpheus*.
 
 In this tutorial, we use a small dataset created by *MetaMorpheus*.
 The code to generate the data can be found [here](https://github.com/SimoneTiberi/IsoBayes/blob/main/inst/script/extdata.Rmd).
@@ -104,8 +106,10 @@ Column names must be 'isoname' and 'tpm'.
 ## PEP vs. FDR cutoff
 Additionally, we suggest to provide the probability that peptides are erroneously detected (usually called PEP): *IsoBayes* will use the PEP to sample the presence/absence of each peptide; this will propagate the peptide identification uncertainty throughout the inference process.
 Alternatively, unreliable peptides can be discarded by specifying a peptide False Discovery Rate (FDR) threshold (also known as qvalue).
-In our benchmarks, we found that using `PEP` provides a (minor) increase in performace, at the cost of a (marginally) higher runtime.
-By default, `load_data` uses the PEP (`PEP = TRUE`); if we want to disable the PEP integration, and filter based on the FDR, we can set `PEP = FALSE` and specify an FDR cutoff, e.g., as `FDR_thd = 0.01`.
+We suggest using PEP with a weak FDR threshold of 0.1 (default parameters options).
+This is because peptides with FDR > 0.1 are usually unreliable, and associated to high error probabilities (e.g., PEP > 0.9).
+In our benchmarks, we found that using `PEP` (with and FDR threshold of 0.1) provides a (minor) increase in performace compared to the classical FDR thresholding (0.01 threshold), at the cost of a (marginally) higher runtime.
+If we want to disable the PEP integration, and filter based on the FDR, we can set `PEP = FALSE` and specify a more stringent FDR cutoff, e.g., as `FDR_thd = 0.01`.
 
 # Load the data
 First, we load and process the input data using the `load_data` function.
@@ -264,8 +268,13 @@ sessionInfo()
 
 # *OpenMS* and *Metamorpheus* pipeline
 *IsoBayes* works directly with the output of *MetaMorpheus*, or *Percolator* (via the *OpenMS* toolkit).
+Additionally, users can also provide MS data obtained from any bioinformatics tool, as long as the input files follow the structure mentioned in the Input user-provided data Section
+*IsoBayes* works with the output of both *MetaMorpheus* (MM) [@MetaMorpheus], or *Percolator* [@Percolator] (via the *OpenMS* toolkit [@OpenMS]).
+Additionally, users can also provide MS data obtained from any bioinformatics tool, as long as the input files follow the structure mentioned in the [Input user-provided data](#input-user-provided-data) Section.
 
-### *MetaMorpheus* pipeline
+Below, we provide example scripts for both *OpenMS* and *Metamorpheus*.
+
+## *MetaMorpheus* pipeline
 To generate the MM output files required to run *IsoBayes*, we need to execute the following commands:
 
 * Install *MetaMorpheus* via [*Conda*](https://docs.conda.io/en/latest/miniconda.html):
@@ -283,7 +292,7 @@ metamorpheus -t Task1-SearchTaskconfig.toml Task2-CalibrateTaskconfig.toml Task3
 ```
 There are several ways to install and run MM. For more details see the MM [tutorial](https://github.com/smith-chem-wisc/MetaMorpheus/wiki/Getting-Started#test-installation-via-net-core-dll---linux-macos-windows), where you can also find the example files used here.
 
-### *Percolator* pipeline
+## *Percolator* pipeline
 We provide a brief pipeline where several *OpenMS* applications are chained together to generate an idXML file required to run *IsoBayes* with *Percolator* output. The pipeline starts from peptide identification results stored in mzID files.
 
 First, install *OpenMS* toolkit and *Percolator* tool.

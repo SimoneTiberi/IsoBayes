@@ -11,7 +11,7 @@ load_data(
   input_type = "metamorpheus",
   abundance_type = "psm",
   PEP = TRUE,
-  FDR_thd = NULL
+  FDR_thd = 0.1
 )
 }
 \arguments{
@@ -47,13 +47,11 @@ the peptides file:
 if TRUE (default), the algorithm will account for the probability
 that peptides are erroneously detected.
 If FALSE, PEP is ignored.
-Although FDR_thd and PEP can be jointly used;
-they are meant to be alternatives.}
+We suggest using PEP with a weak FDR threshold of 0.1 (default parameters options).
+This is because peptides with FDR > 0.1 are usually unreliable, and associated to high error probabilities (e.g., PEP > 0.9).}
 
 \item{FDR_thd}{a numeric value indicating the False Discovery Rate threshold
-to be used to discard unreliable peptides.
-Although FDR_thd and PEP can be jointly used;
-they are meant to be alternatives.}
+to be used to discard unreliable peptides.}
 }
 \value{
 A \code{list} of \code{data.frame} objects, with the data needed
