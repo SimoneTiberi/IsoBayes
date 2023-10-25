@@ -25,7 +25,7 @@ These two steps allow us to recover the presence and abundance of each protein i
 `IsoBayes` is available on [Bioconductor](https://bioconductor.org/packages/IsoBayes) and can be installed with the command:
 ``` r
 if (!requireNamespace("BiocManager", quietly=TRUE))
-install.packages("BiocManager")
+        install.packages("BiocManager")
 BiocManager::install("IsoBayes")
 ```
 
