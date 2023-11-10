@@ -27,6 +27,10 @@
 #' @importFrom stats median
 #' @importFrom stats na.omit
 #' @importFrom HDInterval hdi
-#' @importFrom SummarizedExperiment rowData
+#' @importFrom SummarizedExperiment SummarizedExperiment
+#' @importFrom SummarizedExperiment colData
+#' @importFrom SummarizedExperiment assay
 #' @importFrom methods is
+#' @importFrom S4Vectors DataFrame
+#' @importFrom S4Vectors metadata
 NULL

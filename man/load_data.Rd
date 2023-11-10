@@ -4,62 +4,26 @@
 \alias{load_data}
 \title{Load and process input data}
 \usage{
-load_data(
-  path_to_peptides_psm,
-  path_to_peptides_intensities = NULL,
-  path_to_tpm = NULL,
-  input_type = "metamorpheus",
-  abundance_type = "psm",
-  PEP = TRUE,
-  FDR_thd = 0.1
-)
+load_data(SE, path_to_tpm = NULL)
 }
 \arguments{
-\item{path_to_peptides_psm}{a character string indicating the path to one of
-the following files:
-i) the psmtsv file from *MetaMorpheus* tool with PSM counts,
-ii) the idXML file from *OpenMS* toolkit, or
-iii) a \code{SummarizedExperiment} object, a \code{data.frame} or
-a path to a tsv file, formatted as explained
-in the "Input user-provided data" Section of the vignettes
-(only when input_type = "other").}
+\item{SE}{a \code{SummarizedExperiment} object created by \code{\link{generate_SE}} function.}
 
-\item{path_to_peptides_intensities}{(optional) a character string indicating
-the path to the psmtsv file from *MetaMorpheus* with intensity values.
-Required if 'abundance_type' equals to "intensities".}
-
-\item{path_to_tpm}{(optional) a character string indicating
-the path to a tsv file with mRNA isoform TPMs.
+\item{path_to_tpm}{(optional) a \code{data.frame} object or a character string
+indicating the path to a tsv file with mRNA isoform TPMs.
 The tsv file must have 1 row per isoform, and 2 columns:
 i) 'isoname': a character string indicating the isoform name;
 ii) 'tpm': a numeric variable indicating
 the Transcripts Per Million (TPM) count.
 Column names must be 'isoname' and 'tpm'.}
-
-\item{input_type}{a character string indicating the tool used to obtain
-the peptides file:
-"metamorpheus" (default), "openMS" or "other".}
-
-\item{abundance_type}{a character string indicating the type of input:
-"psm" (default) or "intensities" (only when "input_type = metamorpheus").}
-
-\item{PEP}{logical;
-if TRUE (default), the algorithm will account for the probability
-that peptides are erroneously detected.
-If FALSE, PEP is ignored.
-We suggest using PEP with a weak FDR threshold of 0.1 (default parameters options).
-This is because peptides with FDR > 0.1 are usually unreliable, and associated to high error probabilities (e.g., PEP > 0.9).}
-
-\item{FDR_thd}{a numeric value indicating the False Discovery Rate threshold
-to be used to discard unreliable peptides.}
 }
 \value{
 A \code{list} of \code{data.frame} objects, with the data needed
 to run \code{\link{inference}} function.
 }
 \description{
-\code{load_data} reads and processes all the input files required to run our
-model.
+\code{load_data} reads and processes a \code{SummarizedExperiment} object collecting
+input data and metadata required to run IsoBayes model.
 }
 \examples{
 # Load internal data to the package:
@@ -68,15 +32,21 @@ data_dir = system.file("extdata", package = "IsoBayes")
 # Define the path to the AllPeptides.psmtsv file returned by *MetaMorpheus* tool
 path_to_peptides_psm = paste0(data_dir, "/AllPeptides.psmtsv")
 
-# Load the data
-data_loaded = load_data(path_to_peptides_psm = path_to_peptides_psm)
+# Generate a SummarizedExperiment object
+SE = generate_SE(path_to_peptides_psm = path_to_peptides_psm,
+                 abundance_type = "psm",
+                 input_type = "metamorpheus"
+                 )
+# Load and process SE object
+data_loaded = load_data(SE)
 
 # For more examples see the vignettes:
 # browseVignettes("IsoBayes")
 
 }
 \seealso{
-\code{\link{inference}} and \code{\link{plot_relative_abundances}}.
+\code{\link{generate_SE}}, \code{\link{inference}}
+and \code{\link{plot_relative_abundances}}.
 }
 \author{
 Jordy Bollon \email{jordy.bollon@iit.it}
