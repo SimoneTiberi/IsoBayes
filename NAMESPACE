@@ -2,7 +2,7 @@
 
 export(generate_SE)
 export(inference)
-export(load_data)
+export(input_data)
 export(plot_relative_abundances)
 importFrom(HDInterval,hdi)
 importFrom(Rcpp,sourceCpp)

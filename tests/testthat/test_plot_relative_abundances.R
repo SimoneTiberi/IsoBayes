@@ -15,7 +15,7 @@ test_that("plot_relative_abundances() works faultlessly.", {
     tpm_path <- paste0(data_dir, "/jurkat_isoform_kallisto.tsv")
 
     # Load the data
-    data_loaded <- load_data(SE, path_to_tpm = tpm_path)
+    data_loaded <- input_data(SE, path_to_tpm = tpm_path)
 
     # Define the path to the map_iso_gene.csv file
     path_to_map_iso_gene <- paste0(data_dir, "/map_iso_gene.csv")

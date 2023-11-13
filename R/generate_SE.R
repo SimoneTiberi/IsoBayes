@@ -48,7 +48,7 @@
 #' @author Jordy Bollon \email{jordy.bollon@iit.it}
 #' and Simone Tiberi \email{simone.tiberi@unibo.it}
 #'
-#' @seealso \code{\link{load_data}}, \code{\link{inference}} and
+#' @seealso \code{\link{input_data}}, \code{\link{inference}} and
 #' \code{\link{plot_relative_abundances}}.
 #'
 #' @export

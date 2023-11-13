@@ -68,7 +68,7 @@ SE = generate_SE(path_to_peptides_psm = path_to_peptides_psm,
 
 }
 \seealso{
-\code{\link{load_data}}, \code{\link{inference}} and
+\code{\link{input_data}}, \code{\link{inference}} and
 \code{\link{plot_relative_abundances}}.
 }
 \author{

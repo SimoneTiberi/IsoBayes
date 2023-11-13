@@ -15,7 +15,7 @@ inference(
 }
 \arguments{
 \item{loaded_data}{\code{list} of \code{data.frame} objects,
-returned by \code{\link{load_data}}.}
+returned by \code{\link{input_data}}.}
 
 \item{map_iso_gene}{(optional) a character string indicating
 the path to a csv file with two columns:
@@ -46,7 +46,7 @@ in the three \code{data.frame} objects, see the vignettes:
 }
 \description{
 \code{inference} runs our two-layer latent variable Bayesian model,
-taking as input the data created by \code{\link{load_data}}.
+taking as input the data created by \code{\link{input_data}}.
 }
 \examples{
 # Load internal data to the package:
@@ -64,7 +64,7 @@ SE = generate_SE(path_to_peptides_psm = path_to_peptides_psm,
 tpm_path = paste0(data_dir, "/jurkat_isoform_kallisto.tsv")
            
 # Load and process SE object
-data_loaded = load_data(SE, path_to_tpm = tpm_path)
+data_loaded = input_data(SE, path_to_tpm = tpm_path)
 
 # Define the path to the map_iso_gene.csv file
 path_to_map_iso_gene = paste0(data_dir, "/map_iso_gene.csv")
@@ -92,7 +92,7 @@ head(results$gene_abundance)
 
 }
 \seealso{
-\code{\link{load_data}} and \code{\link{plot_relative_abundances}}
+\code{\link{input_data}} and \code{\link{plot_relative_abundances}}
 }
 \author{
 Jordy Bollon \email{jordy.bollon@iit.it}

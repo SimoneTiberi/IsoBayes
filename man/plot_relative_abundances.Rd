@@ -48,7 +48,7 @@ SE = generate_SE(path_to_peptides_psm = path_to_peptides_psm,
 tpm_path = paste0(data_dir, "/jurkat_isoform_kallisto.tsv")
            
 # Load and process SE object
-data_loaded = load_data(SE, path_to_tpm = tpm_path)
+data_loaded = input_data(SE, path_to_tpm = tpm_path)
 
 # Define the path to the map_iso_gene.csv file
 path_to_map_iso_gene = paste0(data_dir, "/map_iso_gene.csv")
@@ -89,7 +89,7 @@ plot_relative_abundances(results,
 
 }
 \seealso{
-\code{\link{load_data}}, \code{\link{inference}}
+\code{\link{input_data}}, \code{\link{inference}}
 }
 \author{
 Jordy Bollon \email{jordy.bollon@iit.it}

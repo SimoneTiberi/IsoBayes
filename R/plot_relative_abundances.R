@@ -31,7 +31,7 @@
 #' tpm_path = paste0(data_dir, "/jurkat_isoform_kallisto.tsv")
 #'            
 #' # Load and process SE object
-#' data_loaded = load_data(SE, path_to_tpm = tpm_path)
+#' data_loaded = input_data(SE, path_to_tpm = tpm_path)
 #'
 #' # Define the path to the map_iso_gene.csv file
 #' path_to_map_iso_gene = paste0(data_dir, "/map_iso_gene.csv")
@@ -73,7 +73,7 @@
 #' @author Jordy Bollon \email{jordy.bollon@iit.it}
 #' and Simone Tiberi \email{simone.tiberi@unibo.it}
 #'
-#' @seealso \code{\link{load_data}}, \code{\link{inference}}
+#' @seealso \code{\link{input_data}}, \code{\link{inference}}
 #'
 #' @export
 plot_relative_abundances = function(res_inference,

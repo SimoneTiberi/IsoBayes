@@ -1,4 +1,4 @@
-test_that("load_data() works faultlessly.", {
+test_that("input_data() works faultlessly.", {
     # Load internal data to the package:
     data_dir <- system.file("extdata", package = "IsoBayes")
 
@@ -11,7 +11,7 @@ test_that("load_data() works faultlessly.", {
                       input_type = "metamorpheus"
                       )
     # Load the data
-    data_loaded <- load_data(SE)
+    data_loaded <- input_data(SE)
 
     expect_is(data_loaded, "list")
     expect_true(length(data_loaded) == 4)

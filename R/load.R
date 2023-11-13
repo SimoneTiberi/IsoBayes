@@ -1,6 +1,6 @@
 #' Load and process input data
 #'
-#' \code{load_data} reads and processes a \code{SummarizedExperiment} object collecting
+#' \code{input_data} reads and processes a \code{SummarizedExperiment} object collecting
 #' input data and metadata required to run IsoBayes model.
 #
 #' @param SE a \code{SummarizedExperiment} object created by \code{\link{generate_SE}} function.
@@ -28,7 +28,7 @@
 #'                  input_type = "metamorpheus"
 #'                  )
 #' # Load and process SE object
-#' data_loaded = load_data(SE)
+#' data_loaded = input_data(SE)
 #'
 #' # For more examples see the vignettes:
 #' # browseVignettes("IsoBayes")
@@ -40,7 +40,7 @@
 #' and \code{\link{plot_relative_abundances}}.
 #'
 #' @export
-load_data = function(SE,
+input_data = function(SE,
                      path_to_tpm = NULL) {
     if (!is(SE, "SummarizedExperiment")) {
         stop("SE should be a SummarizedExperiment object.")
