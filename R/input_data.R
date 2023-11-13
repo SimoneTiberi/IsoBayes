@@ -4,6 +4,8 @@
 #' input data and metadata required to run IsoBayes model.
 #
 #' @param SE a \code{SummarizedExperiment} object created by \code{\link{generate_SE}} function.
+#' Alternatively, this object can be created by the user, following the structure
+#' specified in the "Input user-provided data" Section of the vignettes
 #' @param path_to_tpm (optional) a \code{data.frame} object or a character string
 #' indicating the path to a tsv file with mRNA isoform TPMs.
 #' The tsv file must have 1 row per isoform, and 2 columns:
@@ -37,7 +39,6 @@
 #' and Simone Tiberi \email{simone.tiberi@unibo.it}
 #'
 #' @seealso \code{\link{generate_SE}}, \code{\link{inference}}
-#' and \code{\link{plot_relative_abundances}}.
 #'
 #' @export
 input_data = function(SE,

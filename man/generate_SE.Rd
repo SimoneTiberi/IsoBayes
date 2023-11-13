@@ -2,7 +2,7 @@
 % Please edit documentation in R/generate_SE.R
 \name{generate_SE}
 \alias{generate_SE}
-\title{Load and process input data}
+\title{Generate SummarizedExperiment object}
 \usage{
 generate_SE(
   path_to_peptides_psm = NULL,
@@ -10,14 +10,17 @@ generate_SE(
   input_type = NULL,
   abundance_type = NULL,
   PEP = TRUE,
-  FDR_thd = 0.1
+  FDR_thd = 0.01
 )
 }
 \arguments{
 \item{path_to_peptides_psm}{a character string indicating the path to one of
 the following files:
+
 i) the psmtsv file from *MetaMorpheus* tool with PSM counts,
+
 ii) the idXML file from *OpenMS* toolkit, or
+
 iii) a \code{data.frame} or a path to a tsv file, formatted as explained
 in the "Input user-provided data" Section of the vignettes
 (only when input_type = "other").}
@@ -47,8 +50,9 @@ to be used to discard unreliable peptides.}
 A \code{SummarizedExperiment} object.
 }
 \description{
-\code{generate_SE} converts several input files required to run IsoBayes model
+\code{generate_SE} converts the input files, required to run IsoBayes,
 into a \code{SummarizedExperiment} object.
+This object should then be passed to \code{\link{input_data}} function.
 }
 \examples{
 # Load internal data to the package:
@@ -68,8 +72,7 @@ SE = generate_SE(path_to_peptides_psm = path_to_peptides_psm,
 
 }
 \seealso{
-\code{\link{input_data}}, \code{\link{inference}} and
-\code{\link{plot_relative_abundances}}.
+\code{\link{input_data}}
 }
 \author{
 Jordy Bollon \email{jordy.bollon@iit.it}
