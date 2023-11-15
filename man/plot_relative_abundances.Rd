@@ -89,7 +89,7 @@ plot_relative_abundances(results,
 
 }
 \seealso{
-\code{\link{input_data}}, \code{\link{inference}}
+\code{\link{inference}}
 }
 \author{
 Jordy Bollon \email{jordy.bollon@iit.it}

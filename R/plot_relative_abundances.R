@@ -73,7 +73,7 @@
 #' @author Jordy Bollon \email{jordy.bollon@iit.it}
 #' and Simone Tiberi \email{simone.tiberi@unibo.it}
 #'
-#' @seealso \code{\link{input_data}}, \code{\link{inference}}
+#' @seealso \code{\link{inference}}
 #'
 #' @export
 plot_relative_abundances = function(res_inference,
