@@ -46,6 +46,9 @@ input_data = function(SE,
     if (!is(SE, "SummarizedExperiment")) {
         stop("SE should be a SummarizedExperiment object.")
     }
+    if (is.null(metadata(SE)$input_type)){
+        metadata(SE)$input_type = "other"
+    }
     protein_df_args = list(protein_name = metadata(SE)$protein_name)
     PEPTIDE_DF = data.frame(colData(SE), Y = t(assay(SE)))
     metadata_SE = metadata(SE)
@@ -60,14 +63,10 @@ input_data = function(SE,
     PROTEIN_DF = do.call("data.frame", protein_df_args)
     rm(protein_df_args)
     
-    if (metadata_SE$input_type == "metamorpheus") {
-        PEPTIDE_DF = PEPTIDE_DF[PEPTIDE_DF$QValue <= metadata_SE$FDR_thd,]
-    }
-    
     PEPTIDE_DF = collapse_pept_w_equal_EC(PEPTIDE_DF, metadata_SE$PEP)
     PEPTIDE_DF = PEPTIDE_DF[PEPTIDE_DF$Y > 0,]
     
-    message("After FDR filtering (if used), we will analyze:")
+    message("After collapsing petides with equal Equivalent Classes and non-negative abundance, we will analyze:")
     protein_name_to_keep = get_prot_from_EC(PEPTIDE_DF$EC)
     if (metadata_SE$input_type %in% c("metamorpheus", "other")) {
         PROTEIN_DF = PROTEIN_DF[PROTEIN_DF$protein_name %in% protein_name_to_keep,]

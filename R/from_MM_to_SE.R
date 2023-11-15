@@ -30,5 +30,7 @@ from_MM_to_SE = function(path_to_peptides_psm,
   protein_name = get_prot_from_EC(PEPTIDE_DF$EC)
   rm(data_list)
   
+  PEPTIDE_DF = PEPTIDE_DF[PEPTIDE_DF$QValue <= FDR_thd,]
+  
   convert_peptideDF_to_SE(PEPTIDE_DF, input_type, PEP, FDR_thd, protein_name)
 }

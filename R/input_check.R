@@ -19,9 +19,9 @@ input_check = function(path_to_peptides_psm, path_to_peptides_intensities,
              'metamorpheus' or 'other'.")
     }
     if (is.null(abundance_type)){
-        stop("input_type is NULL. Choose one of 'psm' or 'intensities'.")
+        stop("abundance_type is NULL. Choose one of 'psm' or 'intensities'.")
     }else if (!(abundance_type %in% c("psm", "intensities"))) {
-        stop("input_type is not valid. Choose one of 'psm' or 'intensities'.")
+        stop("abundance_type is not valid. Choose one of 'psm' or 'intensities'.")
     }
     if (!is.logical(PEP)) {
         stop("PEP must be a boolean value.")
