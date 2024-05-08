@@ -1,4 +1,4 @@
-run_MCMC = function(pept_df, prot_df, protein_length, N, M, prior = 0,
+run_MCMC = function(pept_df, prot_df, protein_length, N, M, prior,
                     lib_size, params) {
     if (prior == 0) {
         # vaguely informative prior for "pi" (protein relative abundances)

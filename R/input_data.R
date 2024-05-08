@@ -42,77 +42,97 @@
 #'
 #' @export
 input_data = function(SE,
-                     path_to_tpm = NULL) {
-    if (!is(SE, "SummarizedExperiment")) {
-        stop("SE should be a SummarizedExperiment object.")
-    }
-    if (is.null(metadata(SE)$input_type)){
-        metadata(SE)$input_type = "other"
-    }
-    protein_df_args = list(protein_name = metadata(SE)$protein_name)
-    PEPTIDE_DF = data.frame(colData(SE), Y = t(assay(SE)))
-    metadata_SE = metadata(SE)
-    rm(SE)
-    
-    if (!is.null(path_to_tpm)) {
-        protein_df_args$TPM = load_tpm(protein_df_args$protein_name, path_to_tpm)
-    }
+                      path_to_tpm = NULL) {
+  if (!is(SE, "SummarizedExperiment")) {
+    stop("SE should be a SummarizedExperiment object.")
+  }
+  if (is.null(metadata(SE)$input_type)){
+    metadata(SE)$input_type = "other"
+  }
+  protein_df_args = list(protein_name = metadata(SE)$protein_name)
+  PEPTIDE_DF = data.frame(colData(SE), Y = t(assay(SE)))
+  metadata_SE = metadata(SE)
+  rm(SE)
+  
+  if (!is.null(path_to_tpm)) {
+    protein_df_args$TPM = load_tpm(protein_df_args$protein_name, path_to_tpm)
+  }
+  # protein_df_args$protein_length = rep(1, length(protein_df_args$protein_name))
+  protein_df_args$id_openMS = metadata_SE$id_openMS
+  
+  # CALCULATE N_detected_peptides BEFORE COLLAPSING PEPTIDES
+  EC = strsplit(PEPTIDE_DF$EC, split = "\\|")
+  EC = lapply(EC, unique)
+  EC = unlist(EC)
+  if(metadata(SE)$input_type == "openMS"){
+    # EC names in openMS are in "protein_df_args$id_openMS"
+    protein_df_args$protein_length = sapply(protein_df_args$id_openMS, function(id){
+      sum(EC == id)
+    })
+  }else{
+    # EC names in MM and in general are in "protein_df_args$protein_name"
+    protein_df_args$protein_length = sapply(protein_df_args$protein_name, function(id){
+      sum(EC == id)
+    })
+  }
+  if(sum(protein_df_args$protein_length) == 0){
+    # check protein_df_args$protein_length is not always 0
     protein_df_args$protein_length = rep(1, length(protein_df_args$protein_name))
-    protein_df_args$id_openMS = metadata_SE$id_openMS
-    
-    PROTEIN_DF = do.call("data.frame", protein_df_args)
-    rm(protein_df_args)
-    
-    PEPTIDE_DF = collapse_pept_w_equal_EC(PEPTIDE_DF, metadata_SE$PEP)
-    PEPTIDE_DF = PEPTIDE_DF[PEPTIDE_DF$Y > 0,]
-    
-    message("After collapsing petides with equal Equivalent Classes and non-negative abundance, we will analyze:")
-    protein_name_to_keep = get_prot_from_EC(PEPTIDE_DF$EC)
-    if (metadata_SE$input_type %in% c("metamorpheus", "other")) {
-        PROTEIN_DF = PROTEIN_DF[PROTEIN_DF$protein_name %in% protein_name_to_keep,]
-        UNIQUE_PEPT_ABUNDANCE = unique_protein_abundance(PEPTIDE_DF$Y,
-                                                         PEPTIDE_DF$EC,
-                                                         PROTEIN_DF$protein_name)
-    } else if (metadata_SE$input_type == "openMS") {
-        PROTEIN_DF = PROTEIN_DF[PROTEIN_DF$id_openMS %in% protein_name_to_keep,]
-        UNIQUE_PEPT_ABUNDANCE = unique_protein_abundance(PEPTIDE_DF$Y,
-                                                         PEPTIDE_DF$EC,
-                                                         PROTEIN_DF$id_openMS)
-    }
-    PROTEIN_DF$Y_unique = UNIQUE_PEPT_ABUNDANCE$Y_unique
-    
-    if (metadata_SE$PEP) {
-        PEPTIDE_DF_unique = PEPTIDE_DF[UNIQUE_PEPT_ABUNDANCE$sel_unique,]
-        PEPTIDE_DF_unique$EC_numeric = UNIQUE_PEPT_ABUNDANCE$EC_numeric[UNIQUE_PEPT_ABUNDANCE$sel_unique]
-        PEPTIDE_DF_unique$EC = NULL
+  }
+  
+  PROTEIN_DF = do.call("data.frame", protein_df_args)
+  rm(protein_df_args)
+  
+  PEPTIDE_DF = collapse_pept_w_equal_EC(PEPTIDE_DF, metadata_SE$PEP)
+  PEPTIDE_DF = PEPTIDE_DF[PEPTIDE_DF$Y > 0,]
+  
+  message("After collapsing petides with equal Equivalent Classes and non-negative abundance, we will analyze:")
+  protein_name_to_keep = get_prot_from_EC(PEPTIDE_DF$EC)
+  if (metadata_SE$input_type %in% c("metamorpheus", "other")) {
+    PROTEIN_DF = PROTEIN_DF[PROTEIN_DF$protein_name %in% protein_name_to_keep,]
+    UNIQUE_PEPT_ABUNDANCE = unique_protein_abundance(PEPTIDE_DF$Y,
+                                                     PEPTIDE_DF$EC,
+                                                     PROTEIN_DF$protein_name)
+  } else if (metadata_SE$input_type == "openMS") {
+    PROTEIN_DF = PROTEIN_DF[PROTEIN_DF$id_openMS %in% protein_name_to_keep,]
+    UNIQUE_PEPT_ABUNDANCE = unique_protein_abundance(PEPTIDE_DF$Y,
+                                                     PEPTIDE_DF$EC,
+                                                     PROTEIN_DF$id_openMS)
+  }
+  PROTEIN_DF$Y_unique = UNIQUE_PEPT_ABUNDANCE$Y_unique
+  
+  if (metadata_SE$PEP) {
+    PEPTIDE_DF_unique = PEPTIDE_DF[UNIQUE_PEPT_ABUNDANCE$sel_unique,]
+    PEPTIDE_DF_unique$EC_numeric = UNIQUE_PEPT_ABUNDANCE$EC_numeric[UNIQUE_PEPT_ABUNDANCE$sel_unique]
+    PEPTIDE_DF_unique$EC = NULL
+  } else {
+    PEPTIDE_DF_unique = NULL
+  }
+  # keep multi-mapping peptides
+  PEPTIDE_DF = PEPTIDE_DF[!UNIQUE_PEPT_ABUNDANCE$sel_unique,]
+  PEPTIDE_DF$EC_numeric = UNIQUE_PEPT_ABUNDANCE$EC_numeric[!UNIQUE_PEPT_ABUNDANCE$sel_unique]
+  PEPTIDE_DF$EC = NULL
+  
+  overall_abundance = get_overall_abundance(PEPTIDE_DF, PEPTIDE_DF_unique,
+                                            PROTEIN_DF$Y_unique)
+  
+  if (overall_abundance > 2 * 10 ^ 5) {
+    PEPTIDE_DF$Y = PEPTIDE_DF$Y / overall_abundance * 10 ^ 5
+    # round abundances to closest integer, BUT we add 0.5 so that
+    # very small abundances (between 0 and 0.5) are rounded to 1.
+    PEPTIDE_DF$Y = round(PEPTIDE_DF$Y + 0.5)
+    if (is.null(PEPTIDE_DF_unique)) {
+      PROTEIN_DF$Y_unique = PROTEIN_DF$Y_unique / overall_abundance * 10 ^ 5
+      PROTEIN_DF$Y_unique = round(PROTEIN_DF$Y_unique + 0.5)
     } else {
-        PEPTIDE_DF_unique = NULL
+      PEPTIDE_DF_unique$Y = PEPTIDE_DF_unique$Y / overall_abundance * 10 ^ 5
+      PEPTIDE_DF_unique$Y = round(PEPTIDE_DF_unique$Y + 0.5)
     }
-    # keep multi-mapping peptides
-    PEPTIDE_DF = PEPTIDE_DF[!UNIQUE_PEPT_ABUNDANCE$sel_unique,]
-    PEPTIDE_DF$EC_numeric = UNIQUE_PEPT_ABUNDANCE$EC_numeric[!UNIQUE_PEPT_ABUNDANCE$sel_unique]
-    PEPTIDE_DF$EC = NULL
-    
-    overall_abundance = get_overall_abundance(PEPTIDE_DF, PEPTIDE_DF_unique,
-                                              PROTEIN_DF$Y_unique)
-    
-    if (overall_abundance > 2 * 10 ^ 5) {
-        PEPTIDE_DF$Y = PEPTIDE_DF$Y / overall_abundance * 10 ^ 5
-        # round abundances to closest integer, BUT we add 0.5 so that
-        # very small abundances (between 0 and 0.5) are rounded to 1.
-        PEPTIDE_DF$Y = round(PEPTIDE_DF$Y + 0.5)
-        if (is.null(PEPTIDE_DF_unique)) {
-            PROTEIN_DF$Y_unique = PROTEIN_DF$Y_unique / overall_abundance * 10 ^ 5
-            PROTEIN_DF$Y_unique = round(PROTEIN_DF$Y_unique + 0.5)
-        } else {
-            PEPTIDE_DF_unique$Y = PEPTIDE_DF_unique$Y / overall_abundance * 10 ^ 5
-            PEPTIDE_DF_unique$Y = round(PEPTIDE_DF_unique$Y + 0.5)
-        }
-    }
-    list(
-        PEPTIDE_DF = PEPTIDE_DF,
-        PEPTIDE_DF_unique = PEPTIDE_DF_unique,
-        PROTEIN_DF = PROTEIN_DF,
-        PEP = metadata_SE$PEP
-    )
+  }
+  list(
+    PEPTIDE_DF = PEPTIDE_DF,
+    PEPTIDE_DF_unique = PEPTIDE_DF_unique,
+    PROTEIN_DF = PROTEIN_DF,
+    PEP = metadata_SE$PEP
+  )
 }
