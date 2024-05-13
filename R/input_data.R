@@ -64,7 +64,7 @@ input_data = function(SE,
   EC = strsplit(PEPTIDE_DF$EC, split = "\\|")
   EC = lapply(EC, unique)
   EC = unlist(EC)
-  if(metadata(SE)$input_type == "openMS"){
+  if(metadata_SE$input_type == "openMS"){
     # EC names in openMS are in "protein_df_args$id_openMS"
     protein_df_args$protein_length = sapply(protein_df_args$id_openMS, function(id){
       sum(EC == id)
