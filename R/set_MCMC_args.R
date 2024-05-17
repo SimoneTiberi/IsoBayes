@@ -8,7 +8,6 @@ set_MCMC_args = function(pept_df, pept_unique_df, prot_df, PEP, prior) {
         sum_pept_unique = sum(arguments$pept_unique_df$Y * (1 - arguments$pept_unique_df$PEP))
         arguments$lib_size = sum_pept + sum_pept_unique
         arguments$M_unique = nrow(arguments$pept_unique_df)
-        arguments$prior = prior
         arguments$pept_unique_df$EC_numeric = unlist(arguments$pept_unique_df$EC_numeric)
         arguments$pept_unique_df$Y = as.integer(arguments$pept_unique_df$Y)
 

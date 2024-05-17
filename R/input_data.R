@@ -49,44 +49,54 @@ input_data = function(SE,
   if (is.null(metadata(SE)$input_type)){
     metadata(SE)$input_type = "other"
   }
-  protein_df_args = list(protein_name = metadata(SE)$protein_name)
+  PROTEIN_DF = data.frame(protein_name = metadata(SE)$protein_name)
   PEPTIDE_DF = data.frame(colData(SE), Y = t(assay(SE)))
   metadata_SE = metadata(SE)
   rm(SE)
   
   if (!is.null(path_to_tpm)) {
-    protein_df_args$TPM = load_tpm(protein_df_args$protein_name, path_to_tpm)
+    PROTEIN_DF$TPM = load_tpm(PROTEIN_DF$protein_name, path_to_tpm)
   }
-  # protein_df_args$protein_length = rep(1, length(protein_df_args$protein_name))
-  protein_df_args$id_openMS = metadata_SE$id_openMS
+  # PROTEIN_DF$protein_length = rep(1, length(PROTEIN_DF$protein_name))
+  PROTEIN_DF$id_openMS = metadata_SE$id_openMS
   
-  # CALCULATE N_detected_peptides BEFORE COLLAPSING PEPTIDES
-  EC = strsplit(PEPTIDE_DF$EC, split = "\\|")
-  EC = lapply(EC, unique)
-  EC = unlist(EC)
-  if(metadata_SE$input_type == "openMS"){
-    # EC names in openMS are in "protein_df_args$id_openMS"
-    protein_df_args$protein_length = sapply(protein_df_args$id_openMS, function(id){
-      sum(EC == id)
-    })
+  # CALCULATE N_peptides BEFORE COLLAPSING PEPTIDES
+  if(metadata_SE$input_type == "metamorpheus"){
+    EC = strsplit(PEPTIDE_DF$EC, split = "\\|")
+    EC = lapply(EC, unique)
+    protein_name_to_keep = sort(unique(unlist(EC)))
+    
+    if(ncol(PROTEIN_DF) == 1){
+      PROTEIN_DF = data.frame(protein_name = PROTEIN_DF[PROTEIN_DF$protein_name %in% protein_name_to_keep,])
+    }else{
+      PROTEIN_DF = PROTEIN_DF[PROTEIN_DF$protein_name %in% protein_name_to_keep,]
+    }
+    
+    pep = rep(PEPTIDE_DF$PEP, sapply(EC, length))
+    EC = unlist(EC)
+    if(metadata_SE$PEP){
+      PROTEIN_DF$protein_length = sapply(PROTEIN_DF$protein_name, function(id){
+        pep = pep[EC == id]
+        length(pep) - sum(pep)
+      })
+    }else{
+      PROTEIN_DF$protein_length = sapply(PROTEIN_DF$protein_name, function(id){
+        sum(EC == id)
+      })
+    }
+    # if length is 0 or NA, set it to 1.
+    sel = is.na(PROTEIN_DF$protein_length) | (PROTEIN_DF$protein_length == 0)
+    PROTEIN_DF$protein_length[ sel ] = 1
+    rm(sel); rm(EC); rm(pep)
   }else{
-    # EC names in MM and in general are in "protein_df_args$protein_name"
-    protein_df_args$protein_length = sapply(protein_df_args$protein_name, function(id){
-      sum(EC == id)
-    })
+    PROTEIN_DF$protein_length = 1
   }
-  if(sum(protein_df_args$protein_length) == 0){
-    # check protein_df_args$protein_length is not always 0
-    protein_df_args$protein_length = rep(1, length(protein_df_args$protein_name))
-  }
-  
-  PROTEIN_DF = do.call("data.frame", protein_df_args)
-  rm(protein_df_args)
+  # maybe move protein_length after protein_name_to_keep -> it has to be done before collapsing ECs though
   
   PEPTIDE_DF = collapse_pept_w_equal_EC(PEPTIDE_DF, metadata_SE$PEP)
   PEPTIDE_DF = PEPTIDE_DF[PEPTIDE_DF$Y > 0,]
   
-  message("After collapsing petides with equal Equivalent Classes and non-negative abundance, we will analyze:")
+  message("After filtering petides, we will analyze:")
   protein_name_to_keep = get_prot_from_EC(PEPTIDE_DF$EC)
   if (metadata_SE$input_type %in% c("metamorpheus", "other")) {
     PROTEIN_DF = PROTEIN_DF[PROTEIN_DF$protein_name %in% protein_name_to_keep,]

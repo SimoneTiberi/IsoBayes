@@ -61,7 +61,6 @@ generate_SE = function(path_to_peptides_psm = NULL,
                        abundance_type = NULL,
                        PEP = TRUE,
                        FDR_thd = 0.01){
-  
   if (is.null(path_to_peptides_intensities)) {
     path_to_peptides_intensities = ""
   }
