@@ -79,6 +79,7 @@ input_data = function(SE,
         pep = pep[EC == id]
         length(pep) - sum(pep)
       })
+      rm(pep)
     }else{
       PROTEIN_DF$protein_length = sapply(PROTEIN_DF$protein_name, function(id){
         sum(EC == id)
@@ -87,7 +88,7 @@ input_data = function(SE,
     # if length is 0 or NA, set it to 1.
     sel = is.na(PROTEIN_DF$protein_length) | (PROTEIN_DF$protein_length == 0)
     PROTEIN_DF$protein_length[ sel ] = 1
-    rm(sel); rm(EC); rm(pep)
+    rm(sel); rm(EC);
   }else{
     PROTEIN_DF$protein_length = 1
   }
