@@ -72,9 +72,9 @@ input_data = function(SE,
       PROTEIN_DF = PROTEIN_DF[PROTEIN_DF$protein_name %in% protein_name_to_keep,]
     }
     
-    pep = rep(PEPTIDE_DF$PEP, sapply(EC, length))
     EC = unlist(EC)
     if(metadata_SE$PEP){
+      pep = rep(PEPTIDE_DF$PEP, sapply(EC, length))
       PROTEIN_DF$protein_length = sapply(PROTEIN_DF$protein_name, function(id){
         pep = pep[EC == id]
         length(pep) - sum(pep)

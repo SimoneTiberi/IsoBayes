@@ -76,7 +76,7 @@ get_peptides_from_idXML = function(idXML, pep, FDR_thd) {
             x = list_id_pep[[i]]
             temp_PEPTIDES[x[[1]], "PEP"] = x[[2]]
         }
-
+        
         COLLAPSED_COUNTS = aggregate.data.frame(temp_PEPTIDES$Y,
                                                 by = list(temp_PEPTIDES$PEP,
                                                           temp_PEPTIDES$sequence),
@@ -94,7 +94,9 @@ get_peptides_from_idXML = function(idXML, pep, FDR_thd) {
     } else {
         COLLAPSED_COUNTS = aggregate.data.frame(PEPTIDES$Y,
                                                 by = list(PEPTIDES$EC),
+                                                          #PEPTIDES$sequence),
                                                 FUN = sum)
+        #COLLAPSED_COUNTS = COLLAPSED_COUNTS[,c(1,3)]
         colnames(COLLAPSED_COUNTS) = c("EC", "Y")
         COLLAPSED_COUNTS$EC = gsub(" ", "|", COLLAPSED_COUNTS$EC)
         rm(PEPTIDES)
