@@ -1,3 +1,6 @@
+Changes in version 1.2.2:
++ big in "input_data" fixed (only triggered when using PEP with MM data)
+
 Changes in version 1.2.1:
 + normalization constant added (accounting for N detected peptides)
 
