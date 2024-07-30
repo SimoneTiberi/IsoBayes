@@ -1,10 +1,9 @@
 input_check_plot = function(x, gene_id, plot_CI, normalize_gene) {
-    if (length(x) != 3 || !is(x, "list")) {
-        stop("'res_inference' should be a list of 3 data.frame objects.")
+    if (!is(x, "list")) {
+        stop("'res_inference' should be a list of data.frame objects created by function 'inference'.")
     }
-    if (all(names(x) != c("isoform_results", "normalized_isoform_results",
-                          "gene_abundance"))) {
-        stop("Names of 'res_inference' should be: 'isoform_results',
+    if (!all(c("isoform_results", "normalized_isoform_results") %in% names(x))) {
+        stop("Names of 'res_inference' should contain: 'isoform_results', and
              'normalized_isoform_results'")
     }
     if (is.null(x$normalized_isoform_results)) {

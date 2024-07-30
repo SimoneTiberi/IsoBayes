@@ -27,6 +27,9 @@ parallel_MCMC_pep = function(pep_df, pept_unique_df, prot_df, protein_length,
         Y = do.call("cbind", lapply(res, function(x) {
             x$Y
         })),
+        PI_burn_in = do.call("cbind", lapply(res, function(x) {
+          x$PI_burn_in
+        })),
         groups = groups, one_pept_one_prot = one_pept_one_prot
     )
     res

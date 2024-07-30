@@ -15,7 +15,8 @@ list_components_for_MCMC = function(components, EC_numeric, Y_unique,
             M = length(x$peptides),
             K = params$K,
             burn_in = params$burn_in,
-            thin = params$thin
+            thin = params$thin,
+            trace = params$traceplot
         )
     })
     components

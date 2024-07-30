@@ -1,7 +1,7 @@
 Package: IsoBayes
 Type: Package
 Title: IsoBayes: Single Isoform protein inference Method via Bayesian Analyses
-Version: 1.2.2
+Version: 1.2.3
 Description: IsoBayes is a Bayesian method to perform inference on single protein isoforms.
   Our approach infers the presence/absence of protein isoforms, and also estimates their abundance;
   additionally, it provides a measure of the uncertainty of these estimates, via:
@@ -32,7 +32,7 @@ Authors@R: c(person(given = "Jordy",
 biocViews: StatisticalMethod, Bayesian, Proteomics, MassSpectrometry, AlternativeSplicing, Sequencing, RNASeq, GeneExpression, Genetics, Visualization, Software
 License: GPL-3
 Depends: R (>= 4.3.0)
-Imports: methods, Rcpp, data.table, glue, stats, doParallel, parallel, doRNG, foreach, iterators, ggplot2,HDInterval, SummarizedExperiment, S4Vectors
+Imports: methods, Rcpp, data.table, glue, stats, doParallel, parallel, doRNG, foreach, iterators, ggplot2, HDInterval, SummarizedExperiment, S4Vectors
 LinkingTo: Rcpp, RcppArmadillo
 Suggests: knitr, rmarkdown, testthat, BiocStyle
 SystemRequirements: C++17

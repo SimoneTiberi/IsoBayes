@@ -19,6 +19,10 @@
 #' @param burn_in the number of initial iterations to discard. Minimum 1000.
 #' @param thin thinning value to apply to the final MCMC chain.
 #' Useful for decreasing the memory (RAM) usage.
+#' @param traceplot a logical value indicating whether to return the posterior chain
+#' of the relative abundances of each protein isoform (i.e., "PI").
+#' If TRUE, the posterior chains are stored in 'MCMC' object,
+#' and can be plotted via 'plot_traceplot' function.
 #'
 #' @return A \code{list} of three \code{data.frame} objects: 'isoform_results',
 #' and (only if `map_iso_gene` is provided) 'normalized_isoform_results'
@@ -50,7 +54,7 @@
 #'
 #' # Run the algorithm
 #' set.seed(169612)
-#' results = inference(data_loaded, map_iso_gene = path_to_map_iso_gene)
+#' results = inference(data_loaded, map_iso_gene = path_to_map_iso_gene, traceplot = TRUE)
 #'
 #' # Results is a list of 3 data.frames:
 #' names(results)
@@ -66,6 +70,28 @@
 #' # Gene abundance
 #' head(results$gene_abundance)
 #'
+#' # results normalized within genes (total abundance of each gene),
+#' # useful to study alternative splicing within genes:
+#' head(results$normalized_isoform_results)
+#'
+#' # Plotting results, normalizing within genes
+#' # (relative abundances add to 1 within each gene):
+#' plot_relative_abundances(results,
+#'     gene_id = "TUBB",
+#'     normalize_gene = TRUE)
+#'
+#' # Plotting results, NOT normalized
+#' # (relative abundances add to 1 across all isoforms in the dataset):
+#' plot_relative_abundances(results,
+#'     gene_id = "TUBB",
+#'     normalize_gene = FALSE)
+#' 
+#' # Visualize MCMC chain for isoforms "TUBB-205", "TUBB-206", and  "TUBB-208"
+#' # To visualize traceplots, set "traceplot" to TRUE when running "inference" function
+#' plot_traceplot(results, "TUBB-205")
+#' plot_traceplot(results, "TUBB-206")
+#' plot_traceplot(results, "TUBB-208")
+#'
 #' # For more examples see the vignettes:
 #' # browseVignettes("IsoBayes")
 #'
@@ -80,7 +106,16 @@ inference = function(loaded_data,
                      n_cores = 1,
                      K = 2000,
                      burn_in = 1000,
-                     thin = 1) {
+                     thin = 1,
+                     traceplot = FALSE) {
+  if(!is.logical(traceplot)){
+    message("'traceplot' must be 'TRUE' or 'FALSE'.")
+    return(NULL)
+  }
+  if( !(traceplot %in% c(TRUE,FALSE)) ){
+    message("'traceplot' must be 'TRUE' or 'FALSE'.")
+    return(NULL)
+  }
   
   if (is.null(map_iso_gene)) {
     map_iso_gene = ""
@@ -102,25 +137,38 @@ inference = function(loaded_data,
   names(loaded_data) = formalArgs(set_MCMC_args)
   args_MCMC = do.call("set_MCMC_args", loaded_data)
   args_MCMC$params = list(n_cores = n_cores, K = K, burn_in = burn_in,
-                          thin = thin, PEP = loaded_data$PEP)
+                          thin = thin, PEP = loaded_data$PEP,
+                          traceplot = traceplot)
   sel_unique = loaded_data$prot_df$Y_unique > 0
   rm(loaded_data)
   
-  if (args_MCMC$params$PEP) {
+  if (args_MCMC$params$PEP){
     results_MCMC = do.call("run_MCMC_pep", args_MCMC)
-  } else {
+  }else{
     results_MCMC = do.call("run_MCMC", args_MCMC)
   }
   
-  if (args_MCMC$params$n_cores > 1) {
-    old_order = unlist(lapply(results_MCMC$groups, function(x) {
+  if (args_MCMC$params$n_cores > 1){
+    old_order = unlist(lapply(results_MCMC$groups, function(x){
       x$proteins
     }))
     old_order = c(old_order, results_MCMC$one_pept_one_prot)
     old_order = sort(old_order, index.return = TRUE)$ix
     results_MCMC$PI = results_MCMC$PI[, old_order]
     results_MCMC$Y = results_MCMC$Y[, old_order]
+    if(traceplot){
+      results_MCMC$PI_burn_in = results_MCMC$PI_burn_in[, old_order]
+    }
   }
+  
+  if(traceplot){
+    MCMC = list( PI = rbind(results_MCMC$PI_burn_in, results_MCMC$PI),
+                 Isoform = args_MCMC$prot_df$protein_name,
+                 thinned_burn_in = burn_in/thin)
+  }else{
+    MCMC = NULL
+  }
+  results_MCMC$PI_burn_in = NULL
   
   results_MCMC$isoform_results = stat_from_MCMC_Y(results_MCMC$Y)
   results_MCMC = get_res_MCMC(results_MCMC, args_MCMC$prot_df$protein_name)
@@ -167,9 +215,11 @@ inference = function(loaded_data,
     # add a small threshold to isoform with unique peptides
     results_MCMC$isoform_results$Prob_present[sel_unique] = results_MCMC$isoform_results$Prob_present[sel_unique] + 0.01
   }
+  
   list(
     isoform_results = results_MCMC$isoform_results[, reorder_col],
     normalized_isoform_results = res_norm,
-    gene_abundance = gene_abundance
+    gene_abundance = gene_abundance,
+    MCMC = MCMC
   )
 }

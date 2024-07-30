@@ -30,7 +30,14 @@ List MCMC_PEP(Rcpp::ListOf<Rcpp::NumericVector> const& EC_numeric_multi_map,
               unsigned int const& N,
               unsigned int const& K,
               unsigned int const& burn_in,
-              unsigned int const& thin) {
+              unsigned int const& thin,
+              bool const& trace
+) {
+  Rcpp::NumericMatrix PI_mat_burn_in;
+  if(trace){
+    PI_mat_burn_in = Rcpp::NumericMatrix(burn_in/thin, N);
+  }
+  
   Rcpp::NumericVector pi(N); // dirichlet sample.
   Rcpp::NumericVector y(N);
   //Rcpp::NumericVector n_detected_peptides_per_protein(N);
@@ -114,11 +121,16 @@ List MCMC_PEP(Rcpp::ListOf<Rcpp::NumericVector> const& EC_numeric_multi_map,
       if(k >= burn_in){
         PI_mat( (k-burn_in)/thin, _) = pi;
         Y_mat( (k-burn_in)/thin, _) = y;
+      }else{
+        if(trace){
+          PI_mat_burn_in( k/thin, _) = pi;
+        }
       }
     }
   }
   
   return Rcpp::List::create(Rcpp::Named("PI") = PI_mat,
-                            Rcpp::Named("Y") = Y_mat);
+                            Rcpp::Named("Y") = Y_mat,
+                            Rcpp::Named("PI_burn_in") = PI_mat_burn_in);
 }
 

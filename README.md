@@ -21,6 +21,14 @@ In the second layer, for peptides that were estimated as being present,
 we allocate their abundance across the protein isoforms they map to.
 These two steps allow us to recover the presence and abundance of each protein isoform.
 
+
+> Jordy Bollon, Michael R. Shortreed, Ben T. Jordan, Rachel Miller, Erin Jeffery, Andrea Cavalli, Lloyd M. Smith, Colin Dewey, Gloria M. Sheynkman, and Simone Tiberi.
+>
+> IsoBayes: a Bayesian approach for single-isoform proteomics inference.
+>
+> bioRxiv (2024).
+> Available [here](https://doi.org/10.1101/2024.06.10.598223).
+
 ## Bioconductor installation 
 `IsoBayes` is available on [Bioconductor](https://bioconductor.org/packages/IsoBayes) and can be installed with the command:
 ``` r

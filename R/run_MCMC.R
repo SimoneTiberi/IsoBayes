@@ -15,8 +15,10 @@ run_MCMC = function(pept_df, prot_df, protein_length, N, M, prior,
   } else {
     res = MCMC(
       pept_df$EC_numeric, prot_df$Y_unique, protein_length, pp,
-      pept_df$Y, N, M, params$K, params$burn_in, params$thin
+      pept_df$Y, N, M, params$K, params$burn_in, params$thin, params$traceplot
     )
+    
+    #print(res$PI_burn_in[1:10, 1:10])
     # res$isoform_results = stat_from_MCMC_Y(res$Y)
     # res$Y = NULL
   }
@@ -24,5 +26,10 @@ run_MCMC = function(pept_df, prot_df, protein_length, N, M, prior,
   res$PI = t(apply(res$PI, 1, function(x) {
     x / sum(x)
   }))
+  if(params$traceplot){
+    res$PI_burn_in = t(apply(res$PI_burn_in, 1, function(x) {
+      x / sum(x)
+    }))
+  }
   res
 }

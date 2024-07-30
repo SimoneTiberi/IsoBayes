@@ -29,10 +29,10 @@ test_that("inference() works faultlessly.", {
     results_par <- inference(data_loaded, map_iso_gene = path_to_map_iso_gene, n_cores = 2)
 
     expect_is(results, "list")
-    expect_true(length(results) == 3)
+    expect_true(length(results) == 4)
     expect_is(results[[1]], "data.frame")
     
     expect_is(results_par, "list")
-    expect_true(length(results_par) == 3)
+    expect_true(length(results_par) == 4)
     expect_is(results_par[[1]], "data.frame")
 })

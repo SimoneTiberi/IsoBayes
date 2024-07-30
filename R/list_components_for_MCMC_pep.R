@@ -33,7 +33,8 @@ list_components_for_MCMC_pep = function(groups, pep_df, pept_unique_df,
             N = length(x$proteins),
             K = params$K,
             burn_in = params$burn_in,
-            thin = params$thin
+            thin = params$thin,
+            trace = params$traceplot
         )
     })
     list_pept_prot = get_list_pept_prot(pept_unique_df, groups, protein_length,

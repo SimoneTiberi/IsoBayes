@@ -18,12 +18,17 @@ run_MCMC_pep = function(pept_df, pept_unique_df, prot_df, protein_length, N, M,
       pept_df$EC_numeric, pept_df$Y, pept_df$PEP, M,
       pept_unique_df$EC_numeric, pept_unique_df$Y,
       pept_unique_df$PEP, M_unique, protein_length, pp, N, params$K,
-      params$burn_in, params$thin
+      params$burn_in, params$thin, params$traceplot
     )
   }
   # normalize PI
   res$PI = t(apply(res$PI, 1, function(x) {
     x / sum(x)
   }))
+  if(params$traceplot){
+    res$PI_burn_in = t(apply(res$PI_burn_in, 1, function(x) {
+      x / sum(x)
+    }))
+  }
   res
 }

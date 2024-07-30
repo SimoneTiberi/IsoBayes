@@ -22,8 +22,14 @@ List MCMC_Unique(Rcpp::NumericVector const& Y_unique,
           unsigned int const& N,
           unsigned int const& K,
           unsigned int const& burn_in,
-          unsigned int const& thin
+          unsigned int const& thin,
+          bool const& trace
 ) {
+  Rcpp::NumericMatrix PI_mat_burn_in;
+  if(trace){
+    PI_mat_burn_in = Rcpp::NumericMatrix(burn_in/thin, N);
+  }
+  
   Rcpp::NumericVector pi(N); // dirichlet sample.
 
   Rcpp::NumericMatrix PI_mat( (K-burn_in)/thin, N);
@@ -46,9 +52,14 @@ List MCMC_Unique(Rcpp::NumericVector const& Y_unique,
       // only keep values after burn_in:
       if(k >= burn_in){
         PI_mat( (k-burn_in)/thin, _) = pi;
+      }else{
+        if(trace){
+          PI_mat_burn_in( k/thin, _) = pi;
+        }
       }
     }
   }
   
-  return Rcpp::List::create(Rcpp::Named("PI") = PI_mat);
+  return Rcpp::List::create(Rcpp::Named("PI") = PI_mat,
+                            Rcpp::Named("PI_burn_in") = PI_mat_burn_in);
 }

@@ -231,7 +231,7 @@ In order to analyse alternative splicing within a specific gene, we may want to 
 ```{r default inference}
 path_to_map_iso_gene = paste0(data_dir, "/map_iso_gene.csv")
 set.seed(169612)
-results_normalized = inference(data_loaded, map_iso_gene = path_to_map_iso_gene)
+results_normalized = inference(data_loaded, map_iso_gene = path_to_map_iso_gene, traceplot = TRUE)
 ```
 
 Specifying the `map_iso_gene` argument, also enables users to plot results via `plot_relative_abundances` function.
@@ -287,6 +287,21 @@ plot_relative_abundances(results_normalized, gene_id = "TUBB", normalize_gene = 
 ```
 
 Note that `plot_relative_abundances` can be used only when, in the `map_iso_gene` argument of the `inference` function, we provide a csv file that maps the protein isoforms to the corresponding gene (`path_to_map_iso_gene` in this case).
+
+# Assessing convergence via traceplots
+If `inference` function was run with parameter `traceplot = TRUE`, we can visualize the traceplot of the posterior chains of the relative abundances of each protein isoform (i.e., `PI`).
+We use the `plot_traceplot` function to plot the 3 isoforms of the gene `TUBB`:
+```{r traceplot}
+plot_traceplot(results_normalized, "TUBB-205")
+
+plot_traceplot(results_normalized, "TUBB-206")
+
+plot_traceplot(results_normalized, "TUBB-208")
+```
+
+The vertical grey dashed line indicates the burn-in (the iterations on the left side of the burn-in are discarded in posterior analyses).
+
+Note that, although we are using normalized results, gene-level information is ignored in the traceplot.
 
 # Session info
 ```{r sessionInfo}

@@ -19,8 +19,6 @@ parallel_MCMC = function(pep_df, prot_df, protein_length, pp, N, params) {
     res = foreach(component = iter(components)) %dorng% {
         names(component) = formalArgs(MCMC)
         res = do.call(MCMC, component)
-        # isoform_results = stat_from_MCMC_Y(res$Y)
-        # list(isoform_results, res$PI)
         res
     }
     stopCluster(cluster)
@@ -28,7 +26,7 @@ parallel_MCMC = function(pep_df, prot_df, protein_length, pp, N, params) {
     PI_one_pept_one_prot = MCMC_Unique(
         one_pept_one_prot_Y, pp[one_pept_one_prot],
         length(one_pept_one_prot_Y), params$K,
-        params$burn_in, params$thin
+        params$burn_in, params$thin, params$traceplot
     )
     res = list(
         PI = do.call("cbind", lapply(res, function(x) {
@@ -36,6 +34,9 @@ parallel_MCMC = function(pep_df, prot_df, protein_length, pp, N, params) {
         })),
         Y = do.call("cbind", lapply(res, function(x) {
             x$Y
+        })),
+        PI_burn_in = do.call("cbind", lapply(res, function(x) {
+          x$PI_burn_in
         })),
         groups = groups
     )
@@ -45,6 +46,7 @@ parallel_MCMC = function(pep_df, prot_df, protein_length, pp, N, params) {
         nrow(res$Y),
         byrow = TRUE
     ))
+    res$PI_burn_in = cbind(res$PI_burn_in, PI_one_pept_one_prot$PI_burn_in)
     res$one_pept_one_prot = one_pept_one_prot
 
     res

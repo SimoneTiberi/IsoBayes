@@ -79,7 +79,7 @@ input_data = function(SE,
         pep = pep_ALL[EC == id]
         length(pep) - sum(pep)
       })
-      rm(pep)
+      rm(pep_ALL)
     }else{
       EC = unlist(EC)
       PROTEIN_DF$protein_length = sapply(PROTEIN_DF$protein_name, function(id){

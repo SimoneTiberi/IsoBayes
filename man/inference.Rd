@@ -10,7 +10,8 @@ inference(
   n_cores = 1,
   K = 2000,
   burn_in = 1000,
-  thin = 1
+  thin = 1,
+  traceplot = FALSE
 )
 }
 \arguments{
@@ -35,6 +36,11 @@ We suggest increasing the number of threads for large datasets only.}
 
 \item{thin}{thinning value to apply to the final MCMC chain.
 Useful for decreasing the memory (RAM) usage.}
+
+\item{traceplot}{a logical value indicating whether to return the posterior chain
+of the relative abundances of each protein isoform (i.e., "PI").
+If TRUE, the posterior chains are stored in 'MCMC' object,
+and can be plotted via 'plot_traceplot' function.}
 }
 \value{
 A \code{list} of three \code{data.frame} objects: 'isoform_results',
@@ -71,7 +77,7 @@ path_to_map_iso_gene = paste0(data_dir, "/map_iso_gene.csv")
 
 # Run the algorithm
 set.seed(169612)
-results = inference(data_loaded, map_iso_gene = path_to_map_iso_gene)
+results = inference(data_loaded, map_iso_gene = path_to_map_iso_gene, traceplot = TRUE)
 
 # Results is a list of 3 data.frames:
 names(results)
@@ -86,6 +92,28 @@ head(results$normalized_isoform_results)
 
 # Gene abundance
 head(results$gene_abundance)
+
+# results normalized within genes (total abundance of each gene),
+# useful to study alternative splicing within genes:
+head(results$normalized_isoform_results)
+
+# Plotting results, normalizing within genes
+# (relative abundances add to 1 within each gene):
+plot_relative_abundances(results,
+    gene_id = "TUBB",
+    normalize_gene = TRUE)
+
+# Plotting results, NOT normalized
+# (relative abundances add to 1 across all isoforms in the dataset):
+plot_relative_abundances(results,
+    gene_id = "TUBB",
+    normalize_gene = FALSE)
+
+# Visualize MCMC chain for isoforms "TUBB-205", "TUBB-206", and  "TUBB-208"
+# To visualize traceplots, set "traceplot" to TRUE when running "inference" function
+plot_traceplot(results, "TUBB-205")
+plot_traceplot(results, "TUBB-206")
+plot_traceplot(results, "TUBB-208")
 
 # For more examples see the vignettes:
 # browseVignettes("IsoBayes")
