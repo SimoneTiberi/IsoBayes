@@ -228,6 +228,8 @@ For large datasets, to speed up the execution time, the number of cores can be i
 
 ## Gene Normalization (optional)
 In order to analyse alternative splicing within a specific gene, we may want to normalize the estimated relative abundances for each set of protein isoforms that maps to a gene. To this aim, we need to input a csv file containing two columns denoting the isoform name and the gene name.
+Alternatively, if isoform-gene ids are already loaded, a data.frame can be used directly.
+In both cases, the csv file or data.frame must have 2 columns: the 1st column must contain the isoform name/id, while the 2nd column has the gene name/id.
 ```{r default inference}
 path_to_map_iso_gene = paste0(data_dir, "/map_iso_gene.csv")
 set.seed(169612)

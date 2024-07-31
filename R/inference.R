@@ -5,14 +5,13 @@
 #'
 #' @param loaded_data \code{list} of \code{data.frame} objects,
 #' returned by \code{\link{input_data}}.
-#' @param map_iso_gene (optional) a character string indicating
-#' the path to a csv file with two columns:
-#' the 1st one containing the isoform id, and the 2nd one with the gene name.
+#' @param map_iso_gene (optional) a character string (indicating the path to a csv file with 2 columns),
+#'or a data.frame with 2 columns.
+#' In both cases, the 1st column must contain the isoform name/id, while the 2nd column has the gene name/id.
 #' This argument is required to return protein isoform relative abundances,
 #' normalized within each gene
 #' (i.e., adding to 1 within a gene), to plot results via \code{\link{plot_relative_abundances}},
-#' and to return protein abundances aggregated
-#' by gene with HPD credible interval.
+#' and to return protein abundances aggregated by gene with HPD credible interval.
 #' @param n_cores the number of cores to use during algorithm execution.
 #' We suggest increasing the number of threads for large datasets only.
 #' @param K the number of MCMC iterations. Minimum 2000.
@@ -49,7 +48,8 @@
 #' # Load and process SE object
 #' data_loaded = input_data(SE, path_to_tpm = tpm_path)
 #'
-#' # Define the path to the map_iso_gene.csv file
+#' # Define the path to the map_iso_gene.csv file.
+#' # Alternatively a data.frame can be used (see documentation).
 #' path_to_map_iso_gene = paste0(data_dir, "/map_iso_gene.csv")
 #'
 #' # Run the algorithm
@@ -130,10 +130,26 @@ inference = function(loaded_data,
   } else {
     loaded_data$prior = 0.1
   }
-  if (file.exists(map_iso_gene)) {
-    map_iso_gene_file = fread(map_iso_gene, header = FALSE)
-  }
   
+  map_iso_gene_file = NULL
+  if ( is.data.frame(map_iso_gene) ) {
+    if(ncol(map_iso_gene) != 2){
+      stop("'map_iso_gene' must be a character string to a csv file with 2 columns, 
+           or directly a data.frame with 2 columns: in both cases, with isoform (1st column) and gene (2nd column) ids.")
+    }
+    map_iso_gene_file = map_iso_gene
+    colnames(map_iso_gene_file) = c("V1", "V2")
+    rm(map_iso_gene)
+  }else{
+    if ( is.character(map_iso_gene) ){
+      map_iso_gene_file = fread(map_iso_gene, header = FALSE)
+      if(ncol(map_iso_gene_file) != 2){
+        stop("'map_iso_gene' must be a character string to a csv file with 2 columns, 
+           or directly a data.frame with 2 columns: in both cases, with isoform (1st column) and gene (2nd column) ids.")
+      }
+    }
+  }
+
   names(loaded_data) = formalArgs(set_MCMC_args)
   args_MCMC = do.call("set_MCMC_args", loaded_data)
   args_MCMC$params = list(n_cores = n_cores, K = K, burn_in = burn_in,
@@ -188,7 +204,7 @@ inference = function(loaded_data,
     )
   }
   
-  if (file.exists(map_iso_gene)) {
+  if ( !is.null(map_iso_gene_file) ) {
     results_MCMC = map_isoform_to_gene(results_MCMC, map_iso_gene_file)
     
     res_norm = normalize_by_gene(results_MCMC, tpm = !is.null(args_MCMC$prot_df$TPM))
