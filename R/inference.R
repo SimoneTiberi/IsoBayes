@@ -142,14 +142,16 @@ inference = function(loaded_data,
     rm(map_iso_gene)
   }else{
     if ( is.character(map_iso_gene) ){
-      map_iso_gene_file = fread(map_iso_gene, header = FALSE)
-      if(ncol(map_iso_gene_file) != 2){
-        stop("'map_iso_gene' must be a character string to a csv file with 2 columns, 
+      if(file.exists(map_iso_gene)){
+        map_iso_gene_file = fread(map_iso_gene, header = FALSE)
+        if(ncol(map_iso_gene_file) != 2){
+          stop("'map_iso_gene' must be a character string to a csv file with 2 columns, 
            or directly a data.frame with 2 columns: in both cases, with isoform (1st column) and gene (2nd column) ids.")
+        }
       }
     }
   }
-
+  
   names(loaded_data) = formalArgs(set_MCMC_args)
   args_MCMC = do.call("set_MCMC_args", loaded_data)
   args_MCMC$params = list(n_cores = n_cores, K = K, burn_in = burn_in,

@@ -1,4 +1,4 @@
-Changes in version 1.2.4:
+Changes in version 1.2.5:
 + inference function extended (map_iso_gene can be either be a data.frame or a .csv)
 
 Changes in version 1.2.3:
