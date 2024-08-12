@@ -33,7 +33,7 @@ obtained by \code{\link{inference}},
 for a specific gene, together with transcripts abundances if available.
 }
 \examples{
-# see the example of DifferentialRegulation function:
+# see the example of inference function:
 help(inference)
 
 }

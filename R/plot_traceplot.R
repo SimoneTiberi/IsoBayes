@@ -12,12 +12,12 @@
 #' @return A \code{gtable} object.
 #' 
 #' @examples
-#' # see the example of DifferentialRegulation function:
+#' # see the example of inference function:
 #' help(inference)
 #' 
 #' @author Simone Tiberi \email{simone.tiberi@unibo.it}
 #' 
-#' @seealso \code{\link{DifferentialRegulation}}
+#' @seealso \code{\link{inference}}
 #' 
 #' @export
 plot_traceplot = function(results,

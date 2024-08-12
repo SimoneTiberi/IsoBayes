@@ -22,12 +22,12 @@ The vertical grey dashed line indicates the burn-in
 (the iterations on the left side of the burn-in are discarded in posterior analyses).
 }
 \examples{
-# see the example of DifferentialRegulation function:
+# see the example of inference function:
 help(inference)
 
 }
 \seealso{
-\code{\link{DifferentialRegulation}}
+\code{\link{inference}}
 }
 \author{
 Simone Tiberi \email{simone.tiberi@unibo.it}

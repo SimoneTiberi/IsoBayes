@@ -16,7 +16,7 @@
 #' @return A \code{ggplot} object, showing isoform relative abundances for a specific gene.
 #'
 #' @examples
-#' # see the example of DifferentialRegulation function:
+#' # see the example of inference function:
 #' help(inference)
 #'
 #' @author Jordy Bollon \email{jordy.bollon@iit.it}
