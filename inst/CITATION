@@ -1,0 +1,24 @@
+citHeader("To cite DifferentialRegulation in publications use:")
+
+citEntry(entry 	= "Article",
+  title        	= "IsoBayes: a Bayesian approach for single-isoform proteomics inference",
+  author       	= personList(as.person("Jordy Bollon"),
+                    as.person("Michael R. Shortreed"),
+                    as.person("Ben T. Jordan"),
+                    as.person("Rachel Miller"),
+                    as.person("Erin Jeffery"),
+                    as.person("Andrea Cavalli"),
+                    as.person("Lloyd M. Smith"),
+                    as.person("Colin Dewey"),
+                   as.person("Gloria M. Sheynkman"),
+                   as.person("Simone Tiberi")),
+	eprint = "https://doi.org/10.1101/2024.06.10.598223",
+	journal = "bioRxiv",
+  year = "2024",
+  doi	= "10.1101/2024.06.10.598223",
+  url  = "https://doi.org/10.1101/2024.06.10.598223",
+  paste("Jordy Bollon, Michael R. Shortreed, Ben T. Jordan, Rachel Miller, Erin Jeffery, Andrea Cavalli, Lloyd M. Smith, Colin Dewey, Gloria M. Sheynkman, and Simone Tiberi (2024).",
+        "IsoBayes: a Bayesian approach for single-isoform proteomics inference.",
+        "bioRxiv.",
+        "URL https://doi.org/10.1101/2024.06.10.598223")
+)
