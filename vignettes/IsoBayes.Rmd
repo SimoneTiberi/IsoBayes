@@ -247,7 +247,7 @@ names(results_normalized)
 Inside the 'isoform_results' `data.frame`, each row corresponds to a protein isoform. The columns report the following results:
 
 * 'Prob_present': the probability that the protein isoform is present in the biological sample;
-* 'Abundance': estimate (posterior mean) of the protein isoform absolute abundance;
+* 'Abundance': estimate (posterior mean) of the protein isoform absolute abundance - note that, for intensities, abundances are normalized (they add to 10,000), so the scale differs from the one provided as input by the user;
 * 'CI_LB': lower bound of the Highest Posterior Density (HPD) credible interval (0.95 level) for the absolute abundance;
 * 'CI_UB': upper bound of the HPD credible interval (0.95 level) for the absolute abundance;
 * 'Pi': estimate (posterior mean) of the protein isoform relative abundance across all isoforms (i.e., the sum of across all isoforms adds to 1);

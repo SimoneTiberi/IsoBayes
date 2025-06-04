@@ -128,7 +128,10 @@ input_data = function(SE,
   overall_abundance = get_overall_abundance(PEPTIDE_DF, PEPTIDE_DF_unique,
                                             PROTEIN_DF$Y_unique)
   
-  if (overall_abundance > 2 * 10 ^ 5) {
+  # Identify intensities, and normalize them values per 10^5 unit
+  cond = !all( round(PEPTIDE_DF$Y) == PEPTIDE_DF$Y )
+  
+  if( cond | (overall_abundance > 2 * 10 ^ 5) ) {
     PEPTIDE_DF$Y = PEPTIDE_DF$Y / overall_abundance * 10 ^ 5
     # round abundances to closest integer, BUT we add 0.5 so that
     # very small abundances (between 0 and 0.5) are rounded to 1.
